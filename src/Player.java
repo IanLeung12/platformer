@@ -11,7 +11,9 @@ public class Player extends Moveable {
     private boolean dashUnlocked;
     private boolean bashUnlocked;
     private AttackAbilities currentWeapon;
-    private int[][] abilityDirection; // no initial value
+    private int[] abilityDirection; // no initial value
+    private boolean abilityActive;
+    private boolean attackActive;
     private ArrayList<String> Weapons;
 
     Player(int x, int y, int width, int height, double health, double totalHealth) {
@@ -26,13 +28,33 @@ public class Player extends Moveable {
 
     }
 
-    public void move() {}
+    public void move() {
+
+        if (this.isAbilityActive()) {
+            this.setxSpeed(abilityDirection[0]);
+            this.setySpeed(abilityDirection[1]);
+        } else if (!this.abilityActive) {
+            // get the direction from keyboard
+        }
+
+
+    }
+
+    public void updatePlayer() {
+        if () {
+
+        }
+    }
+
 
     //collision(GameObject otherObject) {}
     // attack()
     // jump()
     //dash(speedX, speedY)
     // bash()
+
+
+
 
 
     public double getTotalGold() {
@@ -115,12 +137,28 @@ public class Player extends Moveable {
         this.currentWeapon = currentWeapon;
     }
 
-    public int[][] getAbilityDirection() {
+    public int[]getAbilityDirection() {
         return abilityDirection;
     }
 
-    public void setAbilityDirection(int[][] abilityDirection) {
+    public void setAbilityDirection(int[] abilityDirection) {
         this.abilityDirection = abilityDirection;
+    }
+
+    public boolean isAbilityActive() {
+        return abilityActive;
+    }
+
+    public void setAbilityActive(boolean abilityActive) {
+        this.abilityActive = abilityActive;
+    }
+
+    public boolean isAttackActive() {
+        return attackActive;
+    }
+
+    public void setAttackActive(boolean attackActive) {
+        this.attackActive = attackActive;
     }
 
     public ArrayList<String> getWeapons() {

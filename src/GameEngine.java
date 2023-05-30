@@ -3,8 +3,6 @@ public class GameEngine {
     private Player player;
     private GameObject[] surroundings;
     private AttackAbilities[] attacks;
-    private boolean abilityActive;
-    private boolean attackActive;
     private Enemy[] enemies;
 
     // private Shop shop;                       not created yet
@@ -54,22 +52,6 @@ public class GameEngine {
 
     public void setAttacks(AttackAbilities[] attacks) {
         this.attacks = attacks;
-    }
-
-    public boolean isAbilityActive() {
-        return abilityActive;
-    }
-
-    public void setAbilityActive(boolean abilityActive) {
-        this.abilityActive = abilityActive;
-    }
-
-    public boolean isAttackActive() {
-        return attackActive;
-    }
-
-    public void setAttackActive(boolean attackActive) {
-        this.attackActive = attackActive;
     }
 
     public Enemy[] getEnemies() {
