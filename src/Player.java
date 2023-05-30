@@ -1,4 +1,6 @@
+
 import java.util.ArrayList;
+
 public class Player extends Moveable {
 
     private double totalGold;
@@ -24,26 +26,30 @@ public class Player extends Moveable {
         this.maxJumps = 1;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
+
         // add a single weapon into weapons ===============================
 
     }
 
     public void move() {
 
-        if (this.isAbilityActive()) {
-            this.setxSpeed(abilityDirection[0]);
-            this.setySpeed(abilityDirection[1]);
-        } else if (!this.abilityActive) {
-            // get the direction from keyboard
+        if (this.getY() > 20) {
+            this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+            this.setYSpeed(this.getYSpeed() - this.getGravity());
+        } else {
+            this.setYSpeed(0);
         }
+
+
 
 
     }
 
-    public void updatePlayer() {
-        if () {
+    public void jump() {
+        this.setYSpeed(this.getYSpeed() - 25);
+    }
 
-        }
+    public void updatePlayer() {
     }
 
 
@@ -52,8 +58,6 @@ public class Player extends Moveable {
     // jump()
     //dash(speedX, speedY)
     // bash()
-
-
 
 
 

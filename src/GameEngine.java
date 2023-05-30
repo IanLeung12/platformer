@@ -1,14 +1,24 @@
+import java.util.ArrayList;
+
 public class GameEngine {
 
     private Player player;
-    private GameObject[] surroundings;
+    private ArrayList<GameObject> surroundings;
     private AttackAbilities[] attacks;
+    private boolean abilityActive;
+    private boolean attackActive;
     private Enemy[] enemies;
 
     // private Shop shop;                       not created yet
     private int frameNum;
 
 
+    GameEngine() {
+        this.player = new Player(400, 400, 50, 100, 100, 100);
+        this.surroundings = new ArrayList<>();
+        surroundings.add(new Wall(200, 800, 500, 300));
+
+    }
     /*
     constructor =================================================================
     constructor =================================================================
@@ -20,7 +30,9 @@ public class GameEngine {
 
     public void spawnEnemies() {}
     public void spawnProjectile() {}
-    public void moveAll() {}
+    public void moveAll() {
+        player.move();
+    }
     public void checkCollisions() {}
     public void save() {}
 
@@ -38,11 +50,11 @@ public class GameEngine {
         this.player = player;
     }
 
-    public GameObject[] getSurroundings() {
+    public ArrayList<GameObject> getSurroundings() {
         return surroundings;
     }
 
-    public void setSurroundings(GameObject[] surroundings) {
+    public void setSurroundings(ArrayList<GameObject> surroundings) {
         this.surroundings = surroundings;
     }
 
@@ -52,6 +64,22 @@ public class GameEngine {
 
     public void setAttacks(AttackAbilities[] attacks) {
         this.attacks = attacks;
+    }
+
+    public boolean isAbilityActive() {
+        return abilityActive;
+    }
+
+    public void setAbilityActive(boolean abilityActive) {
+        this.abilityActive = abilityActive;
+    }
+
+    public boolean isAttackActive() {
+        return attackActive;
+    }
+
+    public void setAttackActive(boolean attackActive) {
+        this.attackActive = attackActive;
     }
 
     public Enemy[] getEnemies() {

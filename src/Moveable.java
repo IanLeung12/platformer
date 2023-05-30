@@ -1,19 +1,12 @@
 abstract public class Moveable extends Alive{
 
-    private int xSpeed, ySpeed;
-    private final int gravity;
+    private int xSpeed, ySpeed = 0;
+    private final int gravity = 3;
     private int immunityTimer;
-    private final int maxImmunity;
-
-
-
-
-
+    private final int maxImmunity = 0;
 
     Moveable(int x, int y, int width, int height, double health, double totalHealth) {
         super(x, y, width, height, health, totalHealth);
-        this.gravity = 2;
-        this.maxImmunity = 69696996;
     }
 
 
@@ -27,19 +20,19 @@ abstract public class Moveable extends Alive{
 
 
 
-    public int getxSpeed() {
+    public int getXSpeed() {
         return xSpeed;
     }
 
-    public void setxSpeed(int xSpeed) {
+    public void setXSpeed(int xSpeed) {
         this.xSpeed = xSpeed;
     }
 
-    public int getySpeed() {
+    public int getYSpeed() {
         return ySpeed;
     }
 
-    public void setySpeed(int ySpeed) {
+    public void setYSpeed(int ySpeed) {
         this.ySpeed = ySpeed;
     }
 
