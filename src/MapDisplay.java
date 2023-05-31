@@ -61,6 +61,7 @@ public class MapDisplay extends JFrame{
 
     class Keyboard implements KeyListener {
 
+        Player player = game.getPlayer();
 
         /**
          * Invoked when a key has been pressed.
@@ -70,6 +71,11 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyPressed(KeyEvent e) {
+             if (e.getKeyChar() == 'a') {
+                 player.setMovingLeft(true);
+             } else if (e.getKeyChar() == 'd') {
+                 player.setMovingRight(true);
+             }
         }
 
         /**
@@ -80,7 +86,11 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyReleased(KeyEvent e) {
-
+            if (e.getKeyChar() == 'a') {
+                player.setMovingLeft(false);
+            } else if (e.getKeyChar() == 'd') {
+                player.setMovingRight(false);
+            }
         }
 
         /**
@@ -91,10 +101,9 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyTyped(KeyEvent e) {
-            System.out.println("pressed");
+
             if (e.getKeyChar() == ' ') {
-                System.out.println("jump");
-                game.getPlayer().jump();
+                player.jump();
             }
         }
     }

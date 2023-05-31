@@ -17,23 +17,22 @@ public class GameEngine {
         this.player = new Player(400, 400, 50, 100, 100, 100);
         this.surroundings = new ArrayList<>();
         surroundings.add(new Wall(200, 800, 500, 300));
+        surroundings.add(new Wall(700, 300, 400, 1000));
 
     }
-    /*
-    constructor =================================================================
-    constructor =================================================================
-    constructor =================================================================
-    constructor =================================================================
-    constructor =================================================================
-     */
-
 
     public void spawnEnemies() {}
     public void spawnProjectile() {}
     public void moveAll() {
         player.move();
     }
-    public void checkCollisions() {}
+    public void checkCollisions() {
+        for (GameObject object: surroundings) {
+            if (player.getBounds().intersects(object)) {
+                player.fixCollision(object);
+            }
+        }
+    }
     public void save() {}
 
     // ================================================================

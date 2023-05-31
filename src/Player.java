@@ -16,6 +16,27 @@ public class Player extends Moveable {
     private int[] abilityDirection; // no initial value
     private boolean abilityActive;
     private boolean attackActive;
+
+    private boolean movingRight;
+
+    private boolean movingLeft;
+
+    public boolean isMovingRight() {
+        return movingRight;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+    public boolean isMovingLeft() {
+        return movingLeft;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
     private ArrayList<String> Weapons;
 
     Player(int x, int y, int width, int height, double health, double totalHealth) {
@@ -36,9 +57,15 @@ public class Player extends Moveable {
         this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
         this.setYSpeed(this.getYSpeed() - this.getGravity());
 
-        if (this.getY() + this.getHeight() > 600) {
-            this.setLocation((int) this.getX() + this.getXSpeed(), (int) (600 - this.getHeight()));
-            this.setYSpeed(0);
+        if (movingRight && this.getXSpeed() < 25) {
+            this.setXSpeed(this.getXSpeed() + 2);
+        } else if (movingLeft && this.getXSpeed() > -25) {
+            this.setXSpeed(this.getXSpeed() - 2);
+        } else if (this.getXSpeed() != 0) {
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()));
+            if (Math.abs(this.getXSpeed()) <= 1.5) {
+                this.setXSpeed(0);
+            }
         }
 
 
@@ -50,6 +77,35 @@ public class Player extends Moveable {
        // } else {
             this.setYSpeed(40);
      //   }
+
+    }
+
+    public void fixCollision(GameObject collider) {
+
+        double playerBottom = this.getY() + this.getHeight();
+        double colliderTop = collider.getY();
+        double playerRight = this.getX() + this.getWidth();
+        double colliderLeft = collider.getX();
+        double playerLeft = this.getX();
+        double colliderRight = collider.getX() + collider.getWidth();
+
+        if (playerBottom > colliderTop && this.getY() < colliderTop) {
+            // Player is colliding with the top of the collider
+            this.setLocation((int) this.getX(), (int) (colliderTop - this.getHeight()));
+            this.setYSpeed(0); // Stop the player's vertical movement
+        } else if (this.getY() < colliderTop + collider.getHeight() && playerBottom > colliderTop + collider.getHeight()) {
+            // Player is colliding with the bottom of the collider
+            this.setLocation((int) this.getX(), (int) (colliderTop + collider.getHeight()));
+            this.setYSpeed(0); // Stop the player's vertical movement
+        } else if (playerRight > colliderLeft && playerLeft < colliderLeft) {
+            // Player is colliding with the left side of the collider
+            this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
+            this.setXSpeed(-this.getXSpeed()/2); // Reverse the player's horizontal speed
+        } else if (this.getX() < colliderRight && playerRight > colliderRight) {
+            // Player is colliding with the right side of the collider
+            this.setLocation((int) (colliderRight), (int) this.getY());
+            this.setXSpeed(-this.getXSpeed()/2); // Reverse the player's horizontal speed
+        }
 
     }
 
