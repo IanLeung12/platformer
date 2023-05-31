@@ -62,8 +62,8 @@ public class Player extends Moveable {
         } else if (movingLeft && this.getXSpeed() > -25) {
             this.setXSpeed(this.getXSpeed() - 2);
         } else if (this.getXSpeed() != 0) {
-            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()));
-            if (Math.abs(this.getXSpeed()) <= 1.5) {
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+            if (Math.abs(this.getXSpeed()) <= 2) {
                 this.setXSpeed(0);
             }
         }
@@ -89,7 +89,7 @@ public class Player extends Moveable {
         double playerLeft = this.getX();
         double colliderRight = collider.getX() + collider.getWidth();
 
-        if (playerBottom > colliderTop && this.getY() < colliderTop) {
+        if (playerBottom > colliderTop && this.getY() + this.getYSpeed() < colliderTop) {
             // Player is colliding with the top of the collider
             this.setLocation((int) this.getX(), (int) (colliderTop - this.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
@@ -97,14 +97,14 @@ public class Player extends Moveable {
             // Player is colliding with the bottom of the collider
             this.setLocation((int) this.getX(), (int) (colliderTop + collider.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
-        } else if (playerRight > colliderLeft && playerLeft < colliderLeft) {
+        } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > colliderTop && this.getY() < colliderTop + collider.getHeight()) {
             // Player is colliding with the left side of the collider
             this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
-            this.setXSpeed(-this.getXSpeed()/2); // Reverse the player's horizontal speed
-        } else if (this.getX() < colliderRight && playerRight > colliderRight) {
+            this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
+        } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > colliderTop && this.getY() < colliderTop + collider.getHeight()) {
             // Player is colliding with the right side of the collider
             this.setLocation((int) (colliderRight), (int) this.getY());
-            this.setXSpeed(-this.getXSpeed()/2); // Reverse the player's horizontal speed
+            this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
         }
 
     }

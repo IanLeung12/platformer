@@ -18,6 +18,7 @@ public class GameEngine {
         this.surroundings = new ArrayList<>();
         surroundings.add(new Wall(200, 800, 500, 300));
         surroundings.add(new Wall(700, 300, 400, 1000));
+        surroundings.add(new Wall(1300, 400, 500, 100));
 
     }
 
