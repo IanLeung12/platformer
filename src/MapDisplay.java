@@ -128,6 +128,10 @@ public class MapDisplay extends JFrame{
 
             if (e.getKeyChar() == ' ') {
                 player.jump();
+            } else if (e.getKeyCode() == 16) {
+
+            } else if (e.getKeyChar() == 'f') {
+
             }
         }
     }
