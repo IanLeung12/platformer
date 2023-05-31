@@ -33,20 +33,24 @@ public class Player extends Moveable {
 
     public void move() {
 
-        if (this.getY() > 20) {
-            this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
-            this.setYSpeed(this.getYSpeed() - this.getGravity());
-        } else {
+        this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+        this.setYSpeed(this.getYSpeed() - this.getGravity());
+
+        if (this.getY() + this.getHeight() > 600) {
+            this.setLocation((int) this.getX() + this.getXSpeed(), (int) (600 - this.getHeight()));
             this.setYSpeed(0);
         }
-
-
 
 
     }
 
     public void jump() {
-        this.setYSpeed(this.getYSpeed() - 25);
+       // if (this.getYSpeed() > 0) {
+        //    this.setYSpeed(this.getYSpeed() + 40);
+       // } else {
+            this.setYSpeed(40);
+     //   }
+
     }
 
     public void updatePlayer() {

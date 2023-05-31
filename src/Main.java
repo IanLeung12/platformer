@@ -7,7 +7,7 @@ public class Main {
         MapDisplay window = new MapDisplay(map);
 
         while (true) {
-            window.repaint();
+            window.refresh();
             map.moveAll();
             try  {Thread.sleep(20);} catch(Exception e){}
 

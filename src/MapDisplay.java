@@ -13,40 +13,36 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
-
-public class MapDisplay{
+public class MapDisplay extends JFrame{
     // Game Window properties
-    static JFrame gameWindow;
     static GraphicsPanel canvas;
-    static final int WIDTH = 1280;
-    static final int HEIGHT = 720;
+    static final int WIDTH = 1920;
+    static final int HEIGHT = 1080;
     static GameEngine game;
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
-        gameWindow = new JFrame("Game Window");
-        gameWindow.setSize(WIDTH,HEIGHT);
-        gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.game = game;
+        super("Game Window");
+        this.setSize(WIDTH,HEIGHT);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MapDisplay.game = game;
 
         canvas = new GraphicsPanel();
-        gameWindow.add(canvas);
+        this.add(canvas);
 
         addKeyListener(new Keyboard());
+        
         // load the picture from a file
-        gameWindow.setVisible(true);
+        this.setVisible(true);
 
     } // main method end
 
-    public void repaint() {
-        gameWindow.repaint();
+    public void refresh() {
+        this.repaint();
     }
 
     static class GraphicsPanel extends JPanel{
         public GraphicsPanel(){
-            setFocusable(true);
-            requestFocusInWindow();
         }
         public void paintComponent(Graphics g){
             super.paintComponent(g); //required
@@ -73,11 +69,7 @@ public class MapDisplay{
          *
          * @param e
          */
-        @Override
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyChar() == ' ') {
-                game.getPlayer().jump();
-            }
         }
 
         /**
@@ -87,7 +79,6 @@ public class MapDisplay{
          *
          * @param e
          */
-        @Override
         public void keyReleased(KeyEvent e) {
 
         }
@@ -99,9 +90,12 @@ public class MapDisplay{
          *
          * @param e
          */
-        @Override
         public void keyTyped(KeyEvent e) {
-
+            System.out.println("pressed");
+            if (e.getKeyChar() == ' ') {
+                System.out.println("jump");
+                game.getPlayer().jump();
+            }
         }
     }
 } // UsingPictures class
