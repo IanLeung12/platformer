@@ -18,14 +18,31 @@ public class MapDisplay extends JFrame{
     static GraphicsPanel canvas;
     static final int WIDTH = 1920;
     static final int HEIGHT = 1080;
+
+    static int cameraX;
+
+    static int cameraY;
+
+    static int lastCamX;
+
+    static int lastCamY;
+
     static GameEngine game;
+
+    Player player;
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
         super("Game Window");
         this.setSize(WIDTH,HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.cameraX = 0;
+        this.cameraY = 0;
+
         MapDisplay.game = game;
+
+        this.player = game.getPlayer();
 
         canvas = new GraphicsPanel();
         this.add(canvas);
@@ -39,6 +56,15 @@ public class MapDisplay extends JFrame{
 
     public void refresh() {
         this.repaint();
+        cameraX = (int) player.getX() - 400;
+        cameraY = (int) player.getY() - 400;
+
+        for (GameObject surrounding: game.getSurroundings()) {
+            surrounding.setLocation((int) (surrounding.getX() - cameraX + lastCamX), (int) (surrounding.getY() - cameraY + lastCamY));
+
+        }
+
+        player.setLocation((int) (player.getX() - cameraX + lastCamX), (int) (player.getY() - cameraY + lastCamY));
     }
 
     static class GraphicsPanel extends JPanel{
@@ -60,8 +86,6 @@ public class MapDisplay extends JFrame{
 
 
     class Keyboard implements KeyListener {
-
-        Player player = game.getPlayer();
 
         /**
          * Invoked when a key has been pressed.
