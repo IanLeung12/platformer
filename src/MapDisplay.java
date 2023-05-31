@@ -56,8 +56,8 @@ public class MapDisplay extends JFrame{
 
     public void refresh() {
         this.repaint();
-        cameraX = (int) player.getX() - 400;
-        cameraY = (int) player.getY() - 400;
+        cameraX = (int) player.getX() - 650;
+        cameraY = (int) player.getY() - 500;
 
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.setLocation((int) (surrounding.getX() - cameraX + lastCamX), (int) (surrounding.getY() - cameraY + lastCamY));

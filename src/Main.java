@@ -8,8 +8,9 @@ public class Main {
 
         while (true) {
             window.refresh();
-            map.moveAll();d
+            map.moveAll();
             map.checkCollisions();
+            window.refresh();
             try  {Thread.sleep(20);} catch(Exception e){}
 
             // Move the picture
