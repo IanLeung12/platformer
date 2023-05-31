@@ -10,6 +10,7 @@ public class Main {
             window.refresh();
             map.moveAll();
             map.checkCollisions();
+            window.refresh();
             try  {Thread.sleep(20);} catch(Exception e){}
 
             // Move the picture
