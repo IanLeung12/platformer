@@ -8,7 +8,7 @@ public class Player extends Moveable {
     private boolean inAnim; // ian what initial value
     private int animFrames;// ian what initial value
     private String currentAnim;// ian what initial value
-    private int totalJumps;
+    private int jumpNum;
     private int maxJumps;
     private boolean dashUnlocked;
     private boolean bashUnlocked;
@@ -41,8 +41,8 @@ public class Player extends Moveable {
         super(x, y, width, height, health, totalHealth);
         this.totalGold = 0;
         this.energy = 3;
-        this.totalJumps = 0;
-        this.maxJumps = 1;
+        this.jumpNum = 0;
+        this.maxJumps = 2;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
 
@@ -70,11 +70,16 @@ public class Player extends Moveable {
     }
 
     public void jump() {
-       // if (this.getYSpeed() > 0) {
-        //    this.setYSpeed(this.getYSpeed() + 40);
-       // } else {
+
+        if (this.getJumpNum() < this.getMaxJumps()) {
             this.setYSpeed(Constants.getJumpBoost());
-     //   }
+            this.setJumpNum(this.getJumpNum() + 1);
+        }
+
+
+
+
+
 
     }
 
@@ -90,14 +95,18 @@ public class Player extends Moveable {
         if (playerBottom > otherObjectTop && this.getY() + this.getYSpeed() < otherObjectTop) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
+            this.setJumpNum(0);
         } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
+            this.setYSpeed(0);
         } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
+            this.setJumpNum(0);
         } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderRight), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
+            this.setJumpNum(0);
         }
 
     }
@@ -154,12 +163,12 @@ public class Player extends Moveable {
         this.currentAnim = currentAnim;
     }
 
-    public int getTotalJumps() {
-        return totalJumps;
+    public int getJumpNum() {
+        return jumpNum;
     }
 
-    public void setTotalJumps(int totalJumps) {
-        this.totalJumps = totalJumps;
+    public void setJumpNum(int jumpNum) {
+        this.jumpNum = jumpNum;
     }
 
     public int getMaxJumps() {

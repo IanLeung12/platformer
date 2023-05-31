@@ -1,11 +1,9 @@
 public class Constants {
 
-    static int gravity = 1;
-    static int jumpBoost = 40;
+    static int gravity = 2;
+    static int jumpBoost = 30;
     static int dashX = 5;
-
     static int maxXSpeed = 25;
-
     static int XSpeedAddition = 2;
 
 
