@@ -1,7 +1,6 @@
 abstract public class Moveable extends Alive{
 
     private int xSpeed, ySpeed = 0;
-    private final int gravity = 3;
     private int immunityTimer;
     private final int maxImmunity = 0;
 
@@ -36,10 +35,6 @@ abstract public class Moveable extends Alive{
         this.ySpeed = ySpeed;
     }
 
-
-    public int getGravity() {
-        return gravity;
-    }
 
     public int getImmunityTimer() {
         return immunityTimer;

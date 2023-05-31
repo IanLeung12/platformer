@@ -1,8 +1,15 @@
 public class Constants {
 
     static int gravity = 1;
-    static int jumpBoost = 10;
+    static int jumpBoost = 40;
     static int dashX = 5;
+
+    static int maxXSpeed = 25;
+
+    static int XSpeedAddition = 2;
+
+
+
 
 
 
@@ -30,5 +37,13 @@ public class Constants {
 
     public static void setDashX(int dashX) {
         Constants.dashX = dashX;
+    }
+
+    public static int getMaxXSpeed() {
+        return maxXSpeed;
+    }
+
+    public static int getXSpeedAddition() {
+        return XSpeedAddition;
     }
 }

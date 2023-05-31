@@ -8,7 +8,7 @@ public class Main {
 
         while (true) {
             window.refresh();
-            map.moveAll();d
+            map.moveAll();
             map.checkCollisions();
             try  {Thread.sleep(20);} catch(Exception e){}
 
