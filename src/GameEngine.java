@@ -15,12 +15,15 @@ public class GameEngine {
 
 
     GameEngine() {
-        this.player = new Player(600, 500, 50, 100, 100, 100);
+        this.player = new Player(600, 500, 75, 150, 100, 100);
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         surroundings.add(new Wall(200, 800, 500, 300));
         surroundings.add(new Wall(700, 300, 400, 1000));
         surroundings.add(new Wall(1300, 400, 500, 100));
+        surroundings.add(new Wall(-200, 1500, 2000, 200));
+        surroundings.add(new Wall(-200, -400, 200, 3000));
+        surroundings.add(new Wall(1800, -400, 200, 3000));
 
 
     }

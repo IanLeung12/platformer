@@ -150,9 +150,7 @@ public class MapDisplay extends JFrame{
                } else {
                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
                }
-            }
-
-            if (e.getKeyChar() == 'z') {
+            } else if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
                 player.setAbilityActive(true);
                 if (player.isMovingRight()) {
                     player.setAbilityDirection(Constants.getDashX(), 0);
