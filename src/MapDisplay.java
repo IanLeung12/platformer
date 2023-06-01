@@ -125,10 +125,20 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyTyped(KeyEvent e) {
-
             if (e.getKeyChar() == ' ') {
                 player.jump();
             }
+            if (e.getKeyChar() == 'z') {
+                player.setAbilityActive(true);
+                if (player.isMovingRight()) {
+                    player.setAbilityDirection(Constants.getDashX(), 0);
+                } else {
+                    player.setAbilityDirection((Constants.getDashX() * (-1)), 0);
+                }
+                player.movementAbility();
+                System.out.println(Constants.getDashX());
+            }
         }
+
     }
 } // UsingPictures class
