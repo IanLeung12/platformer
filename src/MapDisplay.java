@@ -148,16 +148,7 @@ public class MapDisplay extends JFrame{
                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
                }
             }
-            if (e.getKeyChar() == 'z') {
-                player.setAbilityActive(true);
-                if (player.isMovingRight()) {
-                    player.setAbilityDirection(Constants.getDashX(), 0);
-                } else {
-                    player.setAbilityDirection((Constants.getDashX() * (-1)), 0);
-                }
-                player.movementAbility();
-                System.out.println(Constants.getDashX());
-            }
+
         }
 
     }
