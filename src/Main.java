@@ -11,7 +11,7 @@ public class Main {
             map.moveAll();
             map.checkCollisions();
             window.refresh();
-            try  {Thread.sleep(20);} catch(Exception e){}
+            try  {Thread.sleep(15);} catch(Exception e){}
 
             // Move the picture
         }

@@ -36,6 +36,7 @@ public class GameEngine {
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
         }
     }
+
     public void checkCollisions() {
         for (GameObject object: surroundings) {
             if (player.getBounds().intersects(object)) {
@@ -57,6 +58,14 @@ public class GameEngine {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public ArrayList<AttackAbilities> getAttacks() {
+        return attacks;
+    }
+
+    public void setAttacks(ArrayList<AttackAbilities> attacks) {
+        this.attacks = attacks;
     }
 
     public ArrayList<GameObject> getSurroundings() {

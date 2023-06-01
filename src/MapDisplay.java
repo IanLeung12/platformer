@@ -64,6 +64,11 @@ public class MapDisplay extends JFrame{
 
         }
 
+        for (AttackAbilities attack: game.getAttacks()) {
+            attack.setLocation((int) (attack.getX() - cameraX + lastCamX), (int) (attack.getY() - cameraY + lastCamY));
+
+        }
+
         player.setLocation((int) (player.getX() - cameraX + lastCamX), (int) (player.getY() - cameraY + lastCamY));
     }
 
@@ -75,12 +80,17 @@ public class MapDisplay extends JFrame{
 
             g.setColor(Color.blue);
             for (GameObject thing: game.getSurroundings()) {
-                g.drawRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
+                g.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
+            }
+
+            g.setColor(Color.red);
+            for (AttackAbilities attack: game.getAttacks()) {
+                g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
 
             g.setColor(Color.black);
             Player player = game.getPlayer();
-            g.drawRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+            g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
         } // paintComponent method end
     } // GraphicsPanel class end
 
@@ -97,8 +107,10 @@ public class MapDisplay extends JFrame{
         public void keyPressed(KeyEvent e) {
              if (e.getKeyChar() == 'a') {
                  player.setMovingLeft(true);
+                 player.setDirection(-1);
              } else if (e.getKeyChar() == 'd') {
                  player.setMovingRight(true);
+                 player.setDirection(1);
              }
         }
 
@@ -131,7 +143,11 @@ public class MapDisplay extends JFrame{
             } else if (e.getKeyCode() == 16) {
 
             } else if (e.getKeyChar() == 'f') {
-
+               if (player.getDirection() == 1) {
+                   game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
+               } else {
+                   game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
+               }
             }
         }
     }

@@ -19,6 +19,8 @@ public class Player extends Moveable {
     private boolean movingRight;
     private boolean movingLeft;
 
+    private int direction;
+
     public boolean isMovingRight() {
         return movingRight;
     }
@@ -43,6 +45,7 @@ public class Player extends Moveable {
         this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
+        this.direction = 1;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
 
@@ -102,10 +105,12 @@ public class Player extends Moveable {
         } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
+            this.setDirection(-this.direction);
             this.setJumpNum(0);
         } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderRight), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
+            this.setDirection(-this.direction);
             this.setJumpNum(0);
         }
 
@@ -122,6 +127,13 @@ public class Player extends Moveable {
     // bash()
 
 
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
 
     public double getTotalGold() {
         return totalGold;
