@@ -138,6 +138,9 @@ public class MapDisplay extends JFrame{
                     player.movementAbility();
                 }
             }
+
+
+
         }
 
         /**

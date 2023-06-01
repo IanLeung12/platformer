@@ -8,7 +8,7 @@ public class GameEngine {
     private ArrayList<AttackAbilities> attacks;
     private boolean abilityActive;
     private boolean attackActive;
-    private Enemy[] enemies;
+    private ArrayList<Enemy> enemies;
 
     // private Shop shop;                       not created yet
     private int frameNum;
@@ -49,7 +49,20 @@ public class GameEngine {
                 player.setAbilityActive(false);
             }
         }
+
+        for (Enemy enemy: enemies) {
+
+            Slime slimeEnemy = (Slime) enemy;
+
+            for (GameObject object: surroundings) {
+                if (slimeEnemy.getBounds().intersects(object)) {
+                    slimeEnemy.collision(object);
+
+                }
+            }
+        }
     }
+
     public void save() {}
 
     // ================================================================
@@ -98,13 +111,7 @@ public class GameEngine {
         this.attackActive = attackActive;
     }
 
-    public Enemy[] getEnemies() {
-        return enemies;
-    }
 
-    public void setEnemies(Enemy[] enemies) {
-        this.enemies = enemies;
-    }
 
     public int getFrameNum() {
         return frameNum;

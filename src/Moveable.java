@@ -14,7 +14,6 @@ abstract public class Moveable extends Alive{
     //knockback(gameObject otherObject) {}
 
 
-    public abstract void move();
 //        this.setLocation((int) (this.getX() + xSpeed), (int) (this.getY() + ySpeed));
 
 
