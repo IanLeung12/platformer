@@ -12,7 +12,8 @@ public class Player extends Moveable {
     private boolean dashUnlocked;
     private boolean bashUnlocked;
     private AttackAbilities currentWeapon;
-    private int[] abilityDirection; // no initial value
+    private int[] abilityDirection = {0, 0};
+    private int[] abilityTravelled = {0, 0};
     private boolean abilityActive;
     private boolean attackActive;
     private boolean movingRight;
@@ -53,22 +54,23 @@ public class Player extends Moveable {
     }
 
     public void move() {
+        if (abilityActive) {
+            this.movementAbility();
+        } else {
+            this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
 
-        this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
-        this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-
-        if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
-            this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
-        } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
-            this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
-        } else if (this.getXSpeed() != 0) {
-            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
-            if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
-                this.setXSpeed(0);
+            if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
+                this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
+            } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
+                this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
+            } else if (this.getXSpeed() != 0) {
+                this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+                if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
+                    this.setXSpeed(0);
+                }
             }
         }
-
-
     }
 
     public void jump() {
@@ -77,9 +79,31 @@ public class Player extends Moveable {
             this.setYSpeed(Constants.getJumpBoost());
             this.setJumpNum(this.getJumpNum() + 1);
         }
+    }
+
+    public void movementAbility() {
+
+        if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
+            this.setLocation((int) (this.getX() + this.abilityDirection[0]), (int) (this.getY() + this.abilityDirection[1]));
+            this.abilityTravelled[0] += abilityDirection[0];
+            this.abilityTravelled[1] += abilityDirection[1];
+        } else if ((Math.abs(this.abilityTravelled[0]) >= Constants.getMovementAbilityTotal()) || (Math.abs(this.abilityTravelled[1]) >= Constants.getMovementAbilityTotal())) {
+
+            if (this.abilityTravelled[0] < 0) {
+                this.setXSpeed(Constants.getXSpeedAddition() * -20);
+
+            } else if (this.abilityTravelled[0] > 0) {
+                this.setXSpeed(Constants.getXSpeedAddition() * 20);
+
+            }
 
 
+            this.abilityTravelled[0] = 0;
+            this.abilityTravelled[1] = 0;
+            this.abilityActive = false;
 
+
+        }
 
 
 
@@ -244,5 +268,18 @@ public class Player extends Moveable {
 
     public void setWeapons(ArrayList<String> weapons) {
         Weapons = weapons;
+    }
+
+    public void setAbilityDirection(int xChange, int yChange) {
+        this.abilityDirection[0] = xChange;
+        this.abilityDirection[1] = yChange;
+    }
+
+    public int[] getAbilityTravelled() {
+        return abilityTravelled;
+    }
+
+    public void setAbilityTravelled(int[] abilityTravelled) {
+        this.abilityTravelled = abilityTravelled;
     }
 }

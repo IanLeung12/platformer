@@ -41,6 +41,7 @@ public class GameEngine {
         for (GameObject object: surroundings) {
             if (player.getBounds().intersects(object)) {
                 player.fixCollision(object);
+                player.setAbilityActive(false);
             }
         }
     }
