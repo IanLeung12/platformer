@@ -127,6 +127,10 @@ public class MapDisplay extends JFrame{
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == ' ') {
                 player.jump();
+            } else if (e.getKeyCode() == 16) {
+
+            } else if (e.getKeyChar() == 'f') {
+
             }
             if (e.getKeyChar() == 'z') {
                 player.setAbilityActive(true);

@@ -4,7 +4,8 @@ public class GameEngine {
 
     private Player player;
     private ArrayList<GameObject> surroundings;
-    private AttackAbilities[] attacks;
+
+    private ArrayList<AttackAbilities> attacks;
     private boolean abilityActive;
     private boolean attackActive;
     private Enemy[] enemies;
@@ -14,8 +15,9 @@ public class GameEngine {
 
 
     GameEngine() {
-        this.player = new Player(400, 400, 50, 100, 100, 100);
+        this.player = new Player(650, 500, 50, 100, 100, 100);
         this.surroundings = new ArrayList<>();
+        this.attacks = new ArrayList<>();
         surroundings.add(new Wall(200, 800, 500, 300));
         surroundings.add(new Wall(700, 300, 400, 1000));
         surroundings.add(new Wall(1300, 400, 500, 100));
@@ -26,6 +28,13 @@ public class GameEngine {
     public void spawnProjectile() {}
     public void moveAll() {
         player.move();
+        for (int i = attacks.size() - 1; i >= 0; i --) {
+            AttackAbilities attack = attacks.get(i);
+            if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
+                attacks.remove(i);
+            }
+            attack.setAbilityDuration(attack.getAbilityDuration() + 1);
+        }
     }
     public void checkCollisions() {
         for (GameObject object: surroundings) {
@@ -56,14 +65,6 @@ public class GameEngine {
 
     public void setSurroundings(ArrayList<GameObject> surroundings) {
         this.surroundings = surroundings;
-    }
-
-    public AttackAbilities[] getAttacks() {
-        return attacks;
-    }
-
-    public void setAttacks(AttackAbilities[] attacks) {
-        this.attacks = attacks;
     }
 
     public boolean isAbilityActive() {
