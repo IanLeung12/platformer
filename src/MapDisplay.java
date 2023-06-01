@@ -59,15 +59,27 @@ public class MapDisplay extends JFrame{
         cameraX = (int) player.getX() - 650;
         cameraY = (int) player.getY() - 500;
 
+        int dX = lastCamX - cameraX;
+        int dY = lastCamY - cameraY;
+
+        if (Math.abs(dX) > 25) {
+            cameraX = lastCamX - dX/Math.abs(dX) * 25;
+        }
+
+        if (Math.abs(dY) > 25) {
+            cameraY = lastCamY - dY/Math.abs(dY) * 25;
+        }
+
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.setLocation((int) (surrounding.getX() - cameraX + lastCamX), (int) (surrounding.getY() - cameraY + lastCamY));
 
         }
 
+        /**
         for (AttackAbilities attack: game.getAttacks()) {
             attack.setLocation((int) (attack.getX() - cameraX + lastCamX), (int) (attack.getY() - cameraY + lastCamY));
 
-        }
+        }*/
 
         player.setLocation((int) (player.getX() - cameraX + lastCamX), (int) (player.getY() - cameraY + lastCamY));
     }
