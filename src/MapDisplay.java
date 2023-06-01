@@ -115,19 +115,16 @@ public class MapDisplay extends JFrame{
                 System.out.println("d");
             }
 
-            if (!player.isAbilityActive()) {
-                if (!player.isDashUsed()) {
-                    if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-                        player.setAbilityActive(true);
+            if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                if (!(player.isAbilityActive() || player.isDashUsed())) {
+                    player.setAbilityActive(true);
 
-                        player.setAbilityDirection(Constants.getDashX() * player.getDirection(), 0);
+                    player.setAbilityDirection(Constants.getDashX() * player.getDirection(), 0);
 
-                        player.movementAbility();
-                        System.out.println(Constants.getDashX());
-                    }
+                    player.movementAbility();
+                    System.out.println(Constants.getDashX());
                 }
             }
-
         }
 
         /**
@@ -155,9 +152,8 @@ public class MapDisplay extends JFrame{
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == ' ') {
                 player.jump();
-            } else if (e.getKeyCode() == 16) {
-
-            } else if (e.getKeyChar() == 'f') {
+            }
+            if (e.getKeyChar() == 'f') {
                 System.out.println("f");
                 if (player.getDirection() == 1) {
                     game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));

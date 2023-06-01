@@ -66,7 +66,8 @@ public class Player extends Moveable {
     }
 
     public void movementAbility() {
-
+        this.dashUsed = true;
+        this.setBashUsed(true);
         if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
             this.setLocation((int) (this.getX() + this.abilityDirection[0]), (int) (this.getY() + this.abilityDirection[1]));
             this.abilityTravelled[0] += abilityDirection[0];
@@ -79,9 +80,6 @@ public class Player extends Moveable {
             } else if (this.abilityTravelled[0] > 0) {
                 this.setXSpeed(Constants.getXSpeedAddition() * 20);
             }
-
-            this.setDashUsed(true);
-            this.setBashUsed(true);
 
 
             this.abilityTravelled[0] = 0;
@@ -108,7 +106,7 @@ public class Player extends Moveable {
             this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
             this.setJumpNum(0);
-            this.setDashUsed(false);
+            this.dashUsed = false;
         } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
             this.setYSpeed(0);
@@ -117,13 +115,13 @@ public class Player extends Moveable {
             this.setXSpeed(0); // Reverse the player's horizontal speed
             //this.setDirection(-this.direction);
             this.setJumpNum(0);
-            this.setDashUsed(false);
+            this.dashUsed = false;
         } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderRight), (int) this.getY());
             this.setXSpeed(0); // Reverse the player's horizontal speed
             //this.setDirection(-this.direction);
             this.setJumpNum(0);
-            this.setDashUsed(false);
+            this.dashUsed = false;
 
         }
 

@@ -22,8 +22,8 @@ public class GameEngine {
         surroundings.add(new Wall(700, 300, 400, 1000));
         surroundings.add(new Wall(1300, 400, 500, 100));
         surroundings.add(new Wall(-200, 1500, 2000, 200));
-        surroundings.add(new Wall(-200, -400, 200, 3000));
-        surroundings.add(new Wall(1800, -400, 200, 3000));
+        surroundings.add(new Wall(-200, -1000, 200, 3000));
+        surroundings.add(new Wall(1800, -1000, 200, 3000));
 
 
     }
