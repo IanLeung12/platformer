@@ -13,7 +13,7 @@ public class Main {
             map.checkCollisions();
 
             window.refresh();
-            try  {Thread.sleep(17);} catch(Exception e){}
+            try {Thread.sleep(17);} catch(Exception e){}
 
             // Move the picture
         }

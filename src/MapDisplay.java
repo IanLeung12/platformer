@@ -108,9 +108,11 @@ public class MapDisplay extends JFrame{
              if (e.getKeyChar() == 'a') {
                  player.setMovingLeft(true);
                  player.setDirection(-1);
+                 System.out.println("a");
              } else if (e.getKeyChar() == 'd') {
                  player.setMovingRight(true);
                  player.setDirection(1);
+                 System.out.println("d");
              }
         }
 
@@ -142,6 +144,7 @@ public class MapDisplay extends JFrame{
             } else if (e.getKeyCode() == 16) {
 
             } else if (e.getKeyChar() == 'f') {
+                System.out.println("f");
                if (player.getDirection() == 1) {
                    game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
                } else {
