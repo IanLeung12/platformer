@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class GameEngine {
 
     private Player player;
-    private ArrayList<GameObject> surroundings;
+    private ArrayList<Wall> surroundings;
 
     private ArrayList<AttackAbilities> attacks;
     private boolean abilityActive;
@@ -24,6 +24,7 @@ public class GameEngine {
         surroundings.add(new Wall(-200, 1500, 2000, 200));
         surroundings.add(new Wall(-200, -1000, 200, 3000));
         surroundings.add(new Wall(1800, -1000, 200, 3000));
+        surroundings.add(new Spike(700, -300, 200, 200, false));
 
 
     }
@@ -73,11 +74,11 @@ public class GameEngine {
         this.attacks = attacks;
     }
 
-    public ArrayList<GameObject> getSurroundings() {
+    public ArrayList<Wall> getSurroundings() {
         return surroundings;
     }
 
-    public void setSurroundings(ArrayList<GameObject> surroundings) {
+    public void setSurroundings(ArrayList<Wall> surroundings) {
         this.surroundings = surroundings;
     }
 

@@ -1,24 +1,14 @@
 
-abstract public class Spike extends Alive{
-    private boolean breakable;
+public class Spike extends Wall{
     private double damage;
 
-    Spike(int x, int y, int width, int height, double health, double totalHealth, boolean breakable, double damage) {
-        super(x, y, width, height, health, totalHealth);
-        this.breakable = breakable;
-        this.damage = damage;
-    }
-
-    public void setBreakable(boolean breakable) {
-        this.breakable = breakable;
+    Spike(int x, int y, int width, int height, boolean breakable) {
+        super(x, y, width, height, breakable);
+        this.damage = 25;
     }
 
     public void setDamage(double damage) {
         this.damage = damage;
-    }
-
-    public boolean isBreakable() {
-        return this.breakable;
     }
 
     public double getDamage() {

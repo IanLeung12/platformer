@@ -90,12 +90,16 @@ public class MapDisplay extends JFrame{
         public void paintComponent(Graphics g){
             super.paintComponent(g); //required
 
-            g.setColor(Color.darkGray);
             for (GameObject thing: game.getSurroundings()) {
+                g.setColor(Color.darkGray);
+                if (thing instanceof Spike) {
+                    g.setColor(Color.red);
+                }
                 g.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
+
             }
 
-            g.setColor(Color.red);
+            g.setColor(Color.orange);
             for (AttackAbilities attack: game.getAttacks()) {
                 g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
