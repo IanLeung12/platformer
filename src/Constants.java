@@ -6,12 +6,17 @@ public class Constants {
     static int movementAbilityTotal = 500;
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;
+    static int slimeVision = 300;
+    static int slimeSpeed = 10;
 
+    public static int getSlimeSpeed() {
+        return slimeSpeed;
+    }
 
+    public static int getSlimeVision() {
 
-
-
-
+        return slimeVision;
+    }
 
     public static int getMovementAbilityTotal() {
         return movementAbilityTotal;

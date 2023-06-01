@@ -81,7 +81,6 @@ public class Player extends Moveable {
                 this.setXSpeed(Constants.getXSpeedAddition() * 20);
             }
 
-
             this.abilityTravelled[0] = 0;
             this.abilityTravelled[1] = 0;
             this.abilityActive = false;
@@ -116,6 +115,9 @@ public class Player extends Moveable {
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
                 this.setXSpeed(0); // Reverse the player's horizontal speed
+                if (this.getYSpeed() < 0) {
+                    this.setYSpeed(this.getYSpeed() + 3);
+                }
                 //this.setDirection(-this.direction);
                 this.setJumpNum(0);
                 this.dashUsed = false;
@@ -123,6 +125,9 @@ public class Player extends Moveable {
                 this.setLocation((int) (colliderRight), (int) this.getY());
                 this.setXSpeed(0); // Reverse the player's horizontal speed
                 //this.setDirection(-this.direction);
+                if (this.getYSpeed() < 0) {
+                    this.setYSpeed(this.getYSpeed() + 3);
+                }
                 this.setJumpNum(0);
                 this.dashUsed = false;
 

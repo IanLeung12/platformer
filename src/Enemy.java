@@ -19,8 +19,9 @@ abstract public class Enemy extends Moveable {
         super(x, y, width, height, health, totalHealth);
         this.damage = damage;
         this.goldReward = goldReward;
-
     }
+
+    public abstract void move(Player player);
 
 
     public double getDamage() {
