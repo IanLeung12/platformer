@@ -96,6 +96,18 @@ public class Player extends Moveable {
     public void fixCollision(GameObject otherObject) {
 
         if (otherObject instanceof Spike) {
+            double dX = (this.getCenterX() - otherObject.getCenterX());
+            double dY = (otherObject.getCenterY() - this.getCenterY());
+            System.out.println(dY);
+
+            double interval = 35/(Math.abs(dX) + Math.abs(dY));
+
+            this.setXSpeed((int) (dX * interval));
+            if (this.getXSpeed() < 10) {
+                this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
+            }
+            this.setYSpeed((int) (dY * interval));
+            System.out.println(this.getYSpeed());
 
         } else {
             double playerBottom = this.getY() + this.getHeight();
@@ -128,6 +140,7 @@ public class Player extends Moveable {
 
             }
         }
+
     }
 
     public void updatePlayer() {
