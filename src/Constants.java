@@ -2,7 +2,8 @@ public class Constants {
 
     static int gravity = 2;
     static int jumpBoost = 30;
-    static int dashX = 5;
+    static int dashX = 40;
+    static int movementAbilityTotal = 500;
     static int maxXSpeed = 25;
     static int XSpeedAddition = 2;
 
@@ -12,6 +13,9 @@ public class Constants {
 
 
 
+    public static int getMovementAbilityTotal() {
+        return movementAbilityTotal;
+    }
 
     public static int getJumpBoost() {
         return jumpBoost;
@@ -44,4 +48,8 @@ public class Constants {
     public static int getXSpeedAddition() {
         return XSpeedAddition;
     }
+
+
+
+
 }

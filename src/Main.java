@@ -6,12 +6,14 @@ public class Main {
         GameEngine map = new GameEngine();
         MapDisplay window = new MapDisplay(map);
 
+
         while (true) {
             window.refresh();
             map.moveAll();
             map.checkCollisions();
+
             window.refresh();
-            try  {Thread.sleep(15);} catch(Exception e){}
+            try  {Thread.sleep(17);} catch(Exception e){}
 
             // Move the picture
         }

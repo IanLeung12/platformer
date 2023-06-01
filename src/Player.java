@@ -13,13 +13,12 @@ public class Player extends Moveable {
     private boolean dashUnlocked;
     private boolean bashUnlocked;
     private AttackAbilities currentWeapon;
-    private int[] abilityDirection; // no initial value
+    private int[] abilityDirection = {0, 0};
+    private int[] abilityTravelled = {0, 0};
     private boolean abilityActive;
     private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
-
-    private int direction;
 
     public boolean isMovingRight() {
         return movingRight;
@@ -45,29 +44,34 @@ public class Player extends Moveable {
         this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
-        this.direction = 1;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
+
 
         // add a single weapon into weapons ===============================
 
     }
 
     public void move() {
+        if (abilityActive) {
+            this.movementAbility();
+        } else {
+            this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
 
-        this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
-        this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-
-        if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
-            this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
-        } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
-            this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
-        } else if (this.getXSpeed() != 0) {
-            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
-            if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
-                this.setXSpeed(0);
+            if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
+                this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
+            } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
+                this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
+            } else if (this.getXSpeed() != 0) {
+                this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+                if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
+                    this.setXSpeed(0);
+                }
             }
         }
+
+
 
 
     }
@@ -79,39 +83,66 @@ public class Player extends Moveable {
             this.setJumpNum(this.getJumpNum() + 1);
         }
 
+    }
+
+    public void movementAbility() {
+
+        if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
+            this.setLocation((int) (this.getX() + this.abilityDirection[0]), (int) (this.getY() + this.abilityDirection[1]));
+            this.abilityTravelled[0] += abilityDirection[0];
+            this.abilityTravelled[1] += abilityDirection[1];
+        } else if ((Math.abs(this.abilityTravelled[0]) >= Constants.getMovementAbilityTotal()) || (Math.abs(this.abilityTravelled[1]) >= Constants.getMovementAbilityTotal())) {
+
+            if (this.abilityTravelled[0] < 0) {
+                this.setXSpeed(Constants.getXSpeedAddition() * -20);
+
+            } else if (this.abilityTravelled[0] > 0) {
+                this.setXSpeed(Constants.getXSpeedAddition() * 20);
+
+            }
 
 
+            this.abilityTravelled[0] = 0;
+            this.abilityTravelled[1] = 0;
+            this.abilityActive = false;
+
+
+        }
 
 
 
     }
+
+
 
     public void fixCollision(GameObject otherObject) {
 
         double playerBottom = this.getY() + this.getHeight();
         double otherObjectTop = otherObject.getY();
         double playerRight = this.getX() + this.getWidth();
-        double colliderLeft = otherObject.getX();
+        double otherObjectLeft = otherObject.getX();
         double playerLeft = this.getX();
-        double colliderRight = otherObject.getX() + otherObject.getWidth();
+        double otherObjectRight = otherObject.getX() + otherObject.getWidth();
 
         if (playerBottom > otherObjectTop && this.getY() + this.getYSpeed() < otherObjectTop) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
             this.setJumpNum(0);
+            this.setAbilityActive(false);
         } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
             this.setYSpeed(0);
-        } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
-            this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
+        } else if (playerRight > otherObjectLeft && playerLeft < otherObjectLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
+            this.setLocation((int) (otherObjectLeft - this.getWidth()), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
-            this.setDirection(-this.direction);
             this.setJumpNum(0);
-        } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
-            this.setLocation((int) (colliderRight), (int) this.getY());
+            this.setAbilityActive(false);
+        } else if (this.getX() < otherObjectRight && playerRight > otherObjectRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
+            this.setLocation((int) (otherObjectRight), (int) this.getY());
             this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
-            this.setDirection(-this.direction);
             this.setJumpNum(0);
+            this.setAbilityActive(false);
+
         }
 
     }
@@ -122,18 +153,10 @@ public class Player extends Moveable {
 
     //collision(GameObject otherObject) {}
     // attack()
-    // jump()
     //dash(speedX, speedY)
     // bash()
 
 
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
 
     public double getTotalGold() {
         return totalGold;
@@ -219,8 +242,9 @@ public class Player extends Moveable {
         return abilityDirection;
     }
 
-    public void setAbilityDirection(int[] abilityDirection) {
-        this.abilityDirection = abilityDirection;
+    public void setAbilityDirection(int xChange, int yChange) {
+        this.abilityDirection[0] = xChange;
+        this.abilityDirection[1] = yChange;
     }
 
     public boolean isAbilityActive() {
@@ -245,5 +269,13 @@ public class Player extends Moveable {
 
     public void setWeapons(ArrayList<String> weapons) {
         Weapons = weapons;
+    }
+
+    public int[] getAbilityTravelled() {
+        return abilityTravelled;
+    }
+
+    public void setAbilityTravelled(int[] abilityTravelled) {
+        this.abilityTravelled = abilityTravelled;
     }
 }
