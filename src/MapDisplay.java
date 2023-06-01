@@ -48,7 +48,7 @@ public class MapDisplay extends JFrame{
         this.add(canvas);
 
         addKeyListener(new Keyboard());
-        
+
         // load the picture from a file
         this.setVisible(true);
 
@@ -78,7 +78,7 @@ public class MapDisplay extends JFrame{
         public void paintComponent(Graphics g){
             super.paintComponent(g); //required
 
-            g.setColor(Color.blue);
+            g.setColor(Color.darkGray);
             for (GameObject thing: game.getSurroundings()) {
                 g.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
             }
@@ -88,7 +88,7 @@ public class MapDisplay extends JFrame{
                 g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
 
-            g.setColor(Color.black);
+            g.setColor(Color.gray);
             Player player = game.getPlayer();
             g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
         } // paintComponent method end
@@ -105,26 +105,29 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyPressed(KeyEvent e) {
-             if (e.getKeyChar() == 'a') {
-                 player.setMovingLeft(true);
-                 player.setDirection(-1);
-                 System.out.println("a");
-             } else if (e.getKeyChar() == 'd') {
-                 player.setMovingRight(true);
-                 player.setDirection(1);
-                 System.out.println("d");
-             }
+            if (e.getKeyChar() == 'a') {
+                player.setMovingLeft(true);
+                player.setDirection(-1);
+                System.out.println("a");
+            } else if (e.getKeyChar() == 'd') {
+                player.setMovingRight(true);
+                player.setDirection(1);
+                System.out.println("d");
+            }
 
-             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-                 player.setAbilityActive(true);
-                 if (player.isMovingRight()) {
-                     player.setAbilityDirection(Constants.getDashX(), 0);
-                 } else {
-                     player.setAbilityDirection((Constants.getDashX() * (-1)), 0);
-                 }
-                 player.movementAbility();
-                 System.out.println(Constants.getDashX());
-             }
+            if (!player.isAbilityActive()) {
+                if (!player.isDashUsed()) {
+                    if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                        player.setAbilityActive(true);
+
+                        player.setAbilityDirection(Constants.getDashX() * player.getDirection(), 0);
+
+                        player.movementAbility();
+                        System.out.println(Constants.getDashX());
+                    }
+                }
+            }
+
         }
 
         /**
@@ -156,11 +159,11 @@ public class MapDisplay extends JFrame{
 
             } else if (e.getKeyChar() == 'f') {
                 System.out.println("f");
-               if (player.getDirection() == 1) {
-                   game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
-               } else {
-                   game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
-               }
+                if (player.getDirection() == 1) {
+                    game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
+                } else {
+                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
+                }
             }
         }
 

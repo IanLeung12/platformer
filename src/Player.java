@@ -11,32 +11,16 @@ public class Player extends Moveable {
     private int maxJumps;
     private boolean dashUnlocked;
     private boolean bashUnlocked;
+    private boolean dashUsed = false;
+    private boolean bashUsed = false;
     private AttackAbilities currentWeapon;
     private int[] abilityDirection = {0, 0};
     private int[] abilityTravelled = {0, 0};
-    private boolean abilityActive;
+    private boolean abilityActive = false;
     private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
-
     private int direction;
-
-    public boolean isMovingRight() {
-        return movingRight;
-    }
-
-    public void setMovingRight(boolean movingRight) {
-        this.movingRight = movingRight;
-    }
-
-    public boolean isMovingLeft() {
-        return movingLeft;
-    }
-
-    public void setMovingLeft(boolean movingLeft) {
-        this.movingLeft = movingLeft;
-    }
-
     private ArrayList<String> Weapons;
 
     Player(int x, int y, int width, int height, double health, double totalHealth) {
@@ -94,8 +78,10 @@ public class Player extends Moveable {
 
             } else if (this.abilityTravelled[0] > 0) {
                 this.setXSpeed(Constants.getXSpeedAddition() * 20);
-
             }
+
+            this.setDashUsed(true);
+            this.setBashUsed(true);
 
 
             this.abilityTravelled[0] = 0;
@@ -122,19 +108,23 @@ public class Player extends Moveable {
             this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
             this.setYSpeed(0); // Stop the player's vertical movement
             this.setJumpNum(0);
+            this.setDashUsed(false);
         } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
             this.setYSpeed(0);
         } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
-            this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
-            this.setDirection(-this.direction);
+            this.setXSpeed(0); // Reverse the player's horizontal speed
+            //this.setDirection(-this.direction);
             this.setJumpNum(0);
+            this.setDashUsed(false);
         } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
             this.setLocation((int) (colliderRight), (int) this.getY());
-            this.setXSpeed(-this.getXSpeed()); // Reverse the player's horizontal speed
-            this.setDirection(-this.direction);
+            this.setXSpeed(0); // Reverse the player's horizontal speed
+            //this.setDirection(-this.direction);
             this.setJumpNum(0);
+            this.setDashUsed(false);
+
         }
 
     }
@@ -282,4 +272,37 @@ public class Player extends Moveable {
     public void setAbilityTravelled(int[] abilityTravelled) {
         this.abilityTravelled = abilityTravelled;
     }
+
+    public boolean isDashUsed() {
+        return dashUsed;
+    }
+
+    public void setDashUsed(boolean dashUsed) {
+        this.dashUsed = dashUsed;
+    }
+
+    public boolean isBashUsed() {
+        return bashUsed;
+    }
+
+    public void setBashUsed(boolean bashUsed) {
+        this.bashUsed = bashUsed;
+    }
+
+    public boolean isMovingRight() {
+        return movingRight;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+    public boolean isMovingLeft() {
+        return movingLeft;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
 }

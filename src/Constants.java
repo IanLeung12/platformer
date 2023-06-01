@@ -2,7 +2,7 @@ public class Constants {
 
     static int gravity = 2;
     static int jumpBoost = 30;
-    static int dashX = 40;
+    static int dashX = 60;
     static int movementAbilityTotal = 500;
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;

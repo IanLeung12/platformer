@@ -9,6 +9,7 @@ public class Main {
 
         while (true) {
             window.refresh();
+
             map.moveAll();
             map.checkCollisions();
 
