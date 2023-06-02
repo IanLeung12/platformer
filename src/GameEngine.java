@@ -68,6 +68,13 @@ public class GameEngine {
         }
 
         for (Enemy enemy: enemies) {
+            if (player.getBounds().intersects(enemy)) {
+                player.fixCollision(enemy);
+                player.setAbilityActive(false);
+            }
+        }
+
+        for (Enemy enemy: enemies) {
 
             Slime slimeEnemy = (Slime) enemy;
 

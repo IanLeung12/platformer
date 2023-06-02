@@ -94,7 +94,7 @@ public class Player extends Moveable {
 
     public void fixCollision(GameObject otherObject) {
 
-        if (otherObject instanceof Spike) {
+        if ((otherObject instanceof Spike) || (otherObject instanceof Slime) ) {
             double dX = (this.getCenterX() - otherObject.getCenterX());
             double dY = (otherObject.getCenterY() - this.getCenterY());
 
