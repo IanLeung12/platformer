@@ -37,8 +37,8 @@ public class MapDisplay extends JFrame{
         super("Game Window");
         this.setSize(WIDTH,HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.cameraX = 0;
-        this.cameraY = 0;
+        cameraX = 0;
+        cameraY = 0;
 
         MapDisplay.game = game;
 
@@ -113,6 +113,7 @@ public class MapDisplay extends JFrame{
             g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
         } // paintComponent method end
     } // GraphicsPanel class end
+
 
 
     class Keyboard implements KeyListener {

@@ -21,9 +21,14 @@ public class GameEngine {
         surroundings.add(new Wall(200, 800, 500, 300));
         surroundings.add(new Wall(700, 300, 400, 1000));
         surroundings.add(new Wall(1300, 400, 500, 100));
-        surroundings.add(new Wall(-200, 1500, 2000, 200));
+        surroundings.add(new Wall(-200, 1500, 5500, 200));
         surroundings.add(new Wall(-200, -1000, 200, 3000));
-        surroundings.add(new Wall(1800, -1000, 200, 3000));
+        surroundings.add(new Wall(5000, -1000, 200, 3000));
+        surroundings.add(new Wall(1500, 400, 100, 400));
+        surroundings.add(new Wall(1500, 1000, 100, 400));
+        surroundings.add(new Wall(2000, 1100, 800, 200));
+        surroundings.add(new Spike(1490, 400, 10, 400, false));
+        surroundings.add(new Spike(1490, 1000, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
         enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
 
@@ -65,7 +70,6 @@ public class GameEngine {
                 player.fixCollision(object);
                 player.setAbilityActive(false);
             }
-        }
 
         for (Enemy enemy: enemies) {
             if (player.getBounds().intersects(enemy)) {
@@ -74,14 +78,10 @@ public class GameEngine {
             }
         }
 
-        for (Enemy enemy: enemies) {
-
-            Slime slimeEnemy = (Slime) enemy;
-
-            for (GameObject object: surroundings) {
+            for (Enemy enemy: enemies) {
+                Slime slimeEnemy = (Slime) enemy;
                 if (slimeEnemy.getBounds().intersects(object)) {
                     slimeEnemy.collision(object);
-
                 }
             }
         }

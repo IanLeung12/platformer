@@ -40,21 +40,22 @@ public class Player extends Moveable {
     public void move() {
         if (abilityActive) {
             this.movementAbility();
-        } else {
-            this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
-            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+        }
 
-            if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
-                this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
-            } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
-                this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
-            } else if (this.getXSpeed() != 0) {
-                this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
-                if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
-                    this.setXSpeed(0);
-                }
+        this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+        this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+
+        if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
+            this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
+        } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
+            this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
+        } else if (this.getXSpeed() != 0) {
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+            if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
+                this.setXSpeed(0);
             }
         }
+
     }
 
     public void jump() {
@@ -69,7 +70,8 @@ public class Player extends Moveable {
         this.dashUsed = true;
         this.setBashUsed(true);
         if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
-            this.setLocation((int) (this.getX() + this.abilityDirection[0]), (int) (this.getY() + this.abilityDirection[1]));
+            this.setXSpeed(this.abilityDirection[0]);
+            this.setYSpeed(this.abilityDirection[1]);
             this.abilityTravelled[0] += abilityDirection[0];
             this.abilityTravelled[1] += abilityDirection[1];
         } else if ((Math.abs(this.abilityTravelled[0]) >= Constants.getMovementAbilityTotal()) || (Math.abs(this.abilityTravelled[1]) >= Constants.getMovementAbilityTotal())) {
@@ -117,12 +119,12 @@ public class Player extends Moveable {
             double playerLeft = this.getX();
             double colliderRight = otherObject.getX() + otherObject.getWidth();
 
-            if ((playerBottom > otherObjectTop) && ((this.getY() + this.getYSpeed()) < otherObjectTop)) {
+            if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() > colliderLeft) && (playerLeft - this.getXSpeed() < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.setJumpNum(0);
                 this.dashUsed = false;
-            } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) {
+            } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() > colliderLeft) && (playerLeft - this.getXSpeed() < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(0);
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
