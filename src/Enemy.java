@@ -24,6 +24,16 @@ abstract public class Enemy extends Moveable {
     public abstract void move(Player player);
 
     public double distanceToPlayer(Player player) {
+//        double m, b;
+//
+//        m = ((player.getCenterY() - this.getCenterY()) / (player.getCenterX() - this.getCenterX()));
+//        b = ((this.getCenterY() / (m * this.getCenterX())));
+//
+//
+//
+//        this.get()
+//
+
 
         double xDistanceCenters = Math.abs(player.getCenterX() - this.getCenterX());
         double yDistanceCenters = Math.abs(player.getCenterY() - this.getCenterY());
