@@ -75,11 +75,10 @@ public class MapDisplay extends JFrame{
 
         }
 
-        /**
-        for (AttackAbilities attack: game.getAttacks()) {
-            attack.setLocation((int) (attack.getX() - cameraX + lastCamX), (int) (attack.getY() - cameraY + lastCamY));
+        for (Enemy enemy: game.getEnemies()) {
+            enemy.setLocation((int) (enemy.getX() - cameraX + lastCamX), (int) (enemy.getY() - cameraY + lastCamY));
 
-        }*/
+        }
 
         player.setLocation((int) (player.getX() - cameraX + lastCamX), (int) (player.getY() - cameraY + lastCamY));
     }
@@ -102,6 +101,11 @@ public class MapDisplay extends JFrame{
             g.setColor(Color.orange);
             for (AttackAbilities attack: game.getAttacks()) {
                 g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+            }
+
+            for (Enemy enemy: game.getEnemies()) {
+                g.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                g.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
             }
 
             g.setColor(Color.gray);

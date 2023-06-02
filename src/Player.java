@@ -117,7 +117,7 @@ public class Player extends Moveable {
             double playerLeft = this.getX();
             double colliderRight = otherObject.getX() + otherObject.getWidth();
 
-            if (playerBottom > otherObjectTop && this.getY() + this.getYSpeed() < otherObjectTop) {
+            if ((playerBottom > otherObjectTop) && ((this.getY() + this.getYSpeed()) < otherObjectTop)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.setJumpNum(0);
