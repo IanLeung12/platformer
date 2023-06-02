@@ -23,6 +23,19 @@ abstract public class Enemy extends Moveable {
 
     public abstract void move(Player player);
 
+    public double distanceToPlayer(Player player) {
+
+        double xDistanceCenters = Math.abs(player.getCenterX() - this.getCenterX());
+        double yDistanceCenters = Math.abs(player.getCenterY() - this.getCenterY());
+        double centerDistance = Math.sqrt(Math.pow(xDistanceCenters, 2) + Math.pow(yDistanceCenters, 2)); // ==================================================================================================================================
+
+        double currentToCenter = (getWidth() < getHeight()) ? (centerDistance * (xDistanceCenters - getWidth()) / xDistanceCenters / 2) : (centerDistance * (yDistanceCenters - getHeight()) / yDistanceCenters / 2);
+        double playerToCenter = (getWidth() < getHeight()) ? (centerDistance * (xDistanceCenters - player.getWidth()) / xDistanceCenters / 2) : (centerDistance * (yDistanceCenters - player.getHeight()) / yDistanceCenters / 2);
+
+        return currentToCenter + playerToCenter;
+
+    }
+
 
     public double getDamage() {
         return damage;
