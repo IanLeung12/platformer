@@ -22,24 +22,20 @@ public class Slime extends Enemy{
 
     public void move(Player player) {
 
-
-
-
-//       if ((Math.sqrt( (Math.pow((player.getCenterX() - this.getCenterX()), 2)) + (Math.pow((player.getCenterY() - this.getCenterY()), 2)))) > Constants.getSlimeVision()) {
-
+        System.out.println("move eemy ");
         if (Math.abs(this.getCenterX() - player.getCenterX()) > (Constants.getSlimeVision()) + (player.getWidth()/2) + (this.getWidth()/2)) {
             System.out.println("enemy without player in radius");
 
             this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
             this.setYSpeed(this.getYSpeed() - Constants.getGravity());
 
-       } else if (Math.abs(this.getCenterX() - player.getCenterX()) < (Constants.getSlimeVision()) + (player.getWidth()/2) + (this.getWidth()/2)) {
-           if (player.getCenterX() - this.getCenterX() > 0) {
-               this.setXSpeed(Constants.getSlimeSpeed());
-           } else if (player.getCenterX() - this.getCenterX() < 0) {
-               this.setXSpeed(Constants.getSlimeSpeed() * (-1));
-           }
-       }
+        } else if (Math.abs(this.getCenterX() - player.getCenterX()) < (Constants.getSlimeVision()) + (player.getWidth()/2) + (this.getWidth()/2)) {
+            if (player.getCenterX() - this.getCenterX() > 0) {
+                this.setXSpeed(Constants.getSlimeSpeed());
+            } else if (player.getCenterX() - this.getCenterX() < 0) {
+                this.setXSpeed(Constants.getSlimeSpeed() * (-1));
+            }
+        }
 
     }
 

@@ -25,16 +25,19 @@ public class GameEngine {
         surroundings.add(new Wall(-200, -1000, 200, 3000));
         surroundings.add(new Wall(1800, -1000, 200, 3000));
         surroundings.add(new Spike(700, -300, 200, 200, false));
-        enemies.add(new Slime(1400, 295, 100, 100, 100, 100, 10, 100));
+        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
 
     }
 
     public void spawnEnemies() {}
     public void spawnProjectile() {}
     public void moveAll() {
+
         player.move();
-        for (int i = attacks.size() - 1; i >= 0; i --) {
-            Enemy enemy = enemies.get(i);
+
+        for (int i = enemies.size() - 1; i >= 0; i --) {
+
+            Enemy enemy = (Enemy) enemies.get(i);
 
             if (enemy.getHealth() > 0) {
                 enemy.move(player);
@@ -66,10 +69,13 @@ public class GameEngine {
 
         for (Enemy enemy: enemies) {
 
+            System.out.println("1");
             Slime slimeEnemy = (Slime) enemy;
 
             for (GameObject object: surroundings) {
+                System.out.println("2");
                 if (slimeEnemy.getBounds().intersects(object)) {
+                    System.out.println("3");
                     slimeEnemy.collision(object);
 
                 }
