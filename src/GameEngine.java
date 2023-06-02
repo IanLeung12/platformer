@@ -69,13 +69,10 @@ public class GameEngine {
 
         for (Enemy enemy: enemies) {
 
-            System.out.println("1");
             Slime slimeEnemy = (Slime) enemy;
 
             for (GameObject object: surroundings) {
-                System.out.println("2");
                 if (slimeEnemy.getBounds().intersects(object)) {
-                    System.out.println("3");
                     slimeEnemy.collision(object);
 
                 }

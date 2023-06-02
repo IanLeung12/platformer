@@ -22,9 +22,8 @@ public class Slime extends Enemy{
 
     public void move(Player player) {
 
-        System.out.println("move eemy ");
         if (Math.abs(this.getCenterX() - player.getCenterX()) > (Constants.getSlimeVision()) + (player.getWidth()/2) + (this.getWidth()/2)) {
-            System.out.println("enemy without player in radius");
+            //System.out.println("enemy without player in radius");
 
             this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
             this.setYSpeed(this.getYSpeed() - Constants.getGravity());
@@ -56,6 +55,7 @@ public class Slime extends Enemy{
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight()) { // bottom
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(0);
+                System.out.println("enemy hit bottom");
 
 //                double bottomRightX = (int) (this.getX() + this.getWidth());
 //                double bottomRightY = (int) (this.getY() + this.getHealth());
