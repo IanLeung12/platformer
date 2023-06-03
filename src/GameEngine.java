@@ -31,6 +31,8 @@ public class GameEngine {
         surroundings.add(new Spike(1490, 1000, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
         enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
+        enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
+
 
     }
 
