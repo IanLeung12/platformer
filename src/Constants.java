@@ -7,7 +7,7 @@ public class Constants {
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;
     static int slimeVision = 300;
-    static int slimeSpeed = 10;
+    static int slimeSpeed = 2;
 
     public static int getSlimeSpeed() {
         return slimeSpeed;
