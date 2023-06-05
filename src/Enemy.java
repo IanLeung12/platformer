@@ -37,8 +37,8 @@ abstract public class Enemy extends Moveable {//
         double playerYpointIntersection = 0;
         double playerXpointIntersection = 0;
 
-        String toPlayerDirection = "";
-        String toEnemyDirection = "";
+        String playerPosition = "";
+        String enemyPosition = "";
 
         double enemyY = 0;
         double playerY = 0;
@@ -72,33 +72,37 @@ abstract public class Enemy extends Moveable {//
         }
 
 
-
         if (enemyHorizontalExit) {
-            if (player.getX() - this.getX() <= 0) {
-                toPlayerDirection = "left";
-                toEnemyDirection = "right";
-            } else {
-                toPlayerDirection = "right";
-                toEnemyDirection = "left";
-            }
-        } else if (enemyVerticleExit) {
-            if (player.getY() - this.getY() >= 0) {
-                toPlayerDirection = "down";
-                toEnemyDirection = "up";
-            } else {
-                toPlayerDirection = "up";
-                toEnemyDirection = "down";
+            if (player.getX() - this.getX() >= 0) {
+                playerPosition = "right";
+                enemyPosition = "left";
+            } else if (player.getX() - this.getX() < 0) {
+                playerPosition = "left";
+                enemyPosition = "right";
+
             }
 
+
+        } else if (enemyVerticleExit) {
+
+            if (player.getY() - this.getY() >= 0) {
+                playerPosition = "down";
+                enemyPosition = "up";
+            } else if (player.getY() - this.getY() < 0) {
+                playerPosition = "up";
+                enemyPosition = "down";
+            }
         }
+
+
 
         if (enemyVerticleExit) {
 
-            if (toPlayerDirection.equals("up")) {
+            if (playerPosition.equals("up")) {
                 enemyYpointIntersection = (this.getY());
                 enemyXpointIntersection = ((enemyYpointIntersection - b) / m);
 
-            } else if (toPlayerDirection.equals("down")) {
+            } else if (playerPosition.equals("down")) {
                 enemyYpointIntersection = (this.getY() + this.getHeight());
                 enemyXpointIntersection = ((enemyYpointIntersection - b) / m);
 
@@ -106,11 +110,11 @@ abstract public class Enemy extends Moveable {//
 
         } else if (enemyHorizontalExit) {
 
-            if (toPlayerDirection.equals("right")) {
+            if (playerPosition.equals("right")) {
                 enemyXpointIntersection = (this.getX() + this.getWidth());
                 enemyYpointIntersection = ((m * enemyXpointIntersection) + b);
 
-            } else if (toPlayerDirection.equals("left")) {
+            } else if (playerPosition.equals("left")) {
                 enemyXpointIntersection = (this.getX());
                 enemyYpointIntersection = ((m * enemyXpointIntersection) + b);
             }
@@ -120,11 +124,11 @@ abstract public class Enemy extends Moveable {//
 
         if (playerVerticleExit) {
 
-            if (toEnemyDirection.equals("up")) {
+            if (enemyPosition.equals("up")) {
                 playerYpointIntersection = (player.getY());
                 playerXpointIntersection = ((playerYpointIntersection - b) / m);
 
-            } else if (toEnemyDirection.equals("down")) {
+            } else if (enemyPosition.equals("down")) {
                 playerYpointIntersection = (player.getY() + player.getHeight());
                 playerXpointIntersection = ((playerYpointIntersection - b) / m);
 
@@ -132,11 +136,11 @@ abstract public class Enemy extends Moveable {//
 
         } else if (playerHorizontalExit) {
 
-            if (toEnemyDirection.equals("right")) {
+            if (enemyPosition.equals("right")) {
                 playerXpointIntersection = (player.getX() + player.getWidth());
                 playerYpointIntersection = ((m * playerXpointIntersection) + b);
 
-            } else if (toEnemyDirection.equals("left")) {
+            } else if (enemyPosition.equals("left")) {
                 playerXpointIntersection = (player.getX());
                 playerYpointIntersection = ((m * playerXpointIntersection) + b);
             }
@@ -148,8 +152,20 @@ abstract public class Enemy extends Moveable {//
     }
 
     public void knockback(Attacks attack) {
-        this.setXSpeed(35 * attack.getDirection());
         this.setYSpeed(10);
+    }
+
+    public boolean onEdge(GameObject otherObject) {
+        double bottomRightX = (int) (this.getX() + this.getWidth());
+        double bottomRightY = (int) (this.getY() + this.getHeight());
+        double bottomLeftY = (int) (this.getY() + this.getHeight());
+
+        if (((otherObject.contains(bottomRightX, bottomRightY)) && (!otherObject.contains(this.getX(), bottomLeftY))) || ((!otherObject.contains(bottomRightX, bottomRightY)) && (otherObject.contains(this.getX(), bottomLeftY)))) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 

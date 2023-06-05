@@ -38,6 +38,7 @@ public class Player extends Moveable {//
     }
 
     public void move() {
+
         if (abilityActive) {
             this.movementAbility();
         }
@@ -64,11 +65,14 @@ public class Player extends Moveable {//
             this.setYSpeed(Constants.getJumpBoost());
             this.setJumpNum(this.getJumpNum() + 1);
         }
+
     }
 
     public void movementAbility() {
+
         this.dashUsed = true;
         this.setBashUsed(true);
+
         if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
             this.setXSpeed(this.abilityDirection[0]);
             this.setYSpeed(this.abilityDirection[1]);
@@ -94,6 +98,7 @@ public class Player extends Moveable {//
     public void fixCollision(GameObject otherObject) {
 
         if ((otherObject instanceof Spike) || (otherObject instanceof Enemy) ) {
+
             double dX = (this.getCenterX() - otherObject.getCenterX());
             double dY = (otherObject.getCenterY() - this.getCenterY());
 
@@ -120,22 +125,23 @@ public class Player extends Moveable {//
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.setJumpNum(0);
                 this.dashUsed = false;
+
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(0);
+
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
                 this.setXSpeed(0); // Reverse the player's horizontal speed
                 if (this.getYSpeed() < 0) {
                     this.setYSpeed(this.getYSpeed() + 3);
                 }
-                //this.setDirection(-this.direction);
                 this.setJumpNum(0);
                 this.dashUsed = false;
+
             } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderRight), (int) this.getY());
                 this.setXSpeed(0); // Reverse the player's horizontal speed
-                //this.setDirection(-this.direction);
                 if (this.getYSpeed() < 0) {
                     this.setYSpeed(this.getYSpeed() + 3);
                 }

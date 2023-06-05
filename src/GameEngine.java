@@ -31,7 +31,7 @@ public class GameEngine {
         surroundings.add(new Spike(1490, 1090, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
         enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
-        enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
+        //enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
     }
 
     public void spawnEnemies() {}
@@ -80,6 +80,7 @@ public class GameEngine {
                 if (slimeEnemy.getBounds().intersects(object)) {
                     slimeEnemy.collision(object);
                 }
+
                 if (player.getBounds().intersects(enemy)) {
                     player.fixCollision(enemy);
                     player.setAbilityActive(false);
