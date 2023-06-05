@@ -8,6 +8,8 @@ import java.awt.*;
 // the following imports are needed for pictures
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -48,6 +50,7 @@ public class MapDisplay extends JFrame{//
         this.add(canvas);
 
         addKeyListener(new Keyboard());
+        addMouseListener(new Mouse());
 
         // load the picture from a file
         this.setVisible(true);
@@ -116,6 +119,60 @@ public class MapDisplay extends JFrame{//
 
 
 
+    class Mouse implements MouseListener {
+
+        /**
+         * Invoked when the mouse button has been clicked (pressed
+         * and released) on a component.
+         *
+         * @param e
+         */
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY(), e.getPoint().x, e.getPoint().y, true));
+        }
+
+        /**
+         * Invoked when a mouse button has been pressed on a component.
+         *
+         * @param e
+         */
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        /**
+         * Invoked when a mouse button has been released on a component.
+         *
+         * @param e
+         */
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        /**
+         * Invoked when the mouse enters a component.
+         *
+         * @param e
+         */
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        /**
+         * Invoked when the mouse exits a component.
+         *
+         * @param e
+         */
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
     class Keyboard implements KeyListener {
 
         /**
@@ -182,6 +239,13 @@ public class MapDisplay extends JFrame{//
                     game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), 1, true));
                 } else {
                     game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), -1, true));
+                }
+            }
+            if (key == 'r') {
+                if (player.getDirection() == 1) {
+                    game.getAttacks().add(new Hammer((int) (player.getX() + player.getWidth()) + 50, (int) (player.getY() - 50), 1, true));
+                } else {
+                    game.getAttacks().add(new Hammer((int) (player.getX() - 300), (int) (player.getY() - 50), -1, true));
                 }
             }
         }

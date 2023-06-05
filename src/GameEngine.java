@@ -59,6 +59,10 @@ public class GameEngine {
                 attacks.remove(i);
             }
 
+            if (attack instanceof Arrow) {
+                ((Arrow) attack).move();
+            }
+
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
         }
 
