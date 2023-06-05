@@ -99,7 +99,7 @@ public class MapDisplay extends JFrame{
             }
 
             g.setColor(Color.orange);
-            for (AttackAbilities attack: game.getAttacks()) {
+            for (Attacks attack: game.getAttacks()) {
                 g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
 
@@ -179,9 +179,9 @@ public class MapDisplay extends JFrame{
             }
             if (key == 'f') {
                 if (player.getDirection() == 1) {
-                    game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
+                    game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), 1, true));
                 } else {
-                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), true));
+                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), -1, true));
                 }
             }
         }

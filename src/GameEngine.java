@@ -4,7 +4,7 @@ public class GameEngine {
 
     private Player player;
     private ArrayList<Wall> surroundings;
-    private ArrayList<AttackAbilities> attacks;
+    private ArrayList<Attacks> attacks;
     private boolean abilityActive;
     private boolean attackActive;
     private ArrayList<Enemy> enemies;
@@ -53,7 +53,7 @@ public class GameEngine {
         }
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
-            AttackAbilities attack = attacks.get(i);
+            Attacks attack = attacks.get(i);
 
             if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
                 attacks.remove(i);
@@ -72,16 +72,21 @@ public class GameEngine {
             }
 
             for (Enemy enemy: enemies) {
+                Slime slimeEnemy = (Slime) enemy;
+                if (slimeEnemy.getBounds().intersects(object)) {
+                    slimeEnemy.collision(object);
+                }
                 if (player.getBounds().intersects(enemy)) {
                     player.fixCollision(enemy);
                     player.setAbilityActive(false);
                 }
             }
+        }
 
+        for (Attacks attack: this.attacks) {
             for (Enemy enemy: enemies) {
-                Slime slimeEnemy = (Slime) enemy;
-                if (slimeEnemy.getBounds().intersects(object)) {
-                    slimeEnemy.collision(object);
+                if (enemy.intersects(attack) && attack.isFriendly()) {
+                    enemy.knockback(attack);
                 }
             }
         }
@@ -103,7 +108,7 @@ public class GameEngine {
         this.player = player;
     }
 
-    public ArrayList<AttackAbilities> getAttacks() {
+    public ArrayList<Attacks> getAttacks() {
         return attacks;
     }
 
@@ -115,7 +120,7 @@ public class GameEngine {
         this.enemies = enemies;
     }
 
-    public void setAttacks(ArrayList<AttackAbilities> attacks) {
+    public void setAttacks(ArrayList<Attacks> attacks) {
         this.attacks = attacks;
     }
 

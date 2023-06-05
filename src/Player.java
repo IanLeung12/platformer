@@ -13,7 +13,7 @@ public class Player extends Moveable {
     private boolean bashUnlocked;
     private boolean dashUsed = false;
     private boolean bashUsed = false;
-    private AttackAbilities currentWeapon;
+    private Attacks currentWeapon;
     private int[] abilityDirection = {0, 0};
     private int[] abilityTravelled = {0, 0};
     private boolean abilityActive = false;
@@ -236,14 +236,6 @@ public class Player extends Moveable {
 
     public void setBashUnlocked(boolean bashUnlocked) {
         this.bashUnlocked = bashUnlocked;
-    }
-
-    public AttackAbilities getCurrentWeapon() {
-        return currentWeapon;
-    }
-
-    public void setCurrentWeapon(AttackAbilities currentWeapon) {
-        this.currentWeapon = currentWeapon;
     }
 
     public int[]getAbilityDirection() {

@@ -159,6 +159,11 @@ abstract public class Enemy extends Moveable {
 
     }
 
+    public void knockback(Attacks attack) {
+        this.setXSpeed(35 * attack.getDirection());
+        this.setYSpeed(10);
+    }
+
 
     public double getDamage() {
         return damage;
