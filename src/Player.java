@@ -42,7 +42,7 @@ public class Player extends Moveable {
             this.movementAbility();
         }
 
-        this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+        this.translate(this.getXSpeed(),  -this.getYSpeed());
         this.setYSpeed(this.getYSpeed() - Constants.getGravity());
 
         if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
@@ -89,14 +89,11 @@ public class Player extends Moveable {
 
 
         }
-
-
-
     }
 
     public void fixCollision(GameObject otherObject) {
 
-        if ((otherObject instanceof Spike) || (otherObject instanceof Slime) ) {
+        if ((otherObject instanceof Spike) || (otherObject instanceof Enemy) ) {
             double dX = (this.getCenterX() - otherObject.getCenterX());
             double dY = (otherObject.getCenterY() - this.getCenterY());
 
@@ -109,7 +106,6 @@ public class Player extends Moveable {
                 this.setXSpeed(-20 * this.getDirection());
             }
             this.setYSpeed((int) (dY * interval));
-            System.out.println(this.getYSpeed());
 
         } else {
             double playerBottom = this.getY() + this.getHeight();
@@ -119,12 +115,12 @@ public class Player extends Moveable {
             double playerLeft = this.getX();
             double colliderRight = otherObject.getX() + otherObject.getWidth();
 
-            if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() > colliderLeft) && (playerLeft - this.getXSpeed() < colliderRight)) {
+            if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.setJumpNum(0);
                 this.dashUsed = false;
-            } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() > colliderLeft) && (playerLeft - this.getXSpeed() < colliderRight)) {
+            } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(0);
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {

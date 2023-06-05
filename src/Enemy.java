@@ -99,8 +99,6 @@ abstract public class Enemy extends Moveable {
                 playerDown = true;
             }
 
-        } else {
-            System.out.println("error in things ");
         }
 
 

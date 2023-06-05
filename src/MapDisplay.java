@@ -126,10 +126,11 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyChar() == 'a') {
+            char key = Character.toLowerCase(e.getKeyChar());
+            if (key == 'a') {
                 player.setMovingLeft(true);
                 player.setDirection(-1);
-            } else if (e.getKeyChar() == 'd') {
+            } else if (key == 'd') {
                 player.setMovingRight(true);
                 player.setDirection(1);
             }
@@ -156,9 +157,10 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyReleased(KeyEvent e) {
-            if (e.getKeyChar() == 'a') {
+            char key = Character.toLowerCase(e.getKeyChar());
+            if (key == 'a') {
                 player.setMovingLeft(false);
-            } else if (e.getKeyChar() == 'd') {
+            } else if (key == 'd') {
                 player.setMovingRight(false);
             }
         }
@@ -171,10 +173,11 @@ public class MapDisplay extends JFrame{
          * @param e
          */
         public void keyTyped(KeyEvent e) {
-            if (e.getKeyChar() == ' ') {
+            char key = Character.toLowerCase(e.getKeyChar());
+            if (key == ' ') {
                 player.jump();
             }
-            if (e.getKeyChar() == 'f') {
+            if (key == 'f') {
                 if (player.getDirection() == 1) {
                     game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), true));
                 } else {

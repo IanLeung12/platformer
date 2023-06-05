@@ -25,15 +25,13 @@ public class GameEngine {
         surroundings.add(new Wall(-200, -1000, 200, 3000));
         surroundings.add(new Wall(5000, -1000, 200, 3000));
         surroundings.add(new Wall(1500, 400, 100, 400));
-        surroundings.add(new Wall(1500, 1000, 100, 400));
+        surroundings.add(new Wall(1500, 1090, 100, 400));
         surroundings.add(new Wall(2000, 1100, 800, 200));
         surroundings.add(new Spike(1490, 400, 10, 400, false));
-        surroundings.add(new Spike(1490, 1000, 10, 400, false));
+        surroundings.add(new Spike(1490, 1090, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
         enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
         enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
-
-
     }
 
     public void spawnEnemies() {}
@@ -73,12 +71,12 @@ public class GameEngine {
                 player.setAbilityActive(false);
             }
 
-        for (Enemy enemy: enemies) {
-            if (player.getBounds().intersects(enemy)) {
-                player.fixCollision(enemy);
-                player.setAbilityActive(false);
+            for (Enemy enemy: enemies) {
+                if (player.getBounds().intersects(enemy)) {
+                    player.fixCollision(enemy);
+                    player.setAbilityActive(false);
+                }
             }
-        }
 
             for (Enemy enemy: enemies) {
                 Slime slimeEnemy = (Slime) enemy;
