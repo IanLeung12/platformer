@@ -2,7 +2,7 @@
 
 This work in progress is a game inspired by ori and the will of the wisps*
 
-By Me and Michael Khart for ICS3U6 final project
+By Me and Razor177 for ICS3U6 final project
 
 current controls:
 
