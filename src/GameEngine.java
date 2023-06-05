@@ -11,7 +11,7 @@ public class GameEngine {
 
     // private Shop shop;                       not created yet
     private int frameNum;
-
+//
 
     GameEngine() {
         this.player = new Player(600, 500, 75, 150, 100, 100);

@@ -1,4 +1,4 @@
-abstract public class Attacks extends GameObject{
+abstract public class Attacks extends GameObject{//
 
     private double attackDamage;
     private boolean isFriendly;

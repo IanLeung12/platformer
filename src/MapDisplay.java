@@ -13,7 +13,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-public class MapDisplay extends JFrame{
+public class MapDisplay extends JFrame{//
     // Game Window properties
     static GraphicsPanel canvas;
     static final int WIDTH = 1920;

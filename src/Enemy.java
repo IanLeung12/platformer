@@ -1,4 +1,4 @@
-abstract public class Enemy extends Moveable {
+abstract public class Enemy extends Moveable {//
 
     private double damage;
     private int goldReward;

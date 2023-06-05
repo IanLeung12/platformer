@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Player extends Moveable {
+public class Player extends Moveable {//
 
     private double totalGold;
     private double energy;

@@ -1,4 +1,4 @@
-public class Slime extends Enemy{
+public class Slime extends Enemy{//
 
 
 
