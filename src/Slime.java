@@ -29,10 +29,12 @@ public class Slime extends Enemy{
 
         } else if (this.distanceToPlayer(player) <= Constants.getSlimeVision()) {
 
-            if (player.getCenterX() - this.getCenterX() > 0) {
-                this.setXSpeed(Constants.getSlimeSpeed());
-            } else if (player.getCenterX() - this.getCenterX() < 0) {
-                this.setXSpeed(Constants.getSlimeSpeed() * (-1));
+            if (player.getCenterX() - this.getCenterX() > 0 && this.getXSpeed() < Constants.getSlimeSpeed()) {
+                this.setXSpeed(this.getXSpeed() + 1);
+            } else if (player.getCenterX() - this.getCenterX() < 0 && (this.getXSpeed() > Constants.getSlimeSpeed())) {
+                this.setXSpeed(this.getXSpeed() - 1);
+            } else {
+                this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed() + 1));
             }
 
             this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
