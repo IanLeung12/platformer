@@ -14,10 +14,12 @@ public class GameEngine {
     private int frameNum;
     private ArrayList<GameObject> proximity;
 
+    boolean paused = false;
+
 //
 
     GameEngine() {
-        this.player = new Player(600, 500, 75, 150, 100, 100);
+        this.player = new Player(500, 900, 75, 150, 100, 100);
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -57,7 +59,9 @@ public class GameEngine {
 
         updateProximity(proximity, surroundings, enemies);
 
-        player.move();
+        if (!paused) {
+            player.move();
+        }
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
 
@@ -117,7 +121,7 @@ public class GameEngine {
         for (Attacks attack: this.attacks) {
             for (Enemy enemy: enemies) {
                 if (enemy.intersects(attack) && attack.isFriendly()) {
-                    enemy.knockback(attack);
+                    enemy.attackBack(attack);
                 }
             }
         }
@@ -129,7 +133,6 @@ public class GameEngine {
     // print writter
     // mouse listener stuff
     // ================================================================
-
 
     public Player getPlayer() {
         return player;
