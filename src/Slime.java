@@ -27,8 +27,8 @@ public class Slime extends Enemy{//
         } else {
             if (this.distanceToPlayer(player) > Constants.getSlimeVision()) {
 
-                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
                 this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
 
             } else if (this.distanceToPlayer(player) <= Constants.getSlimeVision()) {
 
@@ -38,8 +38,8 @@ public class Slime extends Enemy{//
                     this.setXSpeed(Constants.getSlimeSpeed() * (-1));
                 }
 
-                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
                 this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
 
 
             }
@@ -70,7 +70,7 @@ public class Slime extends Enemy{//
                 if (onEdge(otherObject)) {
 
                     this.setXSpeed(this.getXSpeed() * -1);
-                    this.setLocation((int) this.getX() + (2 * this.getXSpeed()), (int) this.getY() - this.getYSpeed());
+                    this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
                 }
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
