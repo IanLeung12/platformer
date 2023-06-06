@@ -1,4 +1,4 @@
-abstract public class Attacks extends GameObject{//
+abstract public class Attack extends GameObject{//
 
     private double attackDamage;
     private boolean isFriendly;
@@ -7,7 +7,7 @@ abstract public class Attacks extends GameObject{//
 
     private final int direction;
 
-    Attacks(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly,int maxDuration) {
+    Attack(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly,int maxDuration) {
         super(x, y, width, height);
         this.attackDamage = attackDamage;
         this.direction = direction;

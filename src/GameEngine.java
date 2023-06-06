@@ -5,7 +5,7 @@ public class GameEngine {
 
     private Player player;
     private ArrayList<Wall> surroundings;
-    private ArrayList<Attacks> attacks;
+    private ArrayList<Attack> attacks;
     private boolean abilityActive;
     private boolean attackActive;
     private ArrayList<Enemy> enemies;
@@ -36,9 +36,9 @@ public class GameEngine {
         surroundings.add(new Spike(1490, 400, 10, 400, false));
         surroundings.add(new Spike(1490, 1090, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
-        surroundings.add(new Wall(3000, 1000, 300, 500));
-        surroundings.add(new Wall(4000, 1000, 300, 500));
-        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
+        surroundings.add(new Wall(3000, 1000, 100, 500));
+        surroundings.add(new Wall(4000, 1000, 100, 500));
+        //enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
         enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
     }
 
@@ -78,14 +78,14 @@ public class GameEngine {
         }
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
-            Attacks attack = attacks.get(i);
+            Attack attack = attacks.get(i);
 
             if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
                 attacks.remove(i);
             }
 
-            if (attack instanceof Arrow) {
-                ((Arrow) attack).move();
+            if (attack instanceof Projectile) {
+                ((Projectile) attack).move();
             }
 
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
@@ -118,7 +118,7 @@ public class GameEngine {
             }
         }
 
-        for (Attacks attack: this.attacks) {
+        for (Attack attack: this.attacks) {
             for (Enemy enemy: enemies) {
                 if (enemy.intersects(attack) && attack.isFriendly()) {
                     enemy.knockback(attack);
@@ -142,7 +142,7 @@ public class GameEngine {
         this.player = player;
     }
 
-    public ArrayList<Attacks> getAttacks() {
+    public ArrayList<Attack> getAttacks() {
         return attacks;
     }
 
@@ -154,7 +154,7 @@ public class GameEngine {
         this.enemies = enemies;
     }
 
-    public void setAttacks(ArrayList<Attacks> attacks) {
+    public void setAttacks(ArrayList<Attack> attacks) {
         this.attacks = attacks;
     }
 

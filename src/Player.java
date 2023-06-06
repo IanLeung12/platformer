@@ -13,7 +13,7 @@ public class Player extends Moveable {//
     private boolean bashUnlocked;
     private boolean dashUsed = false;
     private boolean bashUsed = false;
-    private Attacks currentWeapon;
+    private String currentWeapon = "Sword";
     private int[] abilityDirection = {0, 0};
     private int[] abilityTravelled = {0, 0};
     private boolean abilityActive = false;
@@ -30,6 +30,7 @@ public class Player extends Moveable {//
         this.maxJumps = 2;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
+
 
         // add a single weapon into weapons ===============================
 
@@ -149,6 +150,14 @@ public class Player extends Moveable {//
     //dash(speedX, speedY)
     // bash()
 
+
+    public String getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+    public void setCurrentWeapon(String currentWeapon) {
+        this.currentWeapon = currentWeapon;
+    }
 
     public double getTotalGold() {
         return totalGold;

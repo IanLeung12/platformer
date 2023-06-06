@@ -1,17 +1,16 @@
-public class Arrow extends Attacks{
+public class Arrow extends Projectile{
 
-    private int xSpeed, ySpeed;
-    Arrow(int x, int y, int targetX, int targetY, boolean isFriendly) {
-        super(x, y, 100, 50, 20, targetX > x ? 1 : -1, isFriendly, 100);
+    Arrow(int x, int y, int targetX, int targetY, int direction, boolean isFriendly) {
+        super(x, y, 100, 50, 20, direction, isFriendly, 100);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
         double interval = 40/(Math.abs(dX) + Math.abs(dY) + 1);
-        this.xSpeed = (int) (dX * interval);
-        this.ySpeed = (int) ((dY * interval) + (xSpeed == 0 ? 0 : dX/xSpeed/2));
+        this.setXSpeed((int) (dX * interval));
+        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? 0 : dX/this.getXSpeed()/2)));
     }
 
     public void move() {
-        this.translate(xSpeed, -ySpeed);
-        this.ySpeed --;
+        super.move();
+        this.setYSpeed(this.getYSpeed() - 1);
     }
 }

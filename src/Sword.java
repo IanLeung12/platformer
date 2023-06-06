@@ -1,4 +1,4 @@
-public class Sword extends Attacks{//
+public class Sword extends Attack{//
 
 
     // sword

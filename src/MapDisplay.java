@@ -83,15 +83,11 @@ public class MapDisplay extends JFrame{//
 
         }
 
-        for (Attacks attack: game.getAttacks()) {
+        for (Attack attack: game.getAttacks()) {
             if (attack instanceof Arrow) {
                 attack.translate(dX, dY);
-            } else {
-                attack.translate((int) (player.getX() - 650), (int) (player.getY() - 500));
             }
-
         }
-
     }
 
     static class GraphicsPanel extends JPanel{
@@ -110,7 +106,7 @@ public class MapDisplay extends JFrame{//
             }
 
             g.setColor(Color.GREEN);
-            for (Attacks attack: game.getAttacks()) {
+            for (Attack attack: game.getAttacks()) {
                 g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
 
@@ -159,7 +155,28 @@ public class MapDisplay extends JFrame{//
         @Override
         public void mouseReleased(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25, e.getX() + cameraX, e.getY() + cameraY, true));
+                int direction = e.getX() > player.getCenterX() ? 1 : -1;
+
+                System.out.println(player.getCurrentWeapon());
+                switch (player.getCurrentWeapon()) {
+                    case "Sword":
+                        game.getAttacks().add(new Sword((int) (player.getX() + (direction == 1 ? player.getWidth() : -150)),
+                                (int) (player.getY() - 50), direction, true));
+                        break;
+                    case "Hammer":
+                        game.getAttacks().add(new Hammer((int) (player.getX() + (direction == 1 ? player.getWidth() + 50 : -300)),
+                                (int) (player.getY() - 50), 1, true));
+                        break;
+                    case "Bow":
+                        game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
+                                e.getX() + cameraX, e.getY() + cameraY, direction, true));
+                        break;
+                    case "Rocket":
+                        game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
+                                e.getX() + cameraX, e.getY() + cameraY, direction, true));
+                        break;
+                }
+
             } else if (e.getButton() == MouseEvent.BUTTON3) {
                 // @Razor177 put bash here. TargetX = e.getX() etc.
             }
@@ -256,19 +273,21 @@ public class MapDisplay extends JFrame{//
             if (key == ' ') {
                 player.jump();
             }
-            if (key == 'f') {
-                if (player.getDirection() == 1) {
-                    game.getAttacks().add(new Sword((int) (player.getX() + player.getWidth()), (int) (player.getY() - 50), 1, true));
-                } else {
-                    game.getAttacks().add(new Sword((int) (player.getX() - 150), (int) (player.getY() - 50), -1, true));
-                }
-            }
-            if (key == 'r') {
-                if (player.getDirection() == 1) {
-                    game.getAttacks().add(new Hammer((int) (player.getX() + player.getWidth()) + 50, (int) (player.getY() - 50), 1, true));
-                } else {
-                    game.getAttacks().add(new Hammer((int) (player.getX() - 300), (int) (player.getY() - 50), -1, true));
-                }
+
+            System.out.println(key);
+            switch (key) {
+                case '1':
+                    player.setCurrentWeapon("Sword");
+                    break;
+                case '2':
+                    player.setCurrentWeapon("Hammer");
+                    break;
+                case '3':
+                    player.setCurrentWeapon("Bow");
+                    break;
+                case '4':
+                    player.setCurrentWeapon("Rocket");
+                    break;
             }
         }
 
