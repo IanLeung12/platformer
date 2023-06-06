@@ -21,9 +21,9 @@ public class MapDisplay extends JFrame{//
     static final int WIDTH = 1920;
     static final int HEIGHT = 1080;
 
-    static int cameraX;
+    static int cameraX = 0;
 
-    static int cameraY;
+    static int cameraY = 0;
 
     static int lastCamX;
 
@@ -39,8 +39,6 @@ public class MapDisplay extends JFrame{//
         super("Game Window");
         this.setSize(WIDTH,HEIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        cameraX = 0;
-        cameraY = 0;
 
         MapDisplay.game = game;
 
@@ -65,25 +63,35 @@ public class MapDisplay extends JFrame{//
         int dX = lastCamX - cameraX;
         int dY = lastCamY - cameraY;
 
-        if (Math.abs(dX) > 25) {
-            cameraX = lastCamX - dX/Math.abs(dX) * 25;
+        if (Math.abs(dX) > 26) {
+            dX = dX/Math.abs(dX) * 26;
         }
 
-        if (Math.abs(dY) > 25) {
-            cameraY = lastCamY - dY/Math.abs(dY) * 25;
+        if (Math.abs(dY) > 26) {
+            dY = dY/Math.abs(dY) * 26;
         }
+
+        player.translate(dX, dY);
 
         for (GameObject surrounding: game.getSurroundings()) {
-            surrounding.setLocation((int) (surrounding.getX() - cameraX + lastCamX), (int) (surrounding.getY() - cameraY + lastCamY));
+            surrounding.translate(dX, dY);
 
         }
 
         for (Enemy enemy: game.getEnemies()) {
-            enemy.setLocation((int) (enemy.getX() - cameraX + lastCamX), (int) (enemy.getY() - cameraY + lastCamY));
+            enemy.translate(dX, dY);
 
         }
 
-        player.setLocation((int) (player.getX() - cameraX + lastCamX), (int) (player.getY() - cameraY + lastCamY));
+        for (Attacks attack: game.getAttacks()) {
+            if (attack instanceof Arrow) {
+                attack.translate(dX, dY);
+            } else {
+                attack.translate((int) (player.getX() - 650), (int) (player.getY() - 500));
+            }
+
+        }
+
     }
 
     static class GraphicsPanel extends JPanel{
@@ -101,11 +109,12 @@ public class MapDisplay extends JFrame{//
 
             }
 
-            g.setColor(Color.orange);
+            g.setColor(Color.GREEN);
             for (Attacks attack: game.getAttacks()) {
-                g.drawRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
             }
 
+            g.setColor(Color.yellow);
             for (Enemy enemy: game.getEnemies()) {
                 g.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
                 g.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
@@ -129,7 +138,6 @@ public class MapDisplay extends JFrame{//
          */
         @Override
         public void mouseClicked(MouseEvent e) {
-            game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY(), e.getPoint().x, e.getPoint().y, true));
         }
 
         /**
@@ -139,6 +147,11 @@ public class MapDisplay extends JFrame{//
          */
         @Override
         public void mousePressed(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25, e.getX() + cameraX, e.getY() + cameraY, true));
+            } else if (e.getButton() == MouseEvent.BUTTON3) {
+                // @Razor177 put bash here. TargetX = e.getX() etc.
+            }
 
         }
 
@@ -186,9 +199,11 @@ public class MapDisplay extends JFrame{//
             char key = Character.toLowerCase(e.getKeyChar());
             if (key == 'a') {
                 player.setMovingLeft(true);
+                player.setMovingRight(false);
                 player.setDirection(-1);
             } else if (key == 'd') {
                 player.setMovingRight(true);
+                player.setMovingLeft(false);
                 player.setDirection(1);
             }
 
