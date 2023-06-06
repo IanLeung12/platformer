@@ -57,7 +57,7 @@ public class MapDisplay extends JFrame{//
 
     public void refresh() {
         this.repaint();
-        cameraX = (int) player.getX() - 650;
+        cameraX = (int) player.getX() - 900;
         cameraY = (int) player.getY() - 500;
 
         int dX = lastCamX - cameraX;
@@ -147,11 +147,7 @@ public class MapDisplay extends JFrame{//
          */
         @Override
         public void mousePressed(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
-                game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25, e.getX() + cameraX, e.getY() + cameraY, true));
-            } else if (e.getButton() == MouseEvent.BUTTON3) {
-                // @Razor177 put bash here. TargetX = e.getX() etc.
-            }
+
 
         }
 
@@ -162,7 +158,11 @@ public class MapDisplay extends JFrame{//
          */
         @Override
         public void mouseReleased(MouseEvent e) {
-
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25, e.getX() + cameraX, e.getY() + cameraY, true));
+            } else if (e.getButton() == MouseEvent.BUTTON3) {
+                // @Razor177 put bash here. TargetX = e.getX() etc.
+            }
         }
 
         /**
@@ -217,6 +217,10 @@ public class MapDisplay extends JFrame{//
                 }
             }
 
+            if (key == 'q') {
+                game.paused = true;
+            }
+
 
 
         }
@@ -234,6 +238,9 @@ public class MapDisplay extends JFrame{//
                 player.setMovingLeft(false);
             } else if (key == 'd') {
                 player.setMovingRight(false);
+            }
+            if (key == 'q') {
+                game.paused = false;
             }
         }
 
