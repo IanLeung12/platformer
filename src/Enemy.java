@@ -157,8 +157,15 @@ abstract public class Enemy extends Moveable {//
         distance = Math.sqrt( Math.pow((playerXpointIntersection - enemyXpointIntersection), 2) + Math.pow((playerYpointIntersection - enemyYpointIntersection), 2) );
 
         int numPoints = 0;
-        int numXPoints = (int) (this.getCenterX() - player.getCenterX()) / Constants.getRayTracingStep();
-        int numYPoints = (int) (this.getCenterY() - player.getCenterY()) / Constants.getRayTracingStep();
+        int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.getRayTracingStep();
+        int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.getRayTracingStep();
+
+//        System.out.println("num x points and y poins: " + numXPoints + "    " + numYPoints);
+//        System.out.println("enemy y point intersection: " + enemyYpointIntersection);
+//        System.out.println("enemy x point intersection: " + enemyXpointIntersection);
+//        System.out.println("player y point intersection: " + playerYpointIntersection);
+//        System.out.println("enemy x point intersection: " + playerXpointIntersection);
+
         double testX = enemyXpointIntersection;
         double testY = enemyYpointIntersection;
 
@@ -174,13 +181,19 @@ abstract public class Enemy extends Moveable {//
                     testX = ((testY - b) / m);
 
 
+
                     for (GameObject gameObject: listObjects) {
                         if (gameObject.contains(testX, testY)) {
                             intersected = true;
                         }
                     }
 
+
                 }
+
+
+
+
 
             } else if (playerPosition.equals("down")) {
 
@@ -242,15 +255,10 @@ abstract public class Enemy extends Moveable {//
         }
 
 
-        System.out.println("distace:" + distance + "    intersected :" + intersected);
 
         if (!(intersected)) {
-            System.out.println("positive distacne");
             return distance;
         } else {
-            System.out.println("===================================================================================");
-            System.out.println("===================================================================================");
-            System.out.println("===================================================================================");
             return Integer.MAX_VALUE;
         }
 

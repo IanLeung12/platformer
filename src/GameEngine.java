@@ -36,9 +36,9 @@ public class GameEngine {
         surroundings.add(new Spike(1490, 400, 10, 400, false));
         surroundings.add(new Spike(1490, 1090, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
-        surroundings.add(new Wall(3000, 1000, 100, 500));
-        surroundings.add(new Wall(4000, 1000, 100, 500));
-        //enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
+        surroundings.add(new Wall(3000, 1000, 300, 500));
+        surroundings.add(new Wall(4000, 1000, 300, 500));
+        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
         enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
     }
 
@@ -121,7 +121,7 @@ public class GameEngine {
         for (Attacks attack: this.attacks) {
             for (Enemy enemy: enemies) {
                 if (enemy.intersects(attack) && attack.isFriendly()) {
-                    enemy.attackBack(attack);
+                    enemy.knockback(attack);
                 }
             }
         }

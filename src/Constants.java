@@ -6,7 +6,7 @@ public class Constants {
     static int movementAbilityTotal = 500;
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;
-    static int slimeVision = 300;
+    static int slimeVision = 400;
     static int slimeSpeed = 5;
     static int rayTracingStep = 10;
 
