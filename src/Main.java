@@ -13,6 +13,8 @@ public class Main {
             map.moveAll();
             map.checkCollisions();
 
+
+
             window.refresh();
             try {Thread.sleep(17);} catch(Exception e){}
 

@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GameEngine {
@@ -11,6 +12,7 @@ public class GameEngine {
 
     // private Shop shop;                       not created yet
     private int frameNum;
+    private ArrayList<GameObject> proximity;
 
 //
 
@@ -19,25 +21,41 @@ public class GameEngine {
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
+        this.proximity = new ArrayList<>();
         surroundings.add(new Wall(200, 800, 500, 300));
         surroundings.add(new Wall(700, 300, 400, 1000));
         surroundings.add(new Wall(1300, 400, 500, 100));
-        surroundings.add(new Wall(-200, 1500, 5500, 200));
-        surroundings.add(new Wall(-200, -1000, 200, 3000));
-        surroundings.add(new Wall(5000, -1000, 200, 3000));
+        surroundings.add(new Wall(-200, 1500, 5500, 200)); // width thing
+        surroundings.add(new Wall(-200, -1000, 200, 3000)); // left
+        surroundings.add(new Wall(5000, -1000, 200, 3000)); // right wall
         surroundings.add(new Wall(1500, 400, 100, 400));
         surroundings.add(new Wall(1500, 1090, 100, 400));
         surroundings.add(new Wall(2000, 1100, 800, 200));
         surroundings.add(new Spike(1490, 400, 10, 400, false));
         surroundings.add(new Spike(1490, 1090, 10, 400, false));
         surroundings.add(new Spike(700, -300, 200, 200, false));
-        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
-        //enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
+        surroundings.add(new Wall(3000, 1000, 100, 500));
+        surroundings.add(new Wall(4000, 1000, 100, 500));
+        //enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
+        enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
+    }
+
+    public void updateProximity(ArrayList<GameObject> proximity, ArrayList<Wall> surroundings, ArrayList<Enemy> enemies) {
+        proximity.clear();
+
+        proximity.addAll(surroundings);
+        proximity.addAll(enemies);
+
+
+
+
     }
 
     public void spawnEnemies() {}
     public void spawnProjectile() {}
     public void moveAll() {
+
+        updateProximity(proximity, surroundings, enemies);
 
         player.move();
 
@@ -46,7 +64,8 @@ public class GameEngine {
             Enemy enemy = (Enemy) enemies.get(i);
 
             if (enemy.getHealth() > 0) {
-                enemy.move(player);
+
+                enemy.move(player, proximity);
 
             } else if (enemy.getHealth() < 0) {
                 enemies.remove(i);
@@ -71,6 +90,7 @@ public class GameEngine {
         for (Enemy enemy : enemies) {
             enemy.update();
         }
+
 
     }
 
