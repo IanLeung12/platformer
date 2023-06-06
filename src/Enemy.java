@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 abstract public class Enemy extends Moveable {//
 
     private double damage;
@@ -21,11 +23,13 @@ abstract public class Enemy extends Moveable {//
         this.goldReward = goldReward;
     }
 
-    public abstract void move(Player player);
+    public abstract void move(Player player, ArrayList<GameObject> proximity);
 
     public abstract void update();
 
-    public double distanceToPlayer(Player player) {
+    public double distanceToPlayer(Player player, ArrayList<GameObject> listObjects) {
+
+        double distance;
 
         boolean enemyVerticleExit = false;
         boolean enemyHorizontalExit = false;
@@ -46,6 +50,7 @@ abstract public class Enemy extends Moveable {//
         double playerY = 0;
 
         double m, b;
+
 
         if (Math.abs(player.getCenterX()) - Math.abs(this.getCenterX()) == 0) {
             m = Integer.MAX_VALUE;
@@ -149,9 +154,112 @@ abstract public class Enemy extends Moveable {//
 
         }
 
-        return Math.sqrt( Math.pow((playerXpointIntersection - enemyXpointIntersection), 2) + Math.pow((playerYpointIntersection - enemyYpointIntersection), 2) );
+        distance = Math.sqrt( Math.pow((playerXpointIntersection - enemyXpointIntersection), 2) + Math.pow((playerYpointIntersection - enemyYpointIntersection), 2) );
+
+        int numPoints = 0;
+        int numXPoints = (int) (this.getCenterX() - player.getCenterX()) / Constants.getRayTracingStep();
+        int numYPoints = (int) (this.getCenterY() - player.getCenterY()) / Constants.getRayTracingStep();
+        double testX = enemyXpointIntersection;
+        double testY = enemyYpointIntersection;
+
+        boolean intersected = false;
+
+        if (enemyVerticleExit) {
+
+            if (playerPosition.equals("up")) {
+
+                for (int i = 1; i < (numYPoints - 1); i++) {
+
+                    testY = enemyYpointIntersection - (i * Constants.getRayTracingStep());
+                    testX = ((testY - b) / m);
+
+
+                    for (GameObject gameObject: listObjects) {
+                        if (gameObject.contains(testX, testY)) {
+                            intersected = true;
+                        }
+                    }
+
+                }
+
+            } else if (playerPosition.equals("down")) {
+
+                for (int i = 1; i < (numYPoints - 1); i++) {
+
+                    testY = enemyYpointIntersection + (i * Constants.getRayTracingStep());
+                    testX = ((testY - b) / m);
+
+
+                    for (GameObject gameObject: listObjects) {
+                        if (gameObject.contains(testX, testY)) {
+                            intersected = true;
+                        }
+                    }
+
+                }
+
+            }
+
+        } else if (enemyHorizontalExit) {
+
+            if (playerPosition.equals("right")) {
+
+                for (int i = 1; i < (numXPoints - 1); i++) {
+
+                    testX = enemyXpointIntersection + (i * Constants.getRayTracingStep());
+                    testY = (m * testX) + b;
+
+
+                    for (GameObject gameObject: listObjects) {
+                        if (gameObject.contains(testX, testY)) {
+                            intersected = true;
+                        }
+                    }
+
+                }
+
+
+            } else if (playerPosition.equals("left")) {
+
+
+                for (int i = 1; i < (numXPoints - 1); i++) {
+
+                    testX = enemyXpointIntersection - (i * Constants.getRayTracingStep());
+                    testY = (m * testX) + b;
+
+
+                    for (GameObject gameObject: listObjects) {
+                        if (gameObject.contains(testX, testY)) {
+                            intersected = true;
+                        }
+                    }
+
+                }
+
+            }
+
+
+        }
+
+
+        System.out.println("distace:" + distance + "    intersected :" + intersected);
+
+        if (!(intersected)) {
+            System.out.println("positive distacne");
+            return distance;
+        } else {
+            System.out.println("===================================================================================");
+            System.out.println("===================================================================================");
+            System.out.println("===================================================================================");
+            return Integer.MAX_VALUE;
+        }
 
     }
+
+
+
+
+
 
     public boolean onEdge(GameObject otherObject) {
         double bottomRightX = (int) (this.getX() + this.getWidth());

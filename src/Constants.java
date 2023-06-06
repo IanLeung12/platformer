@@ -8,6 +8,12 @@ public class Constants {
     static int XSpeedAddition = 2;
     static int slimeVision = 300;
     static int slimeSpeed = 5;
+    static int rayTracingStep = 10;
+
+
+    public static int getRayTracingStep() {
+        return rayTracingStep;
+    }
 
     public static int getSlimeSpeed() {
         return slimeSpeed;

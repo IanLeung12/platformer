@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Slime extends Enemy{//
 
 
@@ -20,17 +22,17 @@ public class Slime extends Enemy{//
 
 
 
-    public void move(Player player) {
+    public void move(Player player, ArrayList<GameObject> proximity) {
 
         if (this.getImmunityTimer() > 0) {
             // continue knockback
         } else {
-            if (this.distanceToPlayer(player) > Constants.getSlimeVision()) {
+            if (this.distanceToPlayer(player, proximity) > Constants.getSlimeVision()) {
 
                 this.setYSpeed(this.getYSpeed() - Constants.getGravity());
                 this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
 
-            } else if (this.distanceToPlayer(player) <= Constants.getSlimeVision()) {
+            } else if (this.distanceToPlayer(player, proximity) <= Constants.getSlimeVision()) {
 
                 if (player.getCenterX() - this.getCenterX() >= 0) {
                     this.setXSpeed(Constants.getSlimeSpeed());
