@@ -20,7 +20,6 @@ public class Player extends Moveable {//
     private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
-    private int direction;
     private ArrayList<String> Weapons;
 
     Player(int x, int y, int width, int height, double health, double totalHealth) {
@@ -29,7 +28,6 @@ public class Player extends Moveable {//
         this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
-        this.direction = 1;
         this.dashUnlocked = false;
         this.bashUnlocked = false;
 
@@ -99,18 +97,7 @@ public class Player extends Moveable {//
 
         if ((otherObject instanceof Spike) || (otherObject instanceof Enemy) ) {
 
-            double dX = (this.getCenterX() - otherObject.getCenterX());
-            double dY = (otherObject.getCenterY() - this.getCenterY());
-
-            double interval = 35/(Math.abs(dX) + Math.abs(dY));
-
-            this.setXSpeed((int) (dX * interval));
-            if ((this.getXSpeed() < 10) && (this.getXSpeed() != 0)) {
-                this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
-            } if (this.getXSpeed() == 0) {
-                this.setXSpeed(-20 * this.getDirection());
-            }
-            this.setYSpeed((int) (dY * interval));
+            this.knockback(otherObject);
 
         } else {
             double playerBottom = this.getY() + this.getHeight();
@@ -153,8 +140,7 @@ public class Player extends Moveable {//
 
     }
 
-    public void updatePlayer() {
-    }
+    public void updatePlayer() {}
 
 
     //collision(GameObject otherObject) {}
@@ -163,14 +149,6 @@ public class Player extends Moveable {//
     //dash(speedX, speedY)
     // bash()
 
-
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
 
     public double getTotalGold() {
         return totalGold;

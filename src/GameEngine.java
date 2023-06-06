@@ -11,6 +11,7 @@ public class GameEngine {
 
     // private Shop shop;                       not created yet
     private int frameNum;
+
 //
 
     GameEngine() {
@@ -46,6 +47,7 @@ public class GameEngine {
 
             if (enemy.getHealth() > 0) {
                 enemy.move(player);
+
             } else if (enemy.getHealth() < 0) {
                 enemies.remove(i);
             }
@@ -64,6 +66,10 @@ public class GameEngine {
             }
 
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
+        }
+
+        for (Enemy enemy : enemies) {
+            enemy.update();
         }
 
     }

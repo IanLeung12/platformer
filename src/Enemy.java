@@ -23,6 +23,8 @@ abstract public class Enemy extends Moveable {//
 
     public abstract void move(Player player);
 
+    public abstract void update();
+
     public double distanceToPlayer(Player player) {
 
         boolean enemyVerticleExit = false;
@@ -151,10 +153,6 @@ abstract public class Enemy extends Moveable {//
 
     }
 
-    public void knockback(Attacks attack) {
-        this.setYSpeed(10);
-    }
-
     public boolean onEdge(GameObject otherObject) {
         double bottomRightX = (int) (this.getX() + this.getWidth());
         double bottomRightY = (int) (this.getY() + this.getHeight());
@@ -167,6 +165,8 @@ abstract public class Enemy extends Moveable {//
         }
 
     }
+
+
 
 
     public double getDamage() {
