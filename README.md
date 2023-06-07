@@ -10,7 +10,13 @@ a,d: left and right
 
 space: jump
 
-f: attack
+Attack selection: 
+1: Sword
+2: Hammer
+3: Bow
+4: Rocket
+
+left click to attack
 
 shift: dash
 
