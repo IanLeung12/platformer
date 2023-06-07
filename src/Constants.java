@@ -2,8 +2,8 @@ public class Constants {
 
     static int gravity = 2;
     static int jumpBoost = 30;
-    static int dashX = 60;
-    static int movementAbilityTotal = 500;
+    static int abilitySpeed = 60;
+    static int movementAbilityTotal = 450;
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;
     static int slimeVision = 400;
@@ -44,12 +44,12 @@ public class Constants {
         Constants.gravity = gravity;
     }
 
-    public static int getDashX() {
-        return dashX;
+    public static int getAbilitySpeed() {
+        return abilitySpeed;
     }
 
-    public static void setDashX(int dashX) {
-        Constants.dashX = dashX;
+    public static void setAbilitySpeed(int abilitySpeed) {
+        Constants.abilitySpeed = abilitySpeed;
     }
 
     public static int getMaxXSpeed() {

@@ -15,7 +15,7 @@ public class Player extends Moveable {//
     private boolean bashUsed = false;
     private String currentWeapon = "Sword";
     private int[] abilityDirection = {0, 0};
-    private int[] abilityTravelled = {0, 0};
+    private int abilityTravelled = 0;
     private boolean abilityActive = false;
     private boolean attackActive;
     private boolean movingRight;
@@ -50,7 +50,7 @@ public class Player extends Moveable {//
         } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
             this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
         } else if (this.getXSpeed() != 0) {
-            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * Constants.getXSpeedAddition());
             if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
                 this.setXSpeed(0);
             }
@@ -67,30 +67,30 @@ public class Player extends Moveable {//
 
     }
 
+    public void dash() {
+        this.abilityActive = true;
+        this.setAbilityDirection(Constants.getAbilitySpeed() * this.getDirection(), 0);
+        this.dashUsed = true;
+
+    }
+    public void bash(int targetX, int targetY) {
+        this.abilityActive = true;
+        double dX = targetX - this.getCenterX();
+        double dY = -(targetY - this.getCenterY());
+        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+        this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
+        this.bashUsed = true;
+    }
+
     public void movementAbility() {
 
-        this.dashUsed = true;
-        this.setBashUsed(true);
-
-        if ((Math.abs(this.abilityTravelled[0]) < Constants.getMovementAbilityTotal()) && (Math.abs(this.abilityTravelled[1]) < Constants.getMovementAbilityTotal())) {
+        if (this.abilityTravelled < Constants.getMovementAbilityTotal()) {
             this.setXSpeed(this.abilityDirection[0]);
             this.setYSpeed(this.abilityDirection[1]);
-            this.abilityTravelled[0] += abilityDirection[0];
-            this.abilityTravelled[1] += abilityDirection[1];
-        } else if ((Math.abs(this.abilityTravelled[0]) >= Constants.getMovementAbilityTotal()) || (Math.abs(this.abilityTravelled[1]) >= Constants.getMovementAbilityTotal())) {
-
-            if (this.abilityTravelled[0] < 0) {
-                this.setXSpeed(Constants.getXSpeedAddition() * -20);
-
-            } else if (this.abilityTravelled[0] > 0) {
-                this.setXSpeed(Constants.getXSpeedAddition() * 20);
-            }
-
-            this.abilityTravelled[0] = 0;
-            this.abilityTravelled[1] = 0;
+            this.abilityTravelled += Math.abs(abilityDirection[0]) + Math.abs(abilityDirection[1]);
+        } else {
+            this.abilityTravelled = 0;
             this.abilityActive = false;
-
-
         }
     }
 
@@ -111,8 +111,7 @@ public class Player extends Moveable {//
             if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(0); // Stop the player's vertical movement
-                this.setJumpNum(0);
-                this.dashUsed = false;
+                this.wallReset();
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
@@ -124,8 +123,7 @@ public class Player extends Moveable {//
                 if (this.getYSpeed() < 0) {
                     this.setYSpeed(this.getYSpeed() + 3);
                 }
-                this.setJumpNum(0);
-                this.dashUsed = false;
+                this.wallReset();
 
             } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderRight), (int) this.getY());
@@ -133,12 +131,16 @@ public class Player extends Moveable {//
                 if (this.getYSpeed() < 0) {
                     this.setYSpeed(this.getYSpeed() + 3);
                 }
-                this.setJumpNum(0);
-                this.dashUsed = false;
-
+                this.wallReset();
             }
         }
 
+    }
+
+    public void wallReset() {
+        this.jumpNum = 0;
+        this.dashUsed = false;
+        this.bashUsed = false;
     }
 
     public void updatePlayer() {}
@@ -268,11 +270,11 @@ public class Player extends Moveable {//
         this.abilityDirection[1] = yChange;
     }
 
-    public int[] getAbilityTravelled() {
+    public int getAbilityTravelled() {
         return abilityTravelled;
     }
 
-    public void setAbilityTravelled(int[] abilityTravelled) {
+    public void setAbilityTravelled(int abilityTravelled) {
         this.abilityTravelled = abilityTravelled;
     }
 

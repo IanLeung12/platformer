@@ -1,6 +1,5 @@
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 public class GameEngine {
 
@@ -82,11 +81,19 @@ public class GameEngine {
             Attack attack = attacks.get(i);
 
             if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
-                attacks.remove(i);
+                if (attack instanceof Rocket) {
+                    attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                } else {
+                    attacks.remove(i);
+                }
             }
 
             if (attack instanceof Projectile) {
                 ((Projectile) attack).move();
+            }
+
+            if (attack instanceof Explosion) {
+                ((Explosion) attack).expand();
             }
 
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
@@ -120,9 +127,23 @@ public class GameEngine {
         }
 
         for (int i = 0; i < attacks.size(); i ++) {
+            Attack attack = attacks.get(i);
             for (Enemy enemy: enemies) {
-                if (enemy.intersects(attacks.get(i)) && attacks.get(i).isFriendly()) {
-                    enemy.knockback(attacks.get(i));
+                if (enemy.intersects(attack) && attack.isFriendly()) {
+                    if (attack instanceof Rocket) {
+                        attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                    } else {
+                        enemy.knockback(attack);
+                    }
+
+                }
+            }
+
+            if (attack instanceof Rocket) {
+                for (Wall wall: surroundings) {
+                    if (attack.getBounds().intersects(wall)) {
+                        attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                    }
                 }
             }
         }

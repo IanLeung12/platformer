@@ -34,7 +34,6 @@ abstract public class Moveable extends Alive{
 
     }
 
-
     public int getXSpeed() {
         return xSpeed;
     }

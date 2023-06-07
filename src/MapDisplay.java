@@ -96,7 +96,7 @@ public class MapDisplay extends JFrame{//
 
         for (int i = 0; i < game.getAttacks().size(); i ++) {
             Attack attack = game.getAttacks().get(i);
-            if (attack instanceof Arrow) {
+            if (attack instanceof Projectile || attack instanceof Explosion) {
                 attack.translate(dX, dY);
             }
         }
@@ -121,11 +121,14 @@ public class MapDisplay extends JFrame{//
             g.setColor(Color.GREEN);
             for (int i = 0; i < game.getAttacks().size(); i ++) {
                 Attack attack = game.getAttacks().get(i);
-                if (attack instanceof Arrow) {
-                    double theta = Math.atan((double) ((Arrow) attack).getYSpeed() / ((Arrow) attack).getXSpeed());
+
+                if (attack instanceof Projectile) {
+                    double theta = Math.atan((double) ((Projectile) attack).getYSpeed() / ((Projectile) attack).getXSpeed());
                     g2d.rotate(-theta, attack.getX(), attack.getY());
                     g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                     g2d.rotate(theta, attack.getX(), attack.getY());
+                } else if (attack instanceof Explosion) {
+                    g2d.fillOval((int) attack.getCenterX(), (int) attack.getCenterY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
                 } else {
                     g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                 }
@@ -195,7 +198,7 @@ public class MapDisplay extends JFrame{//
                                 (int) (player.getY() - 50), 1, true));
                         break;
                     case "Bow":
-                        game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
+                        game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
                                 e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
                         bowPower = 1;
                         bowCharging = false;
@@ -207,7 +210,9 @@ public class MapDisplay extends JFrame{//
                 }
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
-                // @Razor177 put bash here. TargetX = e.getX() etc.
+                if ((!player.isAbilityActive()) && (!player.isBashUsed())) {
+                    player.bash(e.getX() + cameraX, e.getY() + cameraY);
+                }
             }
         }
 
@@ -259,12 +264,8 @@ public class MapDisplay extends JFrame{//
             }
 
             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-                if (!(player.isAbilityActive() || player.isDashUsed())) {
-                    player.setAbilityActive(true);
-
-                    player.setAbilityDirection(Constants.getDashX() * player.getDirection(), 0);
-
-                    player.movementAbility();
+                if ((!player.isAbilityActive()) && (!player.isDashUsed())) {
+                    player.dash();
                 }
             }
         }
