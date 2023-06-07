@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class GameEngine {
 
@@ -118,10 +119,10 @@ public class GameEngine {
             }
         }
 
-        for (Attack attack: this.attacks) {
+        for (int i = 0; i < attacks.size(); i ++) {
             for (Enemy enemy: enemies) {
-                if (enemy.intersects(attack) && attack.isFriendly()) {
-                    enemy.knockback(attack);
+                if (enemy.intersects(attacks.get(i)) && attacks.get(i).isFriendly()) {
+                    enemy.knockback(attacks.get(i));
                 }
             }
         }

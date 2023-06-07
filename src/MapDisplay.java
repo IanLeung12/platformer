@@ -29,6 +29,10 @@ public class MapDisplay extends JFrame{//
 
     static int lastCamY;
 
+    static int bowPower;
+
+    boolean bowCharging;
+
     static GameEngine game;
 
     Player player;
@@ -43,6 +47,8 @@ public class MapDisplay extends JFrame{//
         MapDisplay.game = game;
 
         this.player = game.getPlayer();
+        this.bowPower = 1;
+        this.bowCharging = false;
 
         canvas = new GraphicsPanel();
         this.add(canvas);
@@ -57,6 +63,11 @@ public class MapDisplay extends JFrame{//
 
     public void refresh() {
         this.repaint();
+
+        if (bowCharging && bowPower < 50) {
+            bowPower ++;
+        }
+
         cameraX = (int) player.getX() - 900;
         cameraY = (int) player.getY() - 500;
 
@@ -83,7 +94,8 @@ public class MapDisplay extends JFrame{//
 
         }
 
-        for (Attack attack: game.getAttacks()) {
+        for (int i = 0; i < game.getAttacks().size(); i ++) {
+            Attack attack = game.getAttacks().get(i);
             if (attack instanceof Arrow) {
                 attack.translate(dX, dY);
             }
@@ -95,6 +107,7 @@ public class MapDisplay extends JFrame{//
         }
         public void paintComponent(Graphics g){
             super.paintComponent(g); //required
+            Graphics2D g2d = (Graphics2D) g;
 
             for (GameObject thing: game.getSurroundings()) {
                 g.setColor(Color.darkGray);
@@ -106,8 +119,17 @@ public class MapDisplay extends JFrame{//
             }
 
             g.setColor(Color.GREEN);
-            for (Attack attack: game.getAttacks()) {
-                g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+            for (int i = 0; i < game.getAttacks().size(); i ++) {
+                Attack attack = game.getAttacks().get(i);
+                if (attack instanceof Arrow) {
+                    double theta = Math.atan((double) ((Arrow) attack).getYSpeed() / ((Arrow) attack).getXSpeed());
+                    g2d.rotate(-theta, attack.getX(), attack.getY());
+                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    g2d.rotate(theta, attack.getX(), attack.getY());
+                } else {
+                    g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                }
+
             }
 
             g.setColor(Color.yellow);
@@ -119,6 +141,10 @@ public class MapDisplay extends JFrame{//
             g.setColor(Color.gray);
             Player player = game.getPlayer();
             g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+
+            g.setFont(new Font("Georgia", Font.PLAIN, 42));
+            g.drawString("Bow Power: " + bowPower, 50, 50);
+
         } // paintComponent method end
     } // GraphicsPanel class end
 
@@ -143,8 +169,11 @@ public class MapDisplay extends JFrame{//
          */
         @Override
         public void mousePressed(MouseEvent e) {
-
-
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                if (player.getCurrentWeapon().equals("Bow")) {
+                    bowCharging = true;
+                }
+            }
         }
 
         /**
@@ -156,8 +185,6 @@ public class MapDisplay extends JFrame{//
         public void mouseReleased(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 int direction = e.getX() > player.getCenterX() ? 1 : -1;
-
-                System.out.println(player.getCurrentWeapon());
                 switch (player.getCurrentWeapon()) {
                     case "Sword":
                         game.getAttacks().add(new Sword((int) (player.getX() + (direction == 1 ? player.getWidth() : -150)),
@@ -169,7 +196,9 @@ public class MapDisplay extends JFrame{//
                         break;
                     case "Bow":
                         game.getAttacks().add(new Arrow((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
-                                e.getX() + cameraX, e.getY() + cameraY, direction, true));
+                                e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                        bowPower = 1;
+                        bowCharging = false;
                         break;
                     case "Rocket":
                         game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
@@ -213,15 +242,20 @@ public class MapDisplay extends JFrame{//
          * @param e
          */
         public void keyPressed(KeyEvent e) {
-            char key = Character.toLowerCase(e.getKeyChar());
-            if (key == 'a') {
-                player.setMovingLeft(true);
-                player.setMovingRight(false);
-                player.setDirection(-1);
-            } else if (key == 'd') {
-                player.setMovingRight(true);
-                player.setMovingLeft(false);
-                player.setDirection(1);
+            switch (Character.toLowerCase(e.getKeyChar())) {
+                case 'a':
+                    player.setMovingLeft(true);
+                    player.setMovingRight(false);
+                    player.setDirection(-1);
+                    break;
+                case 'd':
+                    player.setMovingRight(true);
+                    player.setMovingLeft(false);
+                    player.setDirection(1);
+                    break;
+                case 'q':
+                    game.paused = true;
+                    break;
             }
 
             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
@@ -233,13 +267,6 @@ public class MapDisplay extends JFrame{//
                     player.movementAbility();
                 }
             }
-
-            if (key == 'q') {
-                game.paused = true;
-            }
-
-
-
         }
 
         /**
@@ -251,13 +278,16 @@ public class MapDisplay extends JFrame{//
          */
         public void keyReleased(KeyEvent e) {
             char key = Character.toLowerCase(e.getKeyChar());
-            if (key == 'a') {
-                player.setMovingLeft(false);
-            } else if (key == 'd') {
-                player.setMovingRight(false);
-            }
-            if (key == 'q') {
-                game.paused = false;
+            switch (Character.toLowerCase(e.getKeyChar())) {
+                case 'a':
+                    player.setMovingLeft(false);
+                    break;
+                case 'd':
+                    player.setMovingRight(false);
+                    break;
+                case 'q':
+                    game.paused = false;
+                    break;
             }
         }
 
@@ -269,13 +299,10 @@ public class MapDisplay extends JFrame{//
          * @param e
          */
         public void keyTyped(KeyEvent e) {
-            char key = Character.toLowerCase(e.getKeyChar());
-            if (key == ' ') {
-                player.jump();
-            }
-
-            System.out.println(key);
-            switch (key) {
+            switch (Character.toLowerCase(e.getKeyChar())) {
+                case ' ':
+                    player.jump();
+                    break;
                 case '1':
                     player.setCurrentWeapon("Sword");
                     break;
