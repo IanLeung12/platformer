@@ -5,14 +5,14 @@ public class Slime extends Enemy{//
 
 
     Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, int goldReward, int respawnTimer, int fullRespawnTimer) {
-        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnTimer, fullRespawnTimer);
+        super(x, y, width, height, Constants.getSlimeTotalHealth(), Constants.getSlimeTotalHealth(), Constants.getSlimeDamage(), Constants.getSlimeGoldReward(), respawnTimer, fullRespawnTimer);
 
         this.setXSpeed(Constants.getSlimeSpeed());
 
     }
 
     Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, int goldReward) {
-        super(x, y, width, height, health, totalHealth, damage, goldReward);
+        super(x, y, width, height, Constants.getSlimeTotalHealth(), Constants.getSlimeTotalHealth(), Constants.getSlimeDamage(), Constants.getSlimeGoldReward());
 
         this.setXSpeed(Constants.getSlimeSpeed());
 
@@ -71,6 +71,7 @@ public class Slime extends Enemy{//
 
                     this.setXSpeed(this.getXSpeed() * -1);
                     this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+
                 }
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {

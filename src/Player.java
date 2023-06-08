@@ -74,10 +74,12 @@ public class Player extends Moveable {//
 
     }
     public void bash(int targetX, int targetY) {
+
         this.abilityActive = true;
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
         double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
     }

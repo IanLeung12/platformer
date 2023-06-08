@@ -160,12 +160,6 @@ abstract public class Enemy extends Moveable {//
         int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.getRayTracingStep();
         int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.getRayTracingStep();
 
-//        System.out.println("num x points and y poins: " + numXPoints + "    " + numYPoints);
-//        System.out.println("enemy y point intersection: " + enemyYpointIntersection);
-//        System.out.println("enemy x point intersection: " + enemyXpointIntersection);
-//        System.out.println("player y point intersection: " + playerYpointIntersection);
-//        System.out.println("enemy x point intersection: " + playerXpointIntersection);
-
         double testX = enemyXpointIntersection;
         double testY = enemyYpointIntersection;
 
@@ -180,8 +174,6 @@ abstract public class Enemy extends Moveable {//
                     testY = enemyYpointIntersection - (i * Constants.getRayTracingStep());
                     testX = ((testY - b) / m);
 
-
-
                     for (GameObject gameObject: listObjects) {
                         if (gameObject.contains(testX, testY)) {
                             intersected = true;
@@ -190,8 +182,6 @@ abstract public class Enemy extends Moveable {//
 
 
                 }
-
-
 
 
 

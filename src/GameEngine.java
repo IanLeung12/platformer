@@ -43,6 +43,7 @@ public class GameEngine {
     }
 
     public void updateProximity(ArrayList<GameObject> proximity, ArrayList<Wall> surroundings, ArrayList<Enemy> enemies) {
+
         proximity.clear();
 
         proximity.addAll(surroundings);
@@ -114,9 +115,16 @@ public class GameEngine {
             }
 
             for (Enemy enemy: enemies) {
-                Slime slimeEnemy = (Slime) enemy;
-                if (slimeEnemy.getBounds().intersects(object)) {
-                    slimeEnemy.collision(object);
+                if (enemy instanceof Slime) {
+                    Slime slimeEnemy = (Slime) enemy;
+                    if (slimeEnemy.getBounds().intersects(object)) {
+                        slimeEnemy.collision(object);
+                    }
+                } else if (enemy instanceof Mosquito)  {
+                    Mosquito mosquitoEnemy = (Mosquito) enemy;
+                    if (mosquitoEnemy.getBounds().intersects(object)) {
+                        mosquitoEnemy.collision(object);
+                    }
                 }
 
                 if (player.getBounds().intersects(enemy)) {
