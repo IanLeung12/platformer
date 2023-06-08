@@ -98,7 +98,21 @@ public class Player extends Moveable {//
 
         if ((otherObject instanceof Spike) || (otherObject instanceof Enemy) ) {
 
-            this.knockback(otherObject);
+            double dX = (this.getCenterX() - otherObject.getCenterX());
+            double dY = (otherObject.getCenterY() - this.getCenterY());
+
+            double interval = 35/(Math.abs(dX) + Math.abs(dY));
+
+            this.setXSpeed((int) (dX * interval));
+
+            if ((this.getXSpeed() < 10) && (this.getXSpeed() != 0)) {
+                this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
+            } if (this.getXSpeed() == 0) {
+                this.setXSpeed(-20 * this.getDirection());
+            }
+
+            this.setYSpeed((int) (dY * interval));
+
 
         } else {
             double playerBottom = this.getY() + this.getHeight();

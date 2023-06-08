@@ -13,25 +13,28 @@ abstract public class Moveable extends Alive{
 
 
 
-    public void knockback(GameObject otherObject) {
-
-        double dX = (this.getCenterX() - otherObject.getCenterX());
-        double dY = (otherObject.getCenterY() - this.getCenterY());
-
-        double interval = 35/(Math.abs(dX) + Math.abs(dY));
-
-        this.setXSpeed((int) (dX * interval));
-
-        if ((this.getXSpeed() < 10) && (this.getXSpeed() != 0)) {
-            this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
-        } if (this.getXSpeed() == 0) {
-            this.setXSpeed(-20 * this.getDirection());
+    public void knockback(Attack attack) {
+        double interval, dX, dY;
+        if (attack instanceof Explosion) {
+            dX = (this.getCenterX() - attack.getCenterX());
+            dY = (attack.getCenterY() - this.getCenterY());
+            double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+            distance -= Math.sqrt((Math.pow(this.getWidth()/2, 2) + Math.pow(this.getHeight()/2, 2)));
+            if (distance <= ((Explosion) attack).getRadius()) {
+                interval = 50/(Math.abs(dX) + Math.abs(dY) + 1);
+            } else {
+                interval = 0;
+            }
+        } else {
+            this.setXSpeed((int) (attack.getAttackDamage() * attack.getDirection()));
+            this.setYSpeed(10);
+            dX = (this.getCenterX() - attack.getCenterX());
+            dY = (attack.getX() + attack.getHeight() - this.getCenterY());
+            interval = 15/(Math.abs(dX) + Math.abs(dY) + 1);
         }
 
-        this.setYSpeed((int) (dY * interval));
-
-        this.immunityTimer = this.maxImmunity;
-
+        this.setXSpeed(this.getXSpeed() + (int) (dX * interval));
+        this.setYSpeed(this.getYSpeed() + (int) (dY * interval));
     }
 
     public int getXSpeed() {

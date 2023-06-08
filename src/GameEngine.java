@@ -29,7 +29,7 @@ public class GameEngine {
         surroundings.add(new Wall(1300, 400, 500, 100));
         surroundings.add(new Wall(-200, 1500, 5500, 200)); // width thing
         surroundings.add(new Wall(-200, -1000, 200, 3000)); // left
-        surroundings.add(new Wall(5000, -1000, 200, 3000)); // right wall
+        //surroundings.add(new Wall(5000, -1000, 200, 3000)); // right wall
         surroundings.add(new Wall(1500, 400, 100, 400));
         surroundings.add(new Wall(1500, 1090, 100, 400));
         surroundings.add(new Wall(2000, 1100, 800, 200));
@@ -38,7 +38,7 @@ public class GameEngine {
         surroundings.add(new Spike(700, -300, 200, 200, false));
         surroundings.add(new Wall(3000, 1000, 100, 500));
         surroundings.add(new Wall(4000, 1000, 100, 500));
-        //enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
+        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
         enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
     }
 

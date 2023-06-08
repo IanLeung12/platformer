@@ -30,25 +30,23 @@ public class Slime extends Enemy{//
             if (this.distanceToPlayer(player, proximity) > Constants.getSlimeVision()) {
 
                 this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
+                this.translate(this.getXSpeed(), -this.getYSpeed());
 
             } else if (this.distanceToPlayer(player, proximity) <= Constants.getSlimeVision()) {
 
-                if (player.getCenterX() - this.getCenterX() >= 0) {
-                    this.setXSpeed(Constants.getSlimeSpeed());
-                } else if (player.getCenterX() - this.getCenterX() < 0) {
-                    this.setXSpeed(Constants.getSlimeSpeed() * (-1));
+                if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
+                    this.setXSpeed(this.getXSpeed() + 1);
+                } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
+                    this.setXSpeed(this.getXSpeed() - 1);
                 }
 
                 this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-                this.setLocation((int) this.getX() + this.getXSpeed(), (int) this.getY() - this.getYSpeed());
-
-
+                this.translate(this.getXSpeed(), -this.getYSpeed());
             }
         }
-
-
-
+        if (Math.abs(this.getXSpeed()) > Constants.getSlimeSpeed()) {
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
+        }
 
     }
 

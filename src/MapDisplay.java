@@ -125,10 +125,13 @@ public class MapDisplay extends JFrame{//
                 if (attack instanceof Projectile) {
                     double theta = Math.atan((double) ((Projectile) attack).getYSpeed() / ((Projectile) attack).getXSpeed());
                     g2d.rotate(-theta, attack.getX(), attack.getY());
-                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
                     g2d.rotate(theta, attack.getX(), attack.getY());
                 } else if (attack instanceof Explosion) {
-                    g2d.fillOval((int) attack.getCenterX(), (int) attack.getCenterY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
+                    g.setColor(Color.blue);
+                    g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    g.setColor(Color.GREEN);
+                    g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
                 } else {
                     g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                 }
@@ -195,7 +198,7 @@ public class MapDisplay extends JFrame{//
                         break;
                     case "Hammer":
                         game.getAttacks().add(new Hammer((int) (player.getX() + (direction == 1 ? player.getWidth() + 50 : -300)),
-                                (int) (player.getY() - 50), 1, true));
+                                (int) (player.getY() - 50), direction, true));
                         break;
                     case "Bow":
                         game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
