@@ -16,6 +16,8 @@ public class Player extends Moveable {//
     private String currentWeapon = "Sword";
     private int[] abilityDirection = {0, 0};
     private int abilityTravelled = 0;
+
+    private int maxAbilityDistance = 0;
     private boolean abilityActive = false;
     private boolean attackActive;
     private boolean movingRight;
@@ -71,6 +73,7 @@ public class Player extends Moveable {//
         this.abilityActive = true;
         this.setAbilityDirection(Constants.getAbilitySpeed() * this.getDirection(), 0);
         this.dashUsed = true;
+        this.maxAbilityDistance = 450;
 
     }
     public void bash(int targetX, int targetY) {
@@ -78,15 +81,16 @@ public class Player extends Moveable {//
         this.abilityActive = true;
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
-        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
-
+        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY));
+        System.out.println("D " + dX + ", " + dY + " Int: " + interval);
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
+        this.maxAbilityDistance = 800;
     }
 
     public void movementAbility() {
 
-        if (this.abilityTravelled < Constants.getMovementAbilityTotal()) {
+        if (this.abilityTravelled < this.maxAbilityDistance) {
             this.setXSpeed(this.abilityDirection[0]);
             this.setYSpeed(this.abilityDirection[1]);
             this.abilityTravelled += Math.abs(abilityDirection[0]) + Math.abs(abilityDirection[1]);

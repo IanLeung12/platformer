@@ -6,16 +6,10 @@
 import javax.swing.*;
 import java.awt.*;
 // the following imports are needed for pictures
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import java.awt.event.*;
+import java.io.FileNotFoundException;
 
-public class MapDisplay extends JFrame{//
+public class MapDisplay extends JFrame {//
     // Game Window properties
     static GraphicsPanel canvas;
     static final int WIDTH = 1920;
@@ -37,17 +31,18 @@ public class MapDisplay extends JFrame{//
 
     Player player;
 
+    static double bashSlope = 999999;
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
         super("Game Window");
         this.setSize(WIDTH,HEIGHT);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         MapDisplay.game = game;
 
         this.player = game.getPlayer();
-        this.bowPower = 1;
+        bowPower = 1;
         this.bowCharging = false;
 
         canvas = new GraphicsPanel();
@@ -102,6 +97,22 @@ public class MapDisplay extends JFrame{//
         }
     }
 
+    protected void processWindowEvent(WindowEvent e) {
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            // Call your save method here
+            try {
+                game.save();
+            } catch (FileNotFoundException ex) {
+                System.out.println("WTF");
+                throw new RuntimeException(ex);
+            }
+
+            // Close the program
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+        super.processWindowEvent(e);
+    }
+
     static class GraphicsPanel extends JPanel{
         public GraphicsPanel(){
         }
@@ -148,6 +159,13 @@ public class MapDisplay extends JFrame{//
             Player player = game.getPlayer();
             g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
 
+            if (bashSlope != 999999) {
+                g2d.setColor(Color.BLUE);
+                g2d.rotate(Math.atan(bashSlope), player.getCenterX(), player.getCenterY());
+                g2d.fillRect((int) player.getCenterX(), (int) player.getCenterY(), 100, 50);
+                g2d.rotate(-Math.atan(bashSlope), player.getCenterX(), player.getCenterY());
+            }
+
             g.setFont(new Font("Georgia", Font.PLAIN, 42));
             g.drawString("Bow Power: " + bowPower, 50, 50);
 
@@ -180,6 +198,9 @@ public class MapDisplay extends JFrame{//
                     bowCharging = true;
                 }
             }
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                bashSlope = (player.getY() - (e.getY() + cameraY))/(player.getX() - (e.getX() + cameraX));
+            }
         }
 
         /**
@@ -201,8 +222,10 @@ public class MapDisplay extends JFrame{//
                                 (int) (player.getY() - 50), direction, true));
                         break;
                     case "Bow":
-                        game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
-                                e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                        if (bowPower > 20) {
+                            game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
+                                    e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                        }
                         bowPower = 1;
                         bowCharging = false;
                         break;
@@ -215,6 +238,7 @@ public class MapDisplay extends JFrame{//
             } else if (e.getButton() == MouseEvent.BUTTON3) {
                 if ((!player.isAbilityActive()) && (!player.isBashUsed())) {
                     player.bash(e.getX() + cameraX, e.getY() + cameraY);
+                    bashSlope = 999999;
                 }
             }
         }

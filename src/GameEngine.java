@@ -1,4 +1,8 @@
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.ArrayList;
 
 public class GameEngine {
@@ -16,30 +20,34 @@ public class GameEngine {
 
     boolean paused = false;
 
+    boolean playing = true;
+
 //
 
-    GameEngine() {
-        this.player = new Player(500, 900, 75, 150, 100, 100);
+    GameEngine() throws FileNotFoundException {
+        Scanner input = new Scanner(new File("src/Save2.txt"));
+        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.proximity = new ArrayList<>();
-        surroundings.add(new Wall(200, 800, 500, 300));
-        surroundings.add(new Wall(700, 300, 400, 1000));
-        surroundings.add(new Wall(1300, 400, 500, 100));
-        surroundings.add(new Wall(-200, 1500, 5500, 200)); // width thing
-        surroundings.add(new Wall(-200, -1000, 200, 3000)); // left
-        //surroundings.add(new Wall(5000, -1000, 200, 3000)); // right wall
-        surroundings.add(new Wall(1500, 400, 100, 400));
-        surroundings.add(new Wall(1500, 1090, 100, 400));
-        surroundings.add(new Wall(2000, 1100, 800, 200));
-        surroundings.add(new Spike(1490, 400, 10, 400, false));
-        surroundings.add(new Spike(1490, 1090, 10, 400, false));
-        surroundings.add(new Spike(700, -300, 200, 200, false));
-        surroundings.add(new Wall(3000, 1000, 100, 500));
-        surroundings.add(new Wall(4000, 1000, 100, 500));
-        enemies.add(new Slime(1400, 300, 100, 100, 100, 100, 10, 100));
-        enemies.add(new Slime(2000, 1400, 100, 100, 100, 100, 10, 100));
+
+        while (input.hasNext()) {
+            String objectType = input.next();
+            switch (objectType) {
+                case "Wall":
+                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    break;
+                case "Spike":
+                    surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    break;
+                case "Slime":
+                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    break;
+            }
+            input.nextLine();
+        }
+        input.close();
     }
 
     public void updateProximity(ArrayList<GameObject> proximity, ArrayList<Wall> surroundings, ArrayList<Enemy> enemies) {
@@ -157,7 +165,20 @@ public class GameEngine {
         }
     }
 
-    public void save() {}
+    public void save() throws FileNotFoundException {
+
+        System.out.println("saveing");
+        PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
+        output.println(player.getX() + " " + player.getY() + " " +  player.getWidth() + " " + player.getHeight() + " " + player.getHealth() + " " + player.getTotalHealth());
+        for (Wall wall: this.surroundings) {
+            output.println((wall instanceof Spike ? "Spike " : "Wall ") + wall.getX() + " " + wall.getY() + " " + " " + wall.getWidth() + " " + wall.getHeight());
+        }
+        for (Enemy enemy: this.enemies) {
+            output.println(enemy.getClass().getName() + " " + enemy.getX() + " " + enemy.getY() + " " +  enemy.getWidth() + " " + enemy.getHeight() + " " +
+                    enemy.getHealth() + " " + enemy.getTotalHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward());
+        }
+        output.close();
+    }
 
     // ================================================================
     // print writter
