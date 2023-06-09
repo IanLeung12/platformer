@@ -15,7 +15,7 @@ public class Mosquito extends Enemy{
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
 
-        this.setTotalCooldownTimer(500);
+        this.setTotalCooldownTimer(10);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -24,7 +24,7 @@ public class Mosquito extends Enemy{
 
         super(x, y, width, height, health, totalHealth, damage, goldReward);
 
-        this.setTotalCooldownTimer(500);
+        this.setTotalCooldownTimer(10);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -42,14 +42,18 @@ public class Mosquito extends Enemy{
             this.movementAbility();
         } else {
             if (this.distanceToPlayer(player, proximity) > Constants.getMosquitoVision()) {
-                this.translate(this.getXSpeed(),0);
+
+                this.defaultMovement();
 
             } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
 
-                this.setAbilityActive(true);
+                if (this.getCooldownTimerAbility() == 0) {
+                    this.setAbilityActive(true);
 
-                this.bash((int) player.getCenterX(), (int) player.getCenterY());
-                this.movementAbility();
+                    this.bash((int) player.getCenterX(), (int) player.getCenterY());
+                    this.movementAbility();
+                }
+
             }
         }
 
@@ -58,6 +62,14 @@ public class Mosquito extends Enemy{
 
 
     }
+
+    public void defaultMovement() {
+
+        this.translate(this.getXSpeed(),0);
+
+    }
+
+
 
     public void bash(int targetX, int targetY) {
 
@@ -88,7 +100,7 @@ public class Mosquito extends Enemy{
 
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
-            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(0));
+            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
         } else {
             this.abilityTravelled = 0;
             this.setAbilityActive(false);
