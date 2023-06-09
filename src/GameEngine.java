@@ -22,7 +22,8 @@ public class GameEngine {
 
     boolean playing = true;
 
-//
+    private int refreshDelay;
+
 
     GameEngine() throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/Save2.txt"));
@@ -31,6 +32,7 @@ public class GameEngine {
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.proximity = new ArrayList<>();
+        this.refreshDelay = 17;
 
         while (input.hasNext()) {
             String objectType = input.next();
@@ -233,7 +235,13 @@ public class GameEngine {
         this.attackActive = attackActive;
     }
 
+    public int getRefreshDelay() {
+        return refreshDelay;
+    }
 
+    public void setRefreshDelay(int refreshDelay) {
+        this.refreshDelay = refreshDelay;
+    }
 
     public int getFrameNum() {
         return frameNum;

@@ -82,7 +82,6 @@ public class Player extends Moveable {//
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
         double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY));
-        System.out.println("D " + dX + ", " + dY + " Int: " + interval);
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
         this.maxAbilityDistance = 800;

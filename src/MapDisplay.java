@@ -7,9 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 // the following imports are needed for pictures
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 
-public class MapDisplay extends JFrame {//
+public class MapDisplay extends JFrame {
     // Game Window properties
     static GraphicsPanel canvas;
     static final int WIDTH = 1920;
@@ -31,7 +35,11 @@ public class MapDisplay extends JFrame {//
 
     Player player;
 
-    static double bashSlope = 999999;
+    static boolean aimingBash = false;
+
+    static double angle = 0;
+
+    static BufferedImage bashAimImage;
 
 
     //------------------------------------------------------------------------------
@@ -45,11 +53,20 @@ public class MapDisplay extends JFrame {//
         bowPower = 1;
         this.bowCharging = false;
 
+        try {
+            bashAimImage = ImageIO.read(new File("src/arrow.png"));
+            System.out.println("e");
+        } catch (IOException ex){
+            System.out.println("a");
+        }
+
+
         canvas = new GraphicsPanel();
         this.add(canvas);
 
         addKeyListener(new Keyboard());
         addMouseListener(new Mouse());
+        addMouseMotionListener(new Mouse());
 
         // load the picture from a file
         this.setVisible(true);
@@ -123,13 +140,13 @@ public class MapDisplay extends JFrame {//
             for (GameObject thing: game.getSurroundings()) {
                 g.setColor(Color.darkGray);
                 if (thing instanceof Spike) {
-                    g.setColor(Color.red);
+                    g2d.setColor(Color.red);
                 }
-                g.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
+                g2d.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
 
             }
 
-            g.setColor(Color.GREEN);
+            g2d.setColor(Color.GREEN);
             for (int i = 0; i < game.getAttacks().size(); i ++) {
                 Attack attack = game.getAttacks().get(i);
 
@@ -139,42 +156,41 @@ public class MapDisplay extends JFrame {//
                     g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
                     g2d.rotate(theta, attack.getX(), attack.getY());
                 } else if (attack instanceof Explosion) {
-                    g.setColor(Color.blue);
-                    g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
-                    g.setColor(Color.GREEN);
+                    g2d.setColor(Color.blue);
+                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    g2d.setColor(Color.GREEN);
                     g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
                 } else {
-                    g.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                 }
 
             }
 
-            g.setColor(Color.yellow);
+            g2d.setColor(Color.yellow);
             for (Enemy enemy: game.getEnemies()) {
-                g.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                g.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
             }
 
-            g.setColor(Color.gray);
+            g2d.setColor(Color.gray);
             Player player = game.getPlayer();
-            g.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+            g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
 
-            if (bashSlope != 999999) {
-                g2d.setColor(Color.BLUE);
-                g2d.rotate(Math.atan(bashSlope), player.getCenterX(), player.getCenterY());
-                g2d.fillRect((int) player.getCenterX(), (int) player.getCenterY(), 100, 50);
-                g2d.rotate(-Math.atan(bashSlope), player.getCenterX(), player.getCenterY());
+            if (aimingBash) {
+                g2d.rotate(angle - Math.PI, player.getCenterX(), player.getCenterY());
+                g2d.drawImage(bashAimImage, (int) player.getX() - 100, (int) player.getCenterY() - 300, this);
+                g2d.rotate(-angle + Math.PI, player.getCenterX(), player.getCenterY());
             }
 
-            g.setFont(new Font("Georgia", Font.PLAIN, 42));
-            g.drawString("Bow Power: " + bowPower, 50, 50);
+            g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
+            g2d.drawString("Bow Power: " + bowPower, 50, 50);
 
         } // paintComponent method end
     } // GraphicsPanel class end
 
 
 
-    class Mouse implements MouseListener {
+    class Mouse extends MouseAdapter {
 
         /**
          * Invoked when the mouse button has been clicked (pressed
@@ -199,7 +215,8 @@ public class MapDisplay extends JFrame {//
                 }
             }
             if (e.getButton() == MouseEvent.BUTTON3) {
-                bashSlope = (player.getY() - (e.getY() + cameraY))/(player.getX() - (e.getX() + cameraX));
+                aimingBash = true;
+                game.setRefreshDelay(75);
             }
         }
 
@@ -238,9 +255,15 @@ public class MapDisplay extends JFrame {//
             } else if (e.getButton() == MouseEvent.BUTTON3) {
                 if ((!player.isAbilityActive()) && (!player.isBashUsed())) {
                     player.bash(e.getX() + cameraX, e.getY() + cameraY);
-                    bashSlope = 999999;
+                    aimingBash = false;
+                    game.setRefreshDelay(17);
                 }
             }
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+             angle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
         }
 
         /**

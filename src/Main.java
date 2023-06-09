@@ -20,7 +20,7 @@ public class Main {
 
 
             window.refresh();
-            try {Thread.sleep(17);} catch(Exception e){}
+            try {Thread.sleep(map.getRefreshDelay());} catch(Exception e){}
 
             // Move the picture
         }
