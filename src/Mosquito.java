@@ -33,29 +33,7 @@ public class Mosquito extends Enemy{
 
 
 
-    public void bash(int targetX, int targetY) {
 
-        this.setAbilityActive(true);
-
-        double dX = targetX - this.getCenterX();
-        double dY = -(targetY - this.getCenterY());
-
-        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
-
-        this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
-    }
-
-    public void movementAbility() {
-
-        if (this.abilityTravelled < Constants.getMovementAbilityTotal()  ) {
-            this.setXSpeed(this.getAbilityDirection(0));
-            this.setYSpeed(this.getAbilityDirection(1));
-            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(0));
-        } else {
-            this.abilityTravelled = 0;
-            this.setAbilityActive(false);
-        }
-    }
 
     public void move(Player player, ArrayList<GameObject> proximity) {
 
@@ -66,20 +44,58 @@ public class Mosquito extends Enemy{
 
 
         if (this.distanceToPlayer(player, proximity) > Constants.getMosquitoVision()) {
-
             this.translate(this.getXSpeed(),0);
-
 
         } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
 
             this.setAbilityActive(true);
 
             this.bash((int) player.getCenterX(), (int) player.getCenterY());
-
             this.movementAbility();
         }
 
+    }
 
+    public void bash(int targetX, int targetY) {
+
+        this.setAbilityActive(true);
+
+        double dX = targetX - this.getCenterX();
+        double dY = -(targetY - this.getCenterY());
+
+        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+
+        this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
+
+        this.translate(this.getXSpeed(),  -this.getYSpeed());
+
+
+//        System.out.println("==========================================================================");
+//        System.out.println("");
+//        System.out.println("==========================================================================");
+
+
+    }
+
+    public void movementAbility() {
+
+        if (this.abilityTravelled < Constants.getMovementAbilityTotal()  ) {
+
+            System.out.println("==========================================================================");
+            System.out.println("this x and y :" + this.getCenterX() + "," + this.getCenterY()) ;
+            System.out.println("speed x and y :" + this.getXSpeed() +  " , " + this.getYSpeed());
+            System.out.println("ability traveled and posisbble travil :" + abilityTravelled + "  " + Constants.getMovementAbilityTotal());
+            System.out.println("==========================================================================");
+
+
+
+            this.setXSpeed(this.getAbilityDirection(0));
+            this.setYSpeed(this.getAbilityDirection(1));
+            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(0));
+        } else {
+            this.abilityTravelled = 0;
+            this.setAbilityActive(false);
+        }
 
 
 
@@ -102,10 +118,6 @@ public class Mosquito extends Enemy{
 
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
-                //  =============================================================
-                //  add ians knockbad method think here so if it hits the ground itll bounce off a bit
-                //  =============================================================
-
                 this.setYSpeed(this.getYSpeed() * (-1));
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
@@ -132,11 +144,7 @@ public class Mosquito extends Enemy{
             this.setImmunityTimer(this.getImmunityTimer() - 1);
         }
 
-        if (this.getXSpeed() > 0) {
-            this.setDirection(-1);
-        } else if (this.getXSpeed() < 0) {
-            this.setDirection(1);
-        }
+
 
 
 
