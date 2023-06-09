@@ -263,7 +263,7 @@ public class MapDisplay extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-             angle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
+            angle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
         }
 
         /**

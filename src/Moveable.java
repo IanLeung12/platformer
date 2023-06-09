@@ -4,6 +4,11 @@ abstract public class Moveable extends Alive{
     private int immunityTimer;
     private final int maxImmunity = 0;
     private int direction;
+    private int[] abilityDirection = {0, 0};
+    private boolean abilityActive = false;
+
+
+
 
 
     Moveable(int x, int y, int width, int height, double health, double totalHealth) {
@@ -73,4 +78,30 @@ abstract public class Moveable extends Alive{
     public void setDirection(int direction) {
         this.direction = direction;
     }
+
+    public boolean isAbilityActive() {
+        return abilityActive;
+    }
+
+    public void setAbilityActive(boolean abilityActive) {
+        this.abilityActive = abilityActive;
+    }
+
+    public int getAbilityDirection(int index) {
+        return abilityDirection[index];
+    }
+
+    public void setAbilityDirection(int x, int y) {
+        this.abilityDirection[0] = x;
+        this.abilityDirection[1] = y;
+    }
+
+
+
+
+
+
+
+
+
 }

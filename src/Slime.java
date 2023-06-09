@@ -11,8 +11,15 @@ public class Slime extends Enemy{//
 
     }
 
-    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, int goldReward) {
+    Slime(int x, int y, int width, int height) {
         super(x, y, width, height, Constants.getSlimeTotalHealth(), Constants.getSlimeTotalHealth(), Constants.getSlimeDamage(), Constants.getSlimeGoldReward());
+
+        this.setXSpeed(Constants.getSlimeSpeed());
+
+    }
+
+    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward) {
+        super(x, y, width, height, health, totalHealth, damage, goldReward);
 
         this.setXSpeed(Constants.getSlimeSpeed());
 
@@ -22,28 +29,28 @@ public class Slime extends Enemy{//
 
 
 
+
+
     public void move(Player player, ArrayList<GameObject> proximity) {
 
-        if (this.getImmunityTimer() > 0) {
-            // continue knockback
-        } else {
-            if (this.distanceToPlayer(player, proximity) > Constants.getSlimeVision()) {
 
-                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-                this.translate(this.getXSpeed(), -this.getYSpeed());
+        if (this.distanceToPlayer(player, proximity) > Constants.getSlimeVision()) {
 
-            } else if (this.distanceToPlayer(player, proximity) <= Constants.getSlimeVision()) {
+            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+            this.translate(this.getXSpeed(), -this.getYSpeed());
 
-                if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
-                    this.setXSpeed(this.getXSpeed() + 1);
-                } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
-                    this.setXSpeed(this.getXSpeed() - 1);
-                }
+        } else if (this.distanceToPlayer(player, proximity) <= Constants.getSlimeVision()) {
 
-                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-                this.translate(this.getXSpeed(), -this.getYSpeed());
+            if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
+                this.setXSpeed(this.getXSpeed() + 1);
+            } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
+                this.setXSpeed(this.getXSpeed() - 1);
             }
+
+            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+            this.translate(this.getXSpeed(), -this.getYSpeed());
         }
+
         if (Math.abs(this.getXSpeed()) > Constants.getSlimeSpeed()) {
             this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
         }

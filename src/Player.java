@@ -14,11 +14,7 @@ public class Player extends Moveable {//
     private boolean dashUsed = false;
     private boolean bashUsed = false;
     private String currentWeapon = "Sword";
-    private int[] abilityDirection = {0, 0};
     private int abilityTravelled = 0;
-
-    private int maxAbilityDistance = 0;
-    private boolean abilityActive = false;
     private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
@@ -40,7 +36,7 @@ public class Player extends Moveable {//
 
     public void move() {
 
-        if (abilityActive) {
+        if (isAbilityActive()) {
             this.movementAbility();
         }
 
@@ -70,32 +66,31 @@ public class Player extends Moveable {//
     }
 
     public void dash() {
-        this.abilityActive = true;
+        this.setAbilityActive(true);
         this.setAbilityDirection(Constants.getAbilitySpeed() * this.getDirection(), 0);
         this.dashUsed = true;
-        this.maxAbilityDistance = 450;
 
     }
     public void bash(int targetX, int targetY) {
 
-        this.abilityActive = true;
+        this.setAbilityActive(true);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
-        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY));
+        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
-        this.maxAbilityDistance = 800;
     }
 
     public void movementAbility() {
 
-        if (this.abilityTravelled < this.maxAbilityDistance) {
-            this.setXSpeed(this.abilityDirection[0]);
-            this.setYSpeed(this.abilityDirection[1]);
-            this.abilityTravelled += Math.abs(abilityDirection[0]) + Math.abs(abilityDirection[1]);
+        if (this.abilityTravelled < Constants.getMovementAbilityTotal()) {
+            this.setXSpeed(this.getAbilityDirection(0));
+            this.setYSpeed(this.getAbilityDirection(1));
+            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
         } else {
             this.abilityTravelled = 0;
-            this.abilityActive = false;
+            this.setAbilityActive(false);
         }
     }
 
@@ -252,21 +247,6 @@ public class Player extends Moveable {//
         this.bashUnlocked = bashUnlocked;
     }
 
-    public int[]getAbilityDirection() {
-        return abilityDirection;
-    }
-
-    public void setAbilityDirection(int[] abilityDirection) {
-        this.abilityDirection = abilityDirection;
-    }
-
-    public boolean isAbilityActive() {
-        return abilityActive;
-    }
-
-    public void setAbilityActive(boolean abilityActive) {
-        this.abilityActive = abilityActive;
-    }
 
     public boolean isAttackActive() {
         return attackActive;
@@ -282,11 +262,6 @@ public class Player extends Moveable {//
 
     public void setWeapons(ArrayList<String> weapons) {
         Weapons = weapons;
-    }
-
-    public void setAbilityDirection(int xChange, int yChange) {
-        this.abilityDirection[0] = xChange;
-        this.abilityDirection[1] = yChange;
     }
 
     public int getAbilityTravelled() {
