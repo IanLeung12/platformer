@@ -15,7 +15,7 @@ public class Mosquito extends Enemy{
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
 
-        this.setTotalCooldownTimer(10);
+        this.setTotalCooldownTimer(100);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -24,7 +24,7 @@ public class Mosquito extends Enemy{
 
         super(x, y, width, height, health, totalHealth, damage, goldReward);
 
-        this.setTotalCooldownTimer(10);
+        this.setTotalCooldownTimer(100);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -48,10 +48,15 @@ public class Mosquito extends Enemy{
             } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
 
                 if (this.getCooldownTimerAbility() == 0) {
-                    this.setAbilityActive(true);
 
                     this.bash((int) player.getCenterX(), (int) player.getCenterY());
                     this.movementAbility();
+
+                } else {
+                    System.out.println("cooldown");
+                    System.out.println("remaining :" + this.getCooldownTimerAbility());
+                    this.defaultMovement();
+
                 }
 
             }
@@ -65,7 +70,13 @@ public class Mosquito extends Enemy{
 
     public void defaultMovement() {
 
+        if (this.getXSpeed() > Constants.getMosquitoSpeed()) {
+            this.setXSpeed((this.getXSpeed()/2));
+        }
+
         this.translate(this.getXSpeed(),0);
+
+
 
     }
 
@@ -74,11 +85,12 @@ public class Mosquito extends Enemy{
     public void bash(int targetX, int targetY) {
 
         this.setAbilityActive(true);
+        System.out.println("ability activiated");
 
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
 
-        double interval = Constants.getMosquitoMovementAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = Constants.getMosquitoMovementAbilitySpeed() / (Math.abs(dX) + Math.abs(dY) + 1);
 
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
 
@@ -90,24 +102,21 @@ public class Mosquito extends Enemy{
 
         if (this.abilityTravelled < Constants.getMovementAbilityTotal()  ) {
 
-            System.out.println("==========================================================================");
-            System.out.println("this x and y :" + this.getCenterX() + "," + this.getCenterY()) ;
-            System.out.println("speed x and y :" + this.getXSpeed() +  " , " + this.getYSpeed());
-            System.out.println("ability traveled and posisbble travil :" + abilityTravelled + "  " + Constants.getMovementAbilityTotal());
-            System.out.println("==========================================================================");
-
-
+//            System.out.println("==========================================================================");
+//            System.out.println("this x and y :" + this.getCenterX() + "," + this.getCenterY()) ;
+//            System.out.println("speed x and y :" + this.getXSpeed() +  " , " + this.getYSpeed());
+//            System.out.println("ability traveled and posisbble travil :" + abilityTravelled + "  " + Constants.getMovementAbilityTotal());
+//            System.out.println("==========================================================================");
 
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
+            this.translate(this.getXSpeed(),  -this.getYSpeed());
             this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
         } else {
             this.abilityTravelled = 0;
             this.setAbilityActive(false);
             this.setCooldownTimerAbility(this.getTotalCooldownTimer());
         }
-
-
 
     }
 
