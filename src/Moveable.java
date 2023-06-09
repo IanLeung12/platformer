@@ -1,8 +1,8 @@
 abstract public class Moveable extends Alive{
 
     private int xSpeed, ySpeed = 0;
-    private int immunityTimer;
-    private final int maxImmunity = 0;
+    private int immunityTimer = 0;
+    private final int maxImmunity = 60;
     private int direction;
     private int[] abilityDirection = {0, 0};
     private boolean abilityActive = false;
@@ -15,8 +15,15 @@ abstract public class Moveable extends Alive{
         super(x, y, width, height, health, totalHealth);
     }
 
+    public void immunityTick() {
+        if (this.immunityTimer > 0) {
+            this.immunityTimer ++;
+        }
 
-
+        if (this.immunityTimer > this.maxImmunity) {
+            this.immunityTimer = 0;
+        }
+    }
 
     public void knockback(Attack attack) {
         double interval, dX, dY;
@@ -38,6 +45,8 @@ abstract public class Moveable extends Alive{
             interval = 15/(Math.abs(dX) + Math.abs(dY) + 1);
         }
 
+        this.setImmunityTimer(1);
+        this.setHealth(this.getHealth() - attack.getAttackDamage());
         this.setXSpeed(this.getXSpeed() + (int) (dX * interval));
         this.setYSpeed(this.getYSpeed() + (int) (dY * interval));
     }

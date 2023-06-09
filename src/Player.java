@@ -18,6 +18,10 @@ public class Player extends Moveable {//
     private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
+
+    private int[] respawnPoint;
+
+    private Wall lastWall;
     private ArrayList<String> Weapons;
 
     Player(int x, int y, int width, int height, double health, double totalHealth) {
@@ -26,6 +30,7 @@ public class Player extends Moveable {//
         this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
+        this.respawnPoint = new int[]{x, y};
         this.dashUnlocked = false;
         this.bashUnlocked = false;
 
@@ -76,7 +81,7 @@ public class Player extends Moveable {//
         this.setAbilityActive(true);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
-        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = Constants.getAbilitySpeed()/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
@@ -87,16 +92,16 @@ public class Player extends Moveable {//
         if (this.abilityTravelled < Constants.getMovementAbilityTotal()) {
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
-            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
+            this.abilityTravelled += Math.sqrt(Math.pow(this.getAbilityDirection(0), 2) + Math.pow(this.getAbilityDirection(1), 2));
         } else {
             this.abilityTravelled = 0;
             this.setAbilityActive(false);
         }
     }
 
-    public void fixCollision(GameObject otherObject) {
+    public void collide(GameObject otherObject) {
 
-        if ((otherObject instanceof Spike) || (otherObject instanceof Enemy) ) {
+        if (((otherObject instanceof Spike) || (otherObject instanceof Enemy)) && (this.getImmunityTimer() == 0)) {
 
             double dX = (this.getCenterX() - otherObject.getCenterX());
             double dY = (otherObject.getCenterY() - this.getCenterY());
@@ -112,6 +117,13 @@ public class Player extends Moveable {//
             }
 
             this.setYSpeed((int) (dY * interval));
+            this.setImmunityTimer(1);
+            if (otherObject instanceof Enemy) {
+                this.setHealth(this.getHealth() - ((Enemy) otherObject).getDamage());
+            } else {
+                this.setHealth(this.getHealth() - ((Spike) otherObject).getDamage());
+            }
+
 
 
         } else {
@@ -126,6 +138,15 @@ public class Player extends Moveable {//
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.wallReset();
+
+                if (otherObject != lastWall) {
+                    this.respawnPoint[0] = (int) this.getX();
+                    this.respawnPoint[1] = (int) this.getY();
+                } else {
+                    lastWall = (Wall) otherObject;
+                }
+
+
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
@@ -304,4 +325,11 @@ public class Player extends Moveable {//
         this.movingLeft = movingLeft;
     }
 
+    public int[] getRespawnPoint() {
+        return respawnPoint;
+    }
+
+    public void setRespawnPoint(int[] respawnPoint) {
+        this.respawnPoint = respawnPoint;
+    }
 }

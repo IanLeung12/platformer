@@ -25,7 +25,7 @@ public class GameEngine {
 
 
     GameEngine() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/Save2.txt"));
+        Scanner input = new Scanner(new File("src/Save.txt"));
         this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
@@ -49,7 +49,6 @@ public class GameEngine {
                     enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
             }
-            input.nextLine();
         }
         input.close();
     }
@@ -74,6 +73,11 @@ public class GameEngine {
 
         if (!paused) {
             player.move();
+            player.immunityTick();
+        }
+
+        if (player.getHealth() <= 0) {
+            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, 100, 100);
         }
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
@@ -87,6 +91,8 @@ public class GameEngine {
             } else if (enemy.getHealth() < 0) {
                 enemies.remove(i);
             }
+
+            enemy.immunityTick();
 
         }
 
@@ -122,7 +128,7 @@ public class GameEngine {
     public void checkCollisions() {
         for (GameObject object: surroundings) {
             if (player.getBounds().intersects(object)) {
-                player.fixCollision(object);
+                player.collide(object);
                 player.setAbilityActive(false);
             }
 
@@ -140,7 +146,7 @@ public class GameEngine {
                 }
 
                 if (player.getBounds().intersects(enemy)) {
-                    player.fixCollision(enemy);
+                    player.collide(enemy);
                     player.setAbilityActive(false);
                 }
             }

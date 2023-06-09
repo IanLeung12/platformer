@@ -37,7 +37,7 @@ public class MapDisplay extends JFrame {
 
     static boolean aimingBash = false;
 
-    static double angle = 0;
+    static double bashAngle = 0;
 
     static BufferedImage bashAimImage;
 
@@ -76,6 +76,8 @@ public class MapDisplay extends JFrame {
     public void refresh() {
         this.repaint();
 
+        this.player = game.getPlayer();
+
         if (bowCharging && bowPower < 50) {
             bowPower ++;
         }
@@ -95,6 +97,8 @@ public class MapDisplay extends JFrame {
         }
 
         player.translate(dX, dY);
+
+        player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dX});
 
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.translate(dX, dY);
@@ -174,12 +178,14 @@ public class MapDisplay extends JFrame {
 
             g2d.setColor(Color.gray);
             Player player = game.getPlayer();
-            g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+            if (player.getImmunityTimer()/10 % 2 == 0) {
+                g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
 
+            }
             if (aimingBash) {
-                g2d.rotate(angle - Math.PI, player.getCenterX(), player.getCenterY());
+                g2d.rotate(bashAngle - Math.PI, player.getCenterX(), player.getCenterY());
                 g2d.drawImage(bashAimImage, (int) player.getX() - 100, (int) player.getCenterY() - 300, this);
-                g2d.rotate(-angle + Math.PI, player.getCenterX(), player.getCenterY());
+                g2d.rotate(-bashAngle + Math.PI, player.getCenterX(), player.getCenterY());
             }
 
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
@@ -214,8 +220,9 @@ public class MapDisplay extends JFrame {
                     bowCharging = true;
                 }
             }
-            if (e.getButton() == MouseEvent.BUTTON3) {
+            if ((e.getButton() == MouseEvent.BUTTON3) && (!player.isBashUsed())) {
                 aimingBash = true;
+                bashAngle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
                 game.setRefreshDelay(75);
             }
         }
@@ -263,7 +270,7 @@ public class MapDisplay extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            angle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
+            bashAngle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
         }
 
         /**
