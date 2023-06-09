@@ -6,6 +6,8 @@ abstract public class Enemy extends Moveable {//
     private double goldReward;
     private int respawnTimer;
     private int fullRespawnTimer;
+    private int cooldownTimerAbility;
+    private int totalCooldownTimer;
 
 
     Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, int respawnTimer, int fullRespawnTimer) {
@@ -305,5 +307,21 @@ abstract public class Enemy extends Moveable {//
 
     public void setFullRespawnTimer(int fullRespawnTimer) {
         this.fullRespawnTimer = fullRespawnTimer;
+    }
+
+    public int getCooldownTimerAbility() {
+        return cooldownTimerAbility;
+    }
+
+    public void setCooldownTimerAbility(int cooldownTimerAbility) {
+        this.cooldownTimerAbility = cooldownTimerAbility;
+    }
+
+    public int getTotalCooldownTimer() {
+        return totalCooldownTimer;
+    }
+
+    public void setTotalCooldownTimer(int totalCooldownTimer) {
+        this.totalCooldownTimer = totalCooldownTimer;
     }
 }

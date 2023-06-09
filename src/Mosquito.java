@@ -15,7 +15,7 @@ public class Mosquito extends Enemy{
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
 
-        
+        this.setTotalCooldownTimer(300);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -24,6 +24,7 @@ public class Mosquito extends Enemy{
 
         super(x, y, width, height, health, totalHealth, damage, goldReward);
 
+        this.setTotalCooldownTimer(300);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -39,20 +40,22 @@ public class Mosquito extends Enemy{
 
         if (isAbilityActive()) {
             this.movementAbility();
+        } else {
+            if (this.distanceToPlayer(player, proximity) > Constants.getMosquitoVision()) {
+                this.translate(this.getXSpeed(),0);
+
+            } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
+
+                this.setAbilityActive(true);
+
+                this.bash((int) player.getCenterX(), (int) player.getCenterY());
+                this.movementAbility();
+            }
         }
 
 
 
-        if (this.distanceToPlayer(player, proximity) > Constants.getMosquitoVision()) {
-            this.translate(this.getXSpeed(),0);
 
-        } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
-
-            this.setAbilityActive(true);
-
-            this.bash((int) player.getCenterX(), (int) player.getCenterY());
-            this.movementAbility();
-        }
 
     }
 
@@ -95,6 +98,7 @@ public class Mosquito extends Enemy{
         } else {
             this.abilityTravelled = 0;
             this.setAbilityActive(false);
+            this.setCooldownTimerAbility(this.getTotalCooldownTimer());
         }
 
 
@@ -143,6 +147,12 @@ public class Mosquito extends Enemy{
         if (this.getImmunityTimer() > 0) {
             this.setImmunityTimer(this.getImmunityTimer() - 1);
         }
+
+        if (this.getCooldownTimerAbility() > 0)  {
+            this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
+        }
+
+
 
 
 
