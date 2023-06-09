@@ -15,7 +15,7 @@ public class Mosquito extends Enemy{
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
 
-        this.setTotalCooldownTimer(300);
+        this.setTotalCooldownTimer(500);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -24,7 +24,7 @@ public class Mosquito extends Enemy{
 
         super(x, y, width, height, health, totalHealth, damage, goldReward);
 
-        this.setTotalCooldownTimer(300);
+        this.setTotalCooldownTimer(500);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
@@ -66,17 +66,11 @@ public class Mosquito extends Enemy{
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
 
-        double interval = Constants.getAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = Constants.getMosquitoMovementAbilitySpeed()/(Math.abs(dX) + Math.abs(dY) + 1);
 
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
 
         this.translate(this.getXSpeed(),  -this.getYSpeed());
-
-
-//        System.out.println("==========================================================================");
-//        System.out.println("");
-//        System.out.println("==========================================================================");
-
 
     }
 

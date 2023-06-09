@@ -16,8 +16,13 @@ public class Constants {
     static int mosquitoTotalHealth = 100;
     static int mosquitoDamage = 1;
     static int mosquitoGoldReward = 100;
+    static int mosquitoMovementAbilitySpeed = 100;
     static int movementAbilityTotal = 500;
 
+
+    public static int getMosquitoMovementAbilitySpeed() {
+        return mosquitoMovementAbilitySpeed;
+    }
 
     public static int getMovementAbilityTotal() {
         return movementAbilityTotal;
