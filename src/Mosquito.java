@@ -2,13 +2,7 @@ import java.util.ArrayList;
 
 public class Mosquito extends Enemy{
 
-
     private int abilityTravelled = 0;
-
-
-
-
-
 
 
     Mosquito(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
@@ -28,13 +22,6 @@ public class Mosquito extends Enemy{
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
-
-
-
-
-
-
-
 
     public void move(Player player, ArrayList<GameObject> proximity) {
 
@@ -62,10 +49,6 @@ public class Mosquito extends Enemy{
             }
         }
 
-
-
-
-
     }
 
     public void defaultMovement() {
@@ -75,8 +58,6 @@ public class Mosquito extends Enemy{
         }
 
         this.translate(this.getXSpeed(),0);
-
-
 
     }
 
@@ -110,7 +91,7 @@ public class Mosquito extends Enemy{
 
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
-            this.translate(this.getXSpeed(),  -this.getYSpeed());
+            this.translate(this.getXSpeed(), -this.getYSpeed());
             this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
         } else {
             this.abilityTravelled = 0;
