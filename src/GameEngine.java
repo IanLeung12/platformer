@@ -14,8 +14,6 @@ public class GameEngine {
     private ArrayList<Enemy> enemies;
     private ArrayList<Orb> orbs;
 
-    public Orb orbtest;
-
     // private Shop shop;                       not created yet
     private int frameNum;
     private ArrayList<GameObject> proximity;
@@ -29,7 +27,7 @@ public class GameEngine {
 
     GameEngine() throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/Save.txt"));
-        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble(), input.nextDouble());
+        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -48,15 +46,13 @@ public class GameEngine {
                     surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Slime":
-                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.slimeGoldReward));
                     break;
                 case "Mosquito":
-                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.mosquitoGoldReward));
                     break;
             }
         }
-
-        orbs.add(orbtest = new Orb(1000, 500, 50, 50));
 
         input.close();
     }
@@ -86,7 +82,7 @@ public class GameEngine {
         }
 
         if (player.getHealth() <= 0) {
-            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, 100, 100);
+            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, player.getTotalHealth());
         }
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
@@ -102,9 +98,6 @@ public class GameEngine {
                 createOrbs(enemy, orbs);
 
                 enemies.remove(i);
-
-
-
             }
 
             enemy.immunityTick();
@@ -139,17 +132,12 @@ public class GameEngine {
 
         for (Orb orb : orbs) {
             orb.move(player);
-            System.out.println("moving orb");
-            System.out.println(orbs.size());
         }
-
-        orbtest.move(player);
-
     }
 
     public void checkCollisions() {
         for (GameObject object: surroundings) {
-            if (player.getBounds().intersects(object)) {
+            if (player.intersects(object)) {
                 player.collide(object);
                 player.setAbilityActive(false);
             }
@@ -157,17 +145,17 @@ public class GameEngine {
             for (Enemy enemy: enemies) {
                 if (enemy instanceof Slime) {
                     Slime slimeEnemy = (Slime) enemy;
-                    if (slimeEnemy.getBounds().intersects(object)) {
+                    if (slimeEnemy.intersects(object)) {
                         slimeEnemy.collision(object);
                     }
                 } else if (enemy instanceof Mosquito)  {
                     Mosquito mosquitoEnemy = (Mosquito) enemy;
-                    if (mosquitoEnemy.getBounds().intersects(object)) {
+                    if (mosquitoEnemy.intersects(object)) {
                         mosquitoEnemy.collision(object);
                     }
                 }
 
-                if (player.getBounds().intersects(enemy)) {
+                if (player.intersects(enemy)) {
                     player.collide(enemy);
                     player.setAbilityActive(false);
                 }
@@ -175,14 +163,14 @@ public class GameEngine {
 
 
             for (Orb orb : orbs) {
-                if (orb.getBounds().intersects(object)) {
+                if (orb.intersects(object)) {
                     orb.collision(object);
                 }
             }
 
         }
 
-        for (int i = 0; i < attacks.size(); i ++) {
+        for (int i = attacks.size() - 1; i >= 0; i --) {
             Attack attack = attacks.get(i);
             for (Enemy enemy: enemies) {
                 if (enemy.intersects(attack) && attack.isFriendly()) {
@@ -195,12 +183,24 @@ public class GameEngine {
                 }
             }
 
-            if (attack instanceof Rocket) {
+            if (attack instanceof Projectile) {
                 for (Wall wall: surroundings) {
-                    if (attack.getBounds().intersects(wall)) {
-                        attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                    if (attack.intersects(wall)) {
+                        if (attack instanceof Rocket) {
+                            attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                        } else {
+                            attacks.remove(i);
+                        }
+
                     }
                 }
+            }
+        }
+
+        for (int i = orbs.size() - 1; i >= 0; i -- ) {
+            if (orbs.get(i).intersects(player)) {
+                orbAbsorb(orbs.get(i));
+                orbs.remove(i);
             }
         }
     }
@@ -221,18 +221,29 @@ public class GameEngine {
     }
 
     public void createOrbs(Enemy enemy, ArrayList<Orb> orbs ) {
-
-        System.out.println("Adding orbs");
-        System.out.println(enemy.getGoldReward());
         for (int i = (int) enemy.getGoldReward(); i > 0; i = i - Constants.orbValue) {
-
-            System.out.println("Adding orbs");
             System.out.println(i);
-            orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions));
-            System.out.println(orbs.size());
+            orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, Constants.orbValue, "Gold"));
+        }
+
+        for (int i = 0; i < 3; i ++) {
+            if (Math.random() < enemy.getGoldReward() / 300.0) {
+                orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 25, "Health"));
+            }
         }
 
 
+    }
+
+    public void orbAbsorb(Orb orb) {
+        switch (orb.getBoostType()) {
+            case "Gold":
+                player.setTotalGold(player.getTotalGold() + orb.getBoostValue());
+                break;
+            case "Health":
+                player.setHealth(player.getHealth() + orb.getBoostValue());
+                break;
+        }
     }
 
 

@@ -24,12 +24,13 @@ public class Player extends Alive {//
     private Wall lastWall;
     private ArrayList<String> Weapons;
 
-    Player(int x, int y, int width, int height, double health, double totalHealth) {
-        super(x, y, width, height, health, totalHealth);
+    Player(int x, int y, int width, int height, double totalHealth) {
+        super(x, y, width, height, totalHealth, totalHealth);
         this.totalGold = 0;
         this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
+        this.setImmunityTimer(1);
         this.respawnPoint = new int[]{x, y};
         this.dashUnlocked = false;
         this.bashUnlocked = false;
@@ -59,6 +60,9 @@ public class Player extends Alive {//
             }
         }
 
+        if (this.getHealth() > this.getTotalHealth()) {
+            this.setHealth(this.getTotalHealth());
+        }
     }
 
     public void jump() {

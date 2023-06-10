@@ -1,9 +1,16 @@
 public class Orb extends Moveable{
 
     private boolean following;
-    Orb(int x, int y, int width, int height) {
+
+    private final int boostValue;
+
+    private String boostType;
+
+    Orb(int x, int y, int width, int height, int boostValue, String boostType) {
         super(x, y, width, height);
         this.following = false;
+        this.boostValue = boostValue;
+        this.boostType = boostType;
     }
 
     public void move(Player player) {
@@ -13,9 +20,9 @@ public class Orb extends Moveable{
 
         if (distance < 500) {
             following = true;
-            double interval = 30/distance;
-            this.setXSpeed((int) (dX * interval));
-            this.setYSpeed((int) -(dY * interval));
+            double interval = 20/distance;
+            this.setXSpeed((int) (dX * interval + Math.random() * 11 - 5));
+            this.setYSpeed((int) -(dY * interval + Math.random() * 11 - 5));
 
         } else {
             this.following = false;
@@ -30,10 +37,7 @@ public class Orb extends Moveable{
     public void collision(GameObject otherObject) {
 
         if (!following) {
-            if (otherObject instanceof Spike) {
-                //this.setHealth(-1);
-            } else {
-
+            if (!(otherObject instanceof Spike)) {
                 double playerBottom = this.getY() + this.getHeight();
                 double otherObjectTop = otherObject.getY();
                 double playerRight = this.getX() + this.getWidth();
@@ -58,16 +62,7 @@ public class Orb extends Moveable{
 
                 }
             }
-            System.out.println(" before following ");
-        } else if (following) {
-            if (otherObject instanceof Player) {
-                System.out.println("colliding w player");
-                ((Player) otherObject).setTotalGold(((Player) otherObject).getTotalGold() + Constants.orbValue);
-
-            }
         }
-
-
     }
 
     public boolean isFollowing() {
@@ -76,5 +71,17 @@ public class Orb extends Moveable{
 
     public void setFollowing(boolean following) {
         this.following = following;
+    }
+
+    public int getBoostValue() {
+        return boostValue;
+    }
+
+    public String getBoostType() {
+        return boostType;
+    }
+
+    public void setBoostType(String boostType) {
+        this.boostType = boostType;
     }
 }

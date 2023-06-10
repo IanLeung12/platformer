@@ -100,8 +100,6 @@ public class MapDisplay extends JFrame {
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
 
-        game.orbtest.translate(dX, dY);
-
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.translate(dX, dY);
 
@@ -117,6 +115,10 @@ public class MapDisplay extends JFrame {
             if (attack instanceof Projectile || attack instanceof Explosion) {
                 attack.translate(dX, dY);
             }
+        }
+
+        for (Orb orb: game.getOrbs()) {
+            orb.translate(dX, dY);
         }
     }
 
@@ -204,25 +206,46 @@ public class MapDisplay extends JFrame {
             }
 
             for (Orb orb : game.getOrbs()) {
-                if (orb.getBounds().intersects(player)) {
-                    g2d.setColor(Color.GREEN);
 
-                } else if (orb.isFollowing()) {
-                    g2d.setColor(Color.yellow);
-                } else {
-                    g2d.setColor(Color.red);
+                switch (orb.getBoostType()) {
+                    case "Gold":
+                        g.setColor(Color.ORANGE);
+                        break;
+                    case "Health":
+                        g.setColor(Color.PINK);
+                        break;
                 }
-
-                g2d.drawRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
-
-
+                g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
             }
 
-            g.fillRect((int) game.orbtest.getX(), (int) game.orbtest.getY(), 50, 50);
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
             g2d.drawString("gold " + player.getTotalGold(), 1000, 50);
+            g2d.drawString("Health: " + player.getHealth(), 450, 50);
 
+//            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+//            g2d.setComposite(alphaComposite);
+//            g2d.setStroke(new BasicStroke(8));
+//            g2d.setColor(new Color(67, 85, 96));
+//            g2d.fillOval(102, 802, 195, 195);
+//            g2d.setColor(Color.red);
+//            g2d.drawOval(100, 800, 200, 200);
+//            g2d.setStroke(new BasicStroke(10));
+//            alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+//            g2d.setComposite(alphaComposite);
+//            g2d.setColor(Color.green);
+//            g2d.drawArc(100, 800, 200, 200, 90, (int) -(360 * player.getHealth()/player.getTotalHealth()));
+
+            g2d.setStroke(new BasicStroke(4));
+            g2d.setColor(Color.red);
+            g2d.fillRect(102, 802, (int) (player.getTotalHealth() * 3) - 4, 46);
+            g2d.setColor(Color.GREEN);
+            g2d.fillRect(100, 800, (int) (player.getHealth() * 3), 50);
+            g2d.setColor(Color.black);
+            g2d.drawRect(100, 800, (int) (player.getTotalHealth() * 3), 50);
+
+            g2d.setColor(new Color(211, 230, 255));
+            g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getTotalHealth(), 120, 840);
         } // paintComponent method end
     } // GraphicsPanel class end
 

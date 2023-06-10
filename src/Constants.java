@@ -12,7 +12,7 @@ public class Constants {
     static int slimeSpeed = 5;
     static int slimeTotalHealth = 100;
     static int slimeDamage = 1;
-    static int slimeGoldReward = 100;
+    static int slimeGoldReward = 50;
     static int mosquitoVision = 600;
     static int mosquitoSpeed = 2;
     static int mosquitoTotalHealth = 100;
