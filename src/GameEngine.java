@@ -12,6 +12,7 @@ public class GameEngine {
     private boolean abilityActive;
     private boolean attackActive;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Orb> orbs;
 
     public Orb orbtest;
 
@@ -33,6 +34,8 @@ public class GameEngine {
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.proximity = new ArrayList<>();
+        this.orbs = new ArrayList<>();
+
         this.refreshDelay = 17;
 
         while (input.hasNext()) {
@@ -53,7 +56,7 @@ public class GameEngine {
             }
         }
 
-        orbtest = new Orb(1000, 500, 50, 50);
+        orbs.add(orbtest = new Orb(1000, 500, 50, 50));
 
         input.close();
     }
@@ -64,6 +67,7 @@ public class GameEngine {
 
         proximity.addAll(surroundings);
         proximity.addAll(enemies);
+        proximity.addAll(orbs);
 
 
 
@@ -94,7 +98,13 @@ public class GameEngine {
                 enemy.move(player, proximity);
 
             } else if (enemy.getHealth() < 0) {
+
+                createOrbs(enemy, orbs);
+
                 enemies.remove(i);
+
+
+
             }
 
             enemy.immunityTick();
@@ -127,6 +137,12 @@ public class GameEngine {
             enemy.update();
         }
 
+        for (Orb orb : orbs) {
+            orb.move(player);
+            System.out.println("moving orb");
+            System.out.println(orbs.size());
+        }
+
         orbtest.move(player);
 
     }
@@ -157,9 +173,13 @@ public class GameEngine {
                 }
             }
 
-            if (orbtest.getBounds().intersects(object)) {
-                orbtest.collision(object);
+
+            for (Orb orb : orbs) {
+                if (orb.getBounds().intersects(object)) {
+                    orb.collision(object);
+                }
             }
+
         }
 
         for (int i = 0; i < attacks.size(); i ++) {
@@ -199,6 +219,23 @@ public class GameEngine {
         }
         output.close();
     }
+
+    public void createOrbs(Enemy enemy, ArrayList<Orb> orbs ) {
+
+        System.out.println("Adding orbs");
+        System.out.println(enemy.getGoldReward());
+        for (int i = (int) enemy.getGoldReward(); i > 0; i = i - Constants.orbValue) {
+
+            System.out.println("Adding orbs");
+            System.out.println(i);
+            orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions));
+            System.out.println(orbs.size());
+        }
+
+
+    }
+
+
 
     // ================================================================
     // print writter
@@ -268,4 +305,13 @@ public class GameEngine {
     public void setFrameNum(int frameNum) {
         this.frameNum = frameNum;
     }
+
+    public ArrayList<Orb> getOrbs() {
+        return orbs;
+    }
+
+    public void setOrbs(ArrayList<Orb> orbs) {
+        this.orbs = orbs;
+    }
+
 }

@@ -21,6 +21,8 @@ public class Constants {
     static int mosquitoMovementAbilitySpeed = 80;
     static int mosquitoMovementAbilityTotal = 500;
     static int mosquitoGameLoopChargeUp = 20;
+    static int orbDimensions = 50;
+    static int orbValue = 10;
 
 
     public static int getMovementAbilityTotal() {

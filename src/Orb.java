@@ -10,6 +10,7 @@ public class Orb extends Moveable{
         double dX = player.getCenterX() - this.getCenterX();
         double dY = player.getCenterY() - this.getCenterY();
         double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)) + 1;
+
         if (distance < 500) {
             following = true;
             double interval = 30/distance;
@@ -56,7 +57,15 @@ public class Orb extends Moveable{
 
                 }
             }
+        } else if (following) {
+            if (otherObject instanceof Player) {
+                System.out.println("colliding w player");
+                ((Player) otherObject).setTotalGold(((Player) otherObject).getTotalGold() + Constants.orbValue);
+
+            }
         }
+
+
     }
 
     public boolean isFollowing() {

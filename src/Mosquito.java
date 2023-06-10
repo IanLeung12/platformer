@@ -12,7 +12,6 @@ public class Mosquito extends Enemy{
     Mosquito(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
-
         this.setTotalCooldownTimer(100);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
