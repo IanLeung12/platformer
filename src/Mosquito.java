@@ -2,8 +2,11 @@ import java.util.ArrayList;
 
 public class Mosquito extends Enemy{
 
-    private int abilityTravelled = 0;
-    private int chargeUpCounter = 18;
+    private int chargeUpCounter = Constants.getMosquitoGameLoopChargeUp();
+    private int chargeUpDistanceTraveled = 0;
+    private int startingChargeUpX;
+    private int startingChargeUpY;
+
 
 
     Mosquito(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
@@ -31,19 +34,23 @@ public class Mosquito extends Enemy{
             if (this.chargeUpCounter > 0) {
                 this.chargeUp(player);
             } else {
-                this.movementAbility();
+                this.movementAbility(player, proximity);
             }
 
         } else {
-            if (this.distanceToPlayer(player, proximity) > Constants.getMosquitoVision()) {
+            if (this.distanceToPlayer(player, proximity, false) > Constants.getMosquitoVision()) {
 
                 this.defaultMovement();
 
-            } else if (this.distanceToPlayer(player, proximity) <= Constants.getMosquitoVision()) {
+            } else if (this.distanceToPlayer(player, proximity, false) <= Constants.getMosquitoVision()) {
 
                 if (this.getCooldownTimerAbility() == 0) {
 
-                    this.chargeUpCounter = 18;
+                    chargeUpDistanceTraveled = 0;
+                    startingChargeUpX = (int) this.getCenterX();
+                    startingChargeUpY = (int) this.getCenterY();
+                    this.chargeUpCounter = Constants.getMosquitoGameLoopChargeUp();
+
                     this.chargeUp(player);
 
                 } else {
@@ -74,36 +81,33 @@ public class Mosquito extends Enemy{
         double dX = player.getCenterX() - this.getCenterX();
         double dY = -(player.getCenterY() - this.getCenterY());
 
-        if (dX < 0) {
+        if (dX > 0) {
             cooldownXSpeed = Constants.getMosquitoSpeed() * (-1);
-        } else if (dX > 0) {
+        } else if (dX < 0) {
             cooldownXSpeed = Constants.getMosquitoSpeed();
         } else {
             cooldownXSpeed = 0;
         }
 
-        double interval = Constants.getMosquitoMovementAbilitySpeed() / (Math.abs(dX) + Math.abs(dY) + 1);
-
-
-        if (Math.abs(this.getYSpeed()) > (Constants.getMosquitoSpeed() * 2)) {
+        if (Math.abs(this.getYSpeed()) > (Constants.getMosquitoSpeed())) {
             this.setYSpeed((this.getYSpeed()/2));
         }
 
-        this.translate((int) ( cooldownXSpeed ) , this.getYSpeed());
+        this.translate((int) ( cooldownXSpeed ) , (this.getYSpeed()));
 
     }
 
 
-    public void movementAbility() {
+    public void movementAbility(Player player, ArrayList<GameObject> proximity ) {
 
-        if (this.abilityTravelled < Constants.getMovementAbilityTotal()  ) {
+
+
+        if (this.distanceToPlayer(player, proximity, true) < (Constants.getMosquitoMovementAbilityTotal() + chargeUpDistanceTraveled)) {
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
             this.translate(this.getXSpeed(), -this.getYSpeed());
-            this.abilityTravelled += Math.abs(this.getAbilityDirection(0)) + Math.abs(this.getAbilityDirection(1));
 
         } else {
-            this.abilityTravelled = 0;
             this.setAbilityActive(false);
             this.setCooldownTimerAbility(this.getTotalCooldownTimer());
         }
@@ -122,10 +126,16 @@ public class Mosquito extends Enemy{
 
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
 
-        this.translate(-( this.getAbilityDirection(0)/10) , (this.getAbilityDirection(1)/10) );
+        int xTranslation = -(int) (this.getAbilityDirection(0) * interval * (this.chargeUpCounter / (Constants.getMosquitoGameLoopChargeUp() /2 )));
+        int yTranslation = (int) (this.getAbilityDirection(1) * interval * (this.chargeUpCounter / (Constants.getMosquitoGameLoopChargeUp() /2 )));
 
+        this.translate(xTranslation, yTranslation);
 
         this.chargeUpCounter--;
+
+        if (chargeUpCounter == 0) {
+            this.chargeUpDistanceTraveled = (int) (Math.sqrt(Math.pow((this.getCenterX() - this.startingChargeUpX), 2) + Math.pow((this.getCenterY() - this.startingChargeUpY), 2)));
+        }
 
     }
 
@@ -148,13 +158,12 @@ public class Mosquito extends Enemy{
 
             if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
-
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(this.getYSpeed() * (-1));
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
-                this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
 
+                this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(this.getYSpeed() * (-1));
 
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {

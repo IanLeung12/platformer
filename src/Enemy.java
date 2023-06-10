@@ -29,7 +29,7 @@ abstract public class Enemy extends Moveable {//
 
     public abstract void update();
 
-    public double distanceToPlayer(Player player, ArrayList<GameObject> listObjects) {
+    public double distanceToPlayer(Player player, ArrayList<GameObject> listObjects, boolean justDistance) {
 
         double distance;
 
@@ -50,6 +50,8 @@ abstract public class Enemy extends Moveable {//
 
         double enemyY = 0;
         double playerY = 0;
+
+        int numPoints = 0;
 
         double m, b;
 
@@ -158,7 +160,10 @@ abstract public class Enemy extends Moveable {//
 
         distance = Math.sqrt( Math.pow((playerXpointIntersection - enemyXpointIntersection), 2) + Math.pow((playerYpointIntersection - enemyYpointIntersection), 2) );
 
-        int numPoints = 0;
+        if (justDistance) {
+            return distance;
+        }
+
         int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.getRayTracingStep();
         int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.getRayTracingStep();
 

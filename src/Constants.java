@@ -4,6 +4,8 @@ public class Constants {
     static int jumpBoost = 30;
     static int abilitySpeed = 60;
 
+    static int movementAbilityTotal = 500;
+
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;
     static int slimeVision = 400;
@@ -17,15 +19,24 @@ public class Constants {
     static int mosquitoDamage = 1;
     static int mosquitoGoldReward = 100;
     static int mosquitoMovementAbilitySpeed = 80;
-    static int movementAbilityTotal = 500;
+    static int mosquitoMovementAbilityTotal = 500;
+    static int mosquitoGameLoopChargeUp = 20;
 
+
+    public static int getMovementAbilityTotal() {
+        return movementAbilityTotal;
+    }
+
+    public static int getMosquitoGameLoopChargeUp() {
+        return mosquitoGameLoopChargeUp;
+    }
 
     public static int getMosquitoMovementAbilitySpeed() {
         return mosquitoMovementAbilitySpeed;
     }
 
-    public static int getMovementAbilityTotal() {
-        return movementAbilityTotal;
+    public static int getMosquitoMovementAbilityTotal() {
+        return mosquitoMovementAbilityTotal;
     }
 
     public static int getSlimeGoldReward() {
