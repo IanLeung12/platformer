@@ -170,11 +170,24 @@ public class MapDisplay extends JFrame {
 
             }
 
+            g2d.setColor(Color.GREEN);
+            for (Enemy enemy: game.getEnemies()) {
+                if (enemy instanceof Slime) {
+                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                }
+
+            }
+
             g2d.setColor(Color.yellow);
             for (Enemy enemy: game.getEnemies()) {
-                g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                if (enemy instanceof Mosquito) {
+                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                }
+
             }
+
 
             g2d.setColor(Color.gray);
             Player player = game.getPlayer();
