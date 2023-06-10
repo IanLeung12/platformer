@@ -1,7 +1,7 @@
 abstract public class Alive extends Moveable{
 
     private double health;
-    private final double totalHealth;
+    private final double maxHealth;
 
     private int direction;
 
@@ -13,10 +13,10 @@ abstract public class Alive extends Moveable{
     private final int maxImmunity = 60;
 
 
-    Alive(int x, int y, int width, int height, double health, double totalHealth) {
+    Alive(int x, int y, int width, int height, double health, double maxHealth) {
         super(x, y, width, height);
         this.health = health;
-        this.totalHealth = totalHealth;
+        this.maxHealth = maxHealth;
     }
 
     public void knockback(Attack attack) {
@@ -62,8 +62,8 @@ abstract public class Alive extends Moveable{
         this.health = health;
     }
 
-    public double getTotalHealth() {
-        return totalHealth;
+    public double getMaxHealth() {
+        return maxHealth;
     }
 
     public int getImmunityTimer() {

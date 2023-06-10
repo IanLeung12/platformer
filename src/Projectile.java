@@ -4,8 +4,11 @@ abstract class Projectile extends Attack{
 
     private int ySpeed;
 
-    Projectile(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly,int maxDuration) {
+    private int energyCost;
+
+    Projectile(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly,int maxDuration, int energyCost) {
         super(x, y, width, height, attackDamage, direction, isFriendly, maxDuration);
+        this.energyCost = energyCost;
     }
 
     public void move() {

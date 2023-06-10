@@ -4,6 +4,8 @@ public class Player extends Alive {//
 
     private double totalGold;
     private double energy;
+
+    private double maxEnergy;
     private boolean inAnim; // ian what initial value
     private int animFrames;// ian what initial value
     private String currentAnim;// ian what initial value
@@ -24,10 +26,13 @@ public class Player extends Alive {//
     private Wall lastWall;
     private ArrayList<String> Weapons;
 
-    Player(int x, int y, int width, int height, double totalHealth) {
-        super(x, y, width, height, totalHealth, totalHealth);
+
+
+    Player(int x, int y, int width, int height, double MaxHealth, double maxEnergy) {
+        super(x, y, width, height, MaxHealth, MaxHealth);
+        this.energy = maxEnergy;
+        this.maxEnergy = maxEnergy;
         this.totalGold = 0;
-        this.energy = 3;
         this.jumpNum = 0;
         this.maxJumps = 2;
         this.setImmunityTimer(1);
@@ -60,8 +65,8 @@ public class Player extends Alive {//
             }
         }
 
-        if (this.getHealth() > this.getTotalHealth()) {
-            this.setHealth(this.getTotalHealth());
+        if (this.getHealth() > this.getMaxHealth()) {
+            this.setHealth(this.getMaxHealth());
         }
     }
 
@@ -189,6 +194,14 @@ public class Player extends Alive {//
     //dash(speedX, speedY)
     // bash()
 
+
+    public double getMaxEnergy() {
+        return maxEnergy;
+    }
+
+    public void setMaxEnergy(double maxEnergy) {
+        this.maxEnergy = maxEnergy;
+    }
 
     public String getCurrentWeapon() {
         return currentWeapon;

@@ -24,6 +24,10 @@ public class Constants {
     static int orbDimensions = 50;
     static int orbValue = 10;
 
+    static int arrowCost = 15;
+
+    static int rocketCost = 50;
+
 
     public static int getMovementAbilityTotal() {
         return movementAbilityTotal;

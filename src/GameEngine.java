@@ -22,12 +22,16 @@ public class GameEngine {
 
     boolean playing = true;
 
+    private int energy;
+
+    private int maxEnergy;
+
     private int refreshDelay;
 
 
     GameEngine() throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/Save.txt"));
-        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble());
+        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -82,7 +86,7 @@ public class GameEngine {
         }
 
         if (player.getHealth() <= 0) {
-            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, player.getTotalHealth());
+            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, player.getMaxHealth(), player.getMaxEnergy());
         }
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
@@ -190,8 +194,8 @@ public class GameEngine {
                             attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
                         } else {
                             attacks.remove(i);
+                            break;
                         }
-
                     }
                 }
             }
@@ -209,13 +213,13 @@ public class GameEngine {
 
         System.out.println("saveing");
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
-        output.println(player.getX() + " " + player.getY() + " " +  player.getWidth() + " " + player.getHeight() + " " + player.getHealth() + " " + player.getTotalHealth());
+        output.println(player.getX() + " " + player.getY() + " " +  player.getWidth() + " " + player.getHeight() + " " + player.getHealth() + " " + player.getMaxHealth());
         for (Wall wall: this.surroundings) {
             output.println((wall instanceof Spike ? "Spike " : "Wall ") + wall.getX() + " " + wall.getY() + " " + " " + wall.getWidth() + " " + wall.getHeight());
         }
         for (Enemy enemy: this.enemies) {
             output.println(enemy.getClass().getName() + " " + enemy.getX() + " " + enemy.getY() + " " +  enemy.getWidth() + " " + enemy.getHeight() + " " +
-                    enemy.getHealth() + " " + enemy.getTotalHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward());
+                    enemy.getHealth() + " " + enemy.getMaxHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward());
         }
         output.close();
     }

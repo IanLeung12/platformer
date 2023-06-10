@@ -234,18 +234,27 @@ public class MapDisplay extends JFrame {
 //            alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
 //            g2d.setComposite(alphaComposite);
 //            g2d.setColor(Color.green);
-//            g2d.drawArc(100, 800, 200, 200, 90, (int) -(360 * player.getHealth()/player.getTotalHealth()));
+//            g2d.drawArc(100, 800, 200, 200, 90, (int) -(360 * player.getHealth()/player.getMaxHealth()));
 
             g2d.setStroke(new BasicStroke(4));
             g2d.setColor(Color.red);
-            g2d.fillRect(102, 802, (int) (player.getTotalHealth() * 3) - 4, 46);
+            g2d.fillRect(102, 802, (int) (player.getMaxHealth() * 3) - 4, 46);
             g2d.setColor(Color.GREEN);
             g2d.fillRect(100, 800, (int) (player.getHealth() * 3), 50);
             g2d.setColor(Color.black);
-            g2d.drawRect(100, 800, (int) (player.getTotalHealth() * 3), 50);
-
+            g2d.drawRect(100, 800, (int) (player.getMaxHealth() * 3), 50);
             g2d.setColor(new Color(211, 230, 255));
-            g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getTotalHealth(), 120, 840);
+            g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getMaxHealth(), 120, 840);
+
+            g2d.setColor(new Color(29, 37, 80));
+            g2d.fillRect(102, 902, (int) (player.getMaxEnergy() * 3) - 4, 46);
+            g2d.setColor(new Color(32, 127, 178));
+            g2d.fillRect(100, 900, (int) (player.getEnergy() * 3), 50);
+            g2d.setColor(Color.black);
+            g2d.drawRect(100, 900, (int) (player.getMaxEnergy() * 3), 50);
+            g2d.setColor(new Color(211, 230, 255));
+            g2d.drawString("Energy: " + (int) player.getEnergy() + " / " + (int) player.getMaxEnergy(), 120, 940);
+
         } // paintComponent method end
     } // GraphicsPanel class end
 
@@ -271,7 +280,7 @@ public class MapDisplay extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                if (player.getCurrentWeapon().equals("Bow")) {
+                if ((player.getCurrentWeapon().equals("Bow")) && (player.getEnergy() > Constants.arrowCost)) {
                     bowCharging = true;
                 }
             }
@@ -293,24 +302,32 @@ public class MapDisplay extends JFrame {
                 int direction = e.getX() > player.getCenterX() ? 1 : -1;
                 switch (player.getCurrentWeapon()) {
                     case "Sword":
-                        game.getAttacks().add(new Sword((int) (player.getX() + (direction == 1 ? player.getWidth() : -150)),
+                        game.getAttacks().add(new Sword((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() : -150)),
                                 (int) (player.getY() - 50), direction, true));
                         break;
                     case "Hammer":
-                        game.getAttacks().add(new Hammer((int) (player.getX() + (direction == 1 ? player.getWidth() + 50 : -300)),
+                        game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
                                 (int) (player.getY() - 50), direction, true));
                         break;
                     case "Bow":
-                        if (bowPower > 20) {
-                            game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
-                                    e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                        if (bowCharging) {
+                            if (bowPower > 20) {
+                                game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
+                                        e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                            }
+                            bowPower = 1;
+                            bowCharging = false;
+                            player.setEnergy(player.getEnergy() - Constants.arrowCost);
                         }
-                        bowPower = 1;
-                        bowCharging = false;
+
                         break;
+
                     case "Rocket":
-                        game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
-                                e.getX() + cameraX, e.getY() + cameraY, direction, true));
+                        if (player.getEnergy() > Constants.rocketCost) {
+                            game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
+                                    e.getX() + cameraX, e.getY() + cameraY, direction, true));
+                            player.setEnergy(player.getEnergy() - Constants.rocketCost);
+                        }
                         break;
                 }
 
