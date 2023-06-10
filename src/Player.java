@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Player extends Moveable {//
+public class Player extends Alive {//
 
     private double totalGold;
     private double energy;
@@ -101,31 +101,29 @@ public class Player extends Moveable {//
 
     public void collide(GameObject otherObject) {
 
-        if (((otherObject instanceof Spike) || (otherObject instanceof Enemy)) && (this.getImmunityTimer() == 0)) {
+        if ((otherObject instanceof Spike) || (otherObject instanceof Enemy)) {
+            if (this.getImmunityTimer() == 0) {
+                double dX = (this.getCenterX() - otherObject.getCenterX());
+                double dY = (otherObject.getCenterY() - this.getCenterY());
 
-            double dX = (this.getCenterX() - otherObject.getCenterX());
-            double dY = (otherObject.getCenterY() - this.getCenterY());
+                double interval = 35/(Math.abs(dX) + Math.abs(dY));
 
-            double interval = 35/(Math.abs(dX) + Math.abs(dY));
+                this.setXSpeed((int) (dX * interval));
 
-            this.setXSpeed((int) (dX * interval));
+                if ((this.getXSpeed() < 10) && (this.getXSpeed() != 0)) {
+                    this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
+                } if (this.getXSpeed() == 0) {
+                    this.setXSpeed(-20 * this.getDirection());
+                }
 
-            if ((this.getXSpeed() < 10) && (this.getXSpeed() != 0)) {
-                this.setXSpeed(this.getXSpeed()/Math.abs(this.getXSpeed()) * 20);
-            } if (this.getXSpeed() == 0) {
-                this.setXSpeed(-20 * this.getDirection());
+                this.setYSpeed((int) (dY * interval));
+                this.setImmunityTimer(1);
+                if (otherObject instanceof Enemy) {
+                    this.setHealth(this.getHealth() - ((Enemy) otherObject).getDamage());
+                } else {
+                    this.setHealth(this.getHealth() - ((Spike) otherObject).getDamage());
+                }
             }
-
-            this.setYSpeed((int) (dY * interval));
-            this.setImmunityTimer(1);
-            if (otherObject instanceof Enemy) {
-                this.setHealth(this.getHealth() - ((Enemy) otherObject).getDamage());
-            } else {
-                this.setHealth(this.getHealth() - ((Spike) otherObject).getDamage());
-            }
-
-
-
         } else {
             double playerBottom = this.getY() + this.getHeight();
             double otherObjectTop = otherObject.getY();

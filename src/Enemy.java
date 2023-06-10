@@ -1,6 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-abstract public class Enemy extends Moveable {//
+abstract public class Enemy extends Alive {//
 
     private double damage;
     private double goldReward;

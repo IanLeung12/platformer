@@ -13,6 +13,8 @@ public class GameEngine {
     private boolean attackActive;
     private ArrayList<Enemy> enemies;
 
+    public Orb orbtest;
+
     // private Shop shop;                       not created yet
     private int frameNum;
     private ArrayList<GameObject> proximity;
@@ -50,6 +52,9 @@ public class GameEngine {
                     break;
             }
         }
+
+        orbtest = new Orb(1000, 500, 50, 50);
+
         input.close();
     }
 
@@ -122,6 +127,7 @@ public class GameEngine {
             enemy.update();
         }
 
+        orbtest.move(player);
 
     }
 
@@ -149,6 +155,10 @@ public class GameEngine {
                     player.collide(enemy);
                     player.setAbilityActive(false);
                 }
+            }
+
+            if (orbtest.getBounds().intersects(object)) {
+                orbtest.collision(object);
             }
         }
 

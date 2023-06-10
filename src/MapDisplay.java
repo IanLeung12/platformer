@@ -98,7 +98,9 @@ public class MapDisplay extends JFrame {
 
         player.translate(dX, dY);
 
-        player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dX});
+        player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
+
+        game.orbtest.translate(dX, dY);
 
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.translate(dX, dY);
@@ -201,6 +203,15 @@ public class MapDisplay extends JFrame {
                 g2d.rotate(-bashAngle + Math.PI, player.getCenterX(), player.getCenterY());
             }
 
+            if (game.orbtest.getBounds().intersects(player)) {
+                g2d.setColor(Color.GREEN);
+            } else if (game.orbtest.isFollowing()) {
+                g2d.setColor(Color.yellow);
+            } else {
+                g2d.setColor(Color.red);
+            }
+
+            g.fillRect((int) game.orbtest.getX(), (int) game.orbtest.getY(), 50, 50);
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
 
