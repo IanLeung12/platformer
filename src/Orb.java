@@ -16,6 +16,7 @@ public class Orb extends Moveable{
             double interval = 30/distance;
             this.setXSpeed((int) (dX * interval));
             this.setYSpeed((int) -(dY * interval));
+
         } else {
             this.following = false;
             if (this.getXSpeed() != 0) {
@@ -57,6 +58,7 @@ public class Orb extends Moveable{
 
                 }
             }
+            System.out.println(" before following ");
         } else if (following) {
             if (otherObject instanceof Player) {
                 System.out.println("colliding w player");
