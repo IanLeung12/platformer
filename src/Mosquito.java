@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Mosquito extends Enemy{
 
     private int abilityTravelled = 0;
-    private int chargeUpCounter = 15;
+    private int chargeUpCounter = 18;
 
 
     Mosquito(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
@@ -43,12 +43,12 @@ public class Mosquito extends Enemy{
 
                 if (this.getCooldownTimerAbility() == 0) {
 
-                    this.chargeUpCounter = 15;
+                    this.chargeUpCounter = 18;
                     this.chargeUp(player);
 
                 } else {
 
-                    this.defaultMovement();
+                    this.cooldownMovement(player);
 
                 }
 
@@ -59,7 +59,7 @@ public class Mosquito extends Enemy{
 
     public void defaultMovement() {
 
-        if (this.getXSpeed() > Constants.getMosquitoSpeed()) {
+        if (Math.abs(this.getXSpeed()) > Constants.getMosquitoSpeed()) {
             this.setXSpeed((this.getXSpeed()/2));
         }
 
@@ -67,8 +67,31 @@ public class Mosquito extends Enemy{
 
     }
 
+    public void cooldownMovement(Player player) {
+
+        double cooldownXSpeed;
+
+        double dX = player.getCenterX() - this.getCenterX();
+        double dY = -(player.getCenterY() - this.getCenterY());
+
+        if (dX < 0) {
+            cooldownXSpeed = Constants.getMosquitoSpeed() * (-1);
+        } else if (dX > 0) {
+            cooldownXSpeed = Constants.getMosquitoSpeed();
+        } else {
+            cooldownXSpeed = 0;
+        }
+
+        double interval = Constants.getMosquitoMovementAbilitySpeed() / (Math.abs(dX) + Math.abs(dY) + 1);
 
 
+        if (Math.abs(this.getYSpeed()) > (Constants.getMosquitoSpeed() * 2)) {
+            this.setYSpeed((this.getYSpeed()/2));
+        }
+
+        this.translate((int) ( cooldownXSpeed ) , this.getYSpeed());
+
+    }
 
 
     public void movementAbility() {
