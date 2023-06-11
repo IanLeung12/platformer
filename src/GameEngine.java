@@ -44,7 +44,7 @@ public class GameEngine {
             String objectType = input.next();
             switch (objectType) {
                 case "Wall":
-                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextBoolean()));
+                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Spike":
                     surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
