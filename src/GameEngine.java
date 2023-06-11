@@ -32,8 +32,8 @@ public class GameEngine {
 
 
     GameEngine() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/Save.txt"));
-        this.player = new Player((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextDouble(), input.nextDouble());
+        Scanner input = new Scanner(new File("src/Save2.txt"));
+        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -47,22 +47,22 @@ public class GameEngine {
             String objectType = input.next();
             switch (objectType) {
                 case "Wall":
-                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextBoolean()));
+                    surroundings.add(new Wall(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextBoolean()));
                     break;
                 case "Spike":
-                    surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    surroundings.add(new Spike(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
                 case "Crystal":
-                    surroundings.add(new Crystal((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.next()));
+                    surroundings.add(new Crystal(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next()));
                     break;
                 case "Slime":
-                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Slime(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
                 case "Mosquito":
-                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Mosquito(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
                 case "Jumper":
-                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Jumper(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
             }
         }
@@ -278,13 +278,13 @@ public class GameEngine {
     public void save() throws FileNotFoundException {
 
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
-        output.println(player.getX() + " " + player.getY() + " " +  player.getWidth() + " " + player.getHeight() + " " + player.getHealth() + " " + player.getMaxHealth());
+        output.println((int) player.getX() + " " + (int) player.getY() + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " + (int) player.getHealth() + " " + (int) player.getMaxHealth());
         for (Wall wall: this.surroundings) {
-            output.println((wall instanceof Spike ? "Spike " : "Wall ") + wall.getX() + " " + wall.getY() + " " + " " + wall.getWidth() + " " + wall.getHeight());
+            output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
         }
         for (Enemy enemy: this.enemies) {
-            output.println(enemy.getClass().getName() + " " + enemy.getX() + " " + enemy.getY() + " " +  enemy.getWidth() + " " + enemy.getHeight() + " " +
-                    enemy.getHealth() + " " + enemy.getMaxHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward() + " " + enemy.getRespawnX() + " " + enemy.getRespawnY());
+            output.println(enemy.getClass().getName() + " " + (int) enemy.getX() + " " + (int) enemy.getY() + " " + (int) enemy.getWidth() + " " + (int) enemy.getHeight() + " " +
+                    (int) enemy.getHealth() + " " + (int) enemy.getMaxHealth() + " " + (int) enemy.getDamage() + " " + (int) enemy.getGoldReward() + " " + (int) enemy.getRespawnX() + " " + (int) enemy.getRespawnY());
         }
         output.close();
     }
