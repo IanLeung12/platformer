@@ -145,10 +145,9 @@ public class Player extends Alive {//
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.wallReset();
 
-                if ((otherObject != lastWall) && (((Wall)otherObject).isrespawnable())) {
+                if ((otherObject != lastWall) && (((Wall) otherObject).isrespawnable())) {
                     this.respawnPoint[0] = (int) this.getX();
                     this.respawnPoint[1] = (int) this.getY();
-                } else {
                     lastWall = (Wall) otherObject;
                 }
 
@@ -188,6 +187,8 @@ public class Player extends Alive {//
         this.setLocation(this.respawnPoint[0], this.respawnPoint[1]);
         this.setHealth(this.getMaxHealth());
         this.setEnergy(this.getMaxEnergy());
+        this.setXSpeed(0);
+        this.setYSpeed(0);
         this.totalGold = (int) (this.totalGold * 0.9);
     }
 

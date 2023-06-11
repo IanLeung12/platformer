@@ -43,8 +43,8 @@ public class Jumper extends Enemy{
                 chargeUp(player);
 
             } else {
-                porabolicMovement();
-
+                this.translate(this.getXSpeed(), -this.getYSpeed());
+                this.setYSpeed(this.getYSpeed() - Constants.gravity);
                 if (landedFrenzy > Constants.jumperMaxJumps) {
                     landedFrenzy = 0;
                     this.setAbilityActive(false);
@@ -59,7 +59,12 @@ public class Jumper extends Enemy{
 
             if (this.distanceToPlayer(player, proximity, false) > Constants.jumperVision) {
 
-                this.defaultMovement();
+                this.translate(this.getXSpeed(), -this.getYSpeed());
+                this.setYSpeed(this.getYSpeed() - Constants.gravity);
+
+                if (this.getCooldownTimerAbility() > 0) {
+                    this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
+                }
 
 
             } else if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
@@ -70,28 +75,17 @@ public class Jumper extends Enemy{
                     this.chargeUp(player);
 
                 } else {
-                   this.defaultMovement();
+                   this.translate(this.getXSpeed(), -this.getYSpeed());
+                   this.setYSpeed(this.getYSpeed() - Constants.gravity);
+
+                   if (this.getCooldownTimerAbility() > 0) {
+                       this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
+                   }
 
                 }
             }
         }
     }
-
-    public void defaultMovement() {
-
-        if (Math.abs(this.getXSpeed()) > Constants.jumperSpeed) {
-            this.setXSpeed((this.getXSpeed()/2));
-        }
-
-        this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-        this.translate(this.getXSpeed(), -this.getYSpeed());
-
-        if (this.getCooldownTimerAbility() > 0) {
-            this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
-        }
-
-    }
-
 
     public void chargeUp(Player player) {
 
@@ -109,22 +103,20 @@ public class Jumper extends Enemy{
 
     public void setUpFrenzy(Player player) {
 
-        int power = Constants.jumperJumpPower;
-
         double dX = player.getCenterX() - this.getCenterX();
-        double dY = -(player.getCenterY() - this.getCenterY());
+        double dY = (this.getCenterY() - player.getCenterY());
 
-        double interval = power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
-
-        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? (dY * interval) : (dX/this.getXSpeed()))));
-
-    }
-
-
-    public void porabolicMovement() {
-
-        this.setYSpeed(this.getYSpeed() - Constants.gravity);
-        this.translate(this.getXSpeed(), -this.getYSpeed());
+        if (dY <= 450) {
+            double r1 = (-60 - Math.sqrt(3600 - 8 * dY))/-4;
+            double r2 = (-60 + Math.sqrt(3600 - 8 * dY))/-4;
+            double ticks = Math.max(r1, r2);
+            this.setXSpeed((int) Math.round(dX/(ticks*2)));
+            this.setYSpeed(60);
+            System.out.println(ticks + " " + dX + " " + this.getXSpeed() + " " + dY);
+        } else {
+            this.setYSpeed(80);
+            this.setXSpeed((int) Math.round(dX/30));
+        }
 
     }
 
@@ -146,14 +138,15 @@ public class Jumper extends Enemy{
             if ((playerBottom > otherObjectTop) && (this.getY() + this.getYSpeed() < otherObjectTop) && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
-                this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
+                this.setYSpeed(0);
+                this.setXSpeed(this.getXSpeed()/2);
 
                 this.landedFrenzy++;
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
-                this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
+                this.setYSpeed(0);
 
                 this.landedFrenzy++;
 
@@ -180,7 +173,6 @@ public class Jumper extends Enemy{
 
         this.immunityTick();
 
-        this.setRespawnTimer(this.getRespawnTimer() - 1);
 
     }
 
