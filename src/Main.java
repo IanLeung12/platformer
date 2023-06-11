@@ -10,13 +10,13 @@ public class Main {
 
 
         while (map.playing) {
-            window.refresh();
 
             map.moveAll();
             map.checkCollisions();
 
 
 
+            window.refresh();
             window.refresh();
             try {Thread.sleep(map.getRefreshDelay());} catch(Exception e){}
 

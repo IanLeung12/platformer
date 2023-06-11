@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 // the following imports are needed for pictures
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -43,6 +44,10 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage[] weaponIcons = new BufferedImage[4];
 
+    static BufferedImage[] playerFrames = new BufferedImage[100];
+
+    static BufferedImage slime;
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
@@ -56,11 +61,20 @@ public class MapDisplay extends JFrame {
         this.bowCharging = false;
 
         try {
-            bashAimImage = ImageIO.read(new File("Pictures/arrow.png"));
-            weaponIcons[0] = ImageIO.read(new File("Pictures/SwordIcon.png"));
-            weaponIcons[1] = ImageIO.read(new File("Pictures/HammerIcon.png"));
-            weaponIcons[2] = ImageIO.read(new File("Pictures/BowIcon.png"));
-            weaponIcons[3] = ImageIO.read(new File("Pictures/RocketIcon.png"));
+            bashAimImage = image("Pictures/arrow.png");
+            weaponIcons[0] = image("Pictures/SwordIcon.png");
+            weaponIcons[1] = image("Pictures/HammerIcon.png");
+            weaponIcons[2] = image("Pictures/BowIcon.png");
+            weaponIcons[3] = image("Pictures/RocketIcon.png");
+
+            playerFrames[0] = image("Pictures/player0.png");
+            playerFrames[1] = image("Pictures/player1.png");
+            playerFrames[2] = image("Pictures/player2.png");
+            playerFrames[3] = image("Pictures/player3.png");
+            playerFrames[4] = image("Pictures/player4.png");
+            playerFrames[5] = image("Pictures/player5.png");
+
+            slime = image("Pictures/slime.png");
             System.out.println("e");
         } catch (IOException ex){
             System.out.println("a");
@@ -78,6 +92,10 @@ public class MapDisplay extends JFrame {
         this.setVisible(true);
 
     } // main method end
+
+    public BufferedImage image(String path) throws IOException {
+        return ImageIO.read(new File(path));
+    }
 
     public void refresh() {
         this.repaint();
@@ -181,14 +199,16 @@ public class MapDisplay extends JFrame {
             g2d.setColor(Color.GREEN);
             for (Enemy enemy: game.getEnemies()) {
                 if (enemy instanceof Slime) {
-                    g2d.setColor(Color.GREEN);
+                    g2d.drawImage(slime, (int) enemy.getX(), (int) enemy.getY(), this);
                 } else if (enemy instanceof Mosquito) {
                     g2d.setColor(Color.yellow);
+                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
                 } else if (enemy instanceof Jumper) {
                     g2d.setColor(Color.blue);
+                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
                 }
 
-                g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+
 
                 if (enemy.getHealth() != enemy.getMaxHealth()) {
                     g2d.setColor(Color.red);
@@ -202,8 +222,21 @@ public class MapDisplay extends JFrame {
             g2d.setColor(Color.gray);
             Player player = game.getPlayer();
             if (player.getImmunityTimer()/10 % 2 == 0) {
-                g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+                int speed = Math.abs(player.getXSpeed());
+                if (speed < 30){
+                    AffineTransform originalTransform = g2d.getTransform();
+                    AffineTransform tx = AffineTransform.getScaleInstance(player.getDirection(), 1);
+                    if (player.getDirection() != 1) {
+                        tx.translate(-(player.getX() + playerFrames[speed / 5].getWidth()), player.getY());
+                    } else {
+                        tx.translate(player.getX(), player.getY());
+                    }
 
+                    g2d.drawImage(playerFrames[speed / 5], tx, this);
+                    g2d.setTransform(originalTransform);
+                } else {
+                    g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+                }
             }
 
             if (aimingBash) {

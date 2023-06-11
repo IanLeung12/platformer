@@ -19,6 +19,7 @@ abstract public class Alive extends Moveable{
         this.health = health;
         this.maxHealth = maxHealth;
         this.maxImmunity = maxImmunity;
+        this.direction = 1;
     }
 
     public void immunityTick() {
