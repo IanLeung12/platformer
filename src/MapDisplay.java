@@ -118,24 +118,33 @@ public class MapDisplay extends JFrame {
             dY = dY/Math.abs(dY) * 26;
         }
 
+
+
+
         player.translate(dX, dY);
+        System.out.println("dx is " + dX + "    dy is" + dY);
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
 
         for (GameObject surrounding: game.getSurroundings()) {
             surrounding.translate(dX, dY);
-
         }
 
         for (Enemy enemy: game.getEnemies()) {
             enemy.translate(dX, dY);
+
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
+
         }
 
         for (Enemy enemy : game.getRespawnList()) {
+            enemy.translate(dX, dY);
+            System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
+            System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
+
         }
 
         for (int i = 0; i < game.getAttacks().size(); i ++) {

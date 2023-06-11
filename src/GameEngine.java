@@ -99,6 +99,7 @@ public class GameEngine {
             if (enemy.getHealth() > 0) {
 
                 enemy.move(player, proximity);
+                System.out.println("enemy respawn x :" + enemy.getRespawnX() + " respawn y" + enemy.getRespawnY());
 
             } else if (enemy.getHealth() <= 0) {
 
@@ -167,7 +168,7 @@ public class GameEngine {
                     mosquito.setAbilityActive(false);
                     mosquito.setImmunityTimer(1);
                     mosquito.setHealth(Constants.mosquitoTotalHealth);
-                   // mosquito.setLocation((int) player.getCenterX(), (int) player.getCenterY() );
+                    //mosquito.setLocation((int) player.getCenterX(), (int) player.getCenterY() );
 
                     mosquito.setLocation((int) mosquito.getRespawnX(), (int) mosquito.getRespawnY());
 
@@ -186,6 +187,7 @@ public class GameEngine {
                 enemies.add(enemy);
 
                 System.out.println("respawned" + enemy + "    and respanw x and y are "  + enemy.getRespawnX() + "   " + enemy.getRespawnY());
+                System.out.println(" player x and y " + player.getCenterX() + "   " + player.getCenterY());
             }
 
             System.out.println(enemy.getRespawnTimer());

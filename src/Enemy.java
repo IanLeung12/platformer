@@ -20,6 +20,11 @@ abstract public class Enemy extends Alive {//
     }
 
 
+    public abstract void move(Player player, ArrayList<GameObject> proximity);
+
+    public abstract void update();
+
+
     public void knockback(Attack attack) {
         double interval, dX, dY;
         if (this.getImmunityTimer() == 0) {
@@ -48,9 +53,7 @@ abstract public class Enemy extends Alive {//
         }
     }
 
-    public abstract void move(Player player, ArrayList<GameObject> proximity);
 
-    public abstract void update();
 
     public double distanceToPlayer(Player player, ArrayList<GameObject> listObjects, boolean justDistance) {
 
@@ -126,6 +129,7 @@ abstract public class Enemy extends Alive {//
                 playerPosition = "up";
                 enemyPosition = "down";
             }
+
         }
 
 
