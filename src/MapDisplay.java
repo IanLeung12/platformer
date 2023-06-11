@@ -41,6 +41,8 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage bashAimImage;
 
+    static BufferedImage[] weaponIcons = new BufferedImage[4];
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
@@ -54,7 +56,11 @@ public class MapDisplay extends JFrame {
         this.bowCharging = false;
 
         try {
-            bashAimImage = ImageIO.read(new File("src/arrow.png"));
+            bashAimImage = ImageIO.read(new File("Pictures/arrow.png"));
+            weaponIcons[0] = ImageIO.read(new File("Pictures/SwordIcon.png"));
+            weaponIcons[1] = ImageIO.read(new File("Pictures/HammerIcon.png"));
+            weaponIcons[2] = ImageIO.read(new File("Pictures/BowIcon.png"));
+            weaponIcons[3] = ImageIO.read(new File("Pictures/RocketIcon.png"));
             System.out.println("e");
         } catch (IOException ex){
             System.out.println("a");
@@ -75,8 +81,6 @@ public class MapDisplay extends JFrame {
 
     public void refresh() {
         this.repaint();
-
-        this.player = game.getPlayer();
 
         if (bowCharging && bowPower < 50) {
             bowPower ++;
@@ -208,14 +212,15 @@ public class MapDisplay extends JFrame {
                 g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
 
             }
+
             if (aimingBash) {
                 g2d.rotate(bashAngle - Math.PI, player.getCenterX(), player.getCenterY());
                 g2d.drawImage(bashAimImage, (int) player.getX() - 100, (int) player.getCenterY() - 300, this);
                 g2d.rotate(-bashAngle + Math.PI, player.getCenterX(), player.getCenterY());
             }
 
-            for (Orb orb : game.getOrbs()) {
-
+            for (int i = 0; i < game.getOrbs().size(); i ++) {
+                Orb orb = game.getOrbs().get(i);
                 switch (orb.getBoostType()) {
                     case "Gold":
                         g.setColor(Color.ORANGE);
@@ -244,6 +249,29 @@ public class MapDisplay extends JFrame {
 //            g2d.setComposite(alphaComposite);
 //            g2d.setColor(Color.green);
 //            g2d.drawArc(100, 800, 200, 200, 90, (int) -(360 * player.getHealth()/player.getMaxHealth()));
+
+            g2d.setColor(new Color(20, 20, 129));
+
+            g2d.fillRect(90, 690, 295, 70);
+            g2d.setColor(new Color(159, 243, 245));
+
+            switch (player.getCurrentWeapon()) {
+                case "Sword":
+                    g2d.fillRect(98, 698, 54, 54);
+                    break;
+                case "Hammer":
+                    g2d.fillRect(98 + 75, 698, 54, 54);
+                    break;
+                case "Bow":
+                    g2d.fillRect(98 + 150, 698, 54, 54);
+                    break;
+                case "Rocket":
+                    g2d.fillRect(98 + 225, 698, 54, 54);
+                    break;
+            }
+            for (int i = 0; i < weaponIcons.length; i ++) {
+                g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+            }
 
             g2d.setStroke(new BasicStroke(4));
             g2d.setColor(Color.red);
@@ -289,11 +317,11 @@ public class MapDisplay extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                if ((player.getCurrentWeapon().equals("Bow")) && (player.getEnergy() > Constants.arrowCost)) {
+                if ((player.getCurrentWeapon().equals("Bow")) && (player.getEnergy() >= Constants.arrowCost)) {
                     bowCharging = true;
                 }
             }
-            if ((e.getButton() == MouseEvent.BUTTON3) && (!player.isBashUsed())) {
+            if ((e.getButton() == MouseEvent.BUTTON3) && (player.isBashUnlocked()) && (!player.isBashUsed())) {
                 aimingBash = true;
                 bashAngle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
                 game.setRefreshDelay(75);
@@ -323,16 +351,16 @@ public class MapDisplay extends JFrame {
                             if (bowPower > 20) {
                                 game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
                                         e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
+                                player.setEnergy(player.getEnergy() - Constants.arrowCost);
                             }
                             bowPower = 1;
                             bowCharging = false;
-                            player.setEnergy(player.getEnergy() - Constants.arrowCost);
                         }
 
                         break;
 
                     case "Rocket":
-                        if (player.getEnergy() > Constants.rocketCost) {
+                        if (player.getEnergy() >= Constants.rocketCost) {
                             game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
                                     e.getX() + cameraX, e.getY() + cameraY, direction, true));
                             player.setEnergy(player.getEnergy() - Constants.rocketCost);
@@ -341,7 +369,7 @@ public class MapDisplay extends JFrame {
                 }
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
-                if ((!player.isAbilityActive()) && (!player.isBashUsed())) {
+                if ((!player.isAbilityActive()) && (player.isBashUnlocked()) && (!player.isBashUsed())) {
                     player.bash(e.getX() + cameraX, e.getY() + cameraY);
                     aimingBash = false;
                     game.setRefreshDelay(17);
@@ -402,7 +430,7 @@ public class MapDisplay extends JFrame {
             }
 
             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-                if ((!player.isAbilityActive()) && (!player.isDashUsed())) {
+                if ((!player.isAbilityActive()) && (player.isDashUnlocked()) && (!player.isDashUsed())) {
                     player.dash();
                 }
             }

@@ -4,7 +4,6 @@ public class Player extends Alive {//
 
     private double totalGold;
     private double energy;
-
     private double maxEnergy;
     private boolean inAnim; // ian what initial value
     private int animFrames;// ian what initial value
@@ -37,8 +36,8 @@ public class Player extends Alive {//
         this.maxJumps = 2;
         this.setImmunityTimer(1);
         this.respawnPoint = new int[]{x, y};
-        this.dashUnlocked = false;
-        this.bashUnlocked = false;
+        this.dashUnlocked = true;
+        this.bashUnlocked = true;
 
 
         // add a single weapon into weapons ===============================
@@ -146,7 +145,7 @@ public class Player extends Alive {//
                 this.setYSpeed(0); // Stop the player's vertical movement
                 this.wallReset();
 
-                if (otherObject != lastWall) {
+                if ((otherObject != lastWall) && (((Wall)otherObject).isrespawnable())) {
                     this.respawnPoint[0] = (int) this.getX();
                     this.respawnPoint[1] = (int) this.getY();
                 } else {
@@ -183,6 +182,13 @@ public class Player extends Alive {//
         this.jumpNum = 0;
         this.dashUsed = false;
         this.bashUsed = false;
+    }
+
+    public void respawn() {
+        this.setLocation(this.respawnPoint[0], this.respawnPoint[1]);
+        this.setHealth(this.getMaxHealth());
+        this.setEnergy(this.getMaxEnergy());
+        this.totalGold = this.totalGold * 0.9;
     }
 
     public void updatePlayer() {}
