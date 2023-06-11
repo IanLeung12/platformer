@@ -190,5 +190,8 @@ public class Mosquito extends Enemy{
         if (this.getCooldownTimerAbility() > 0)  {
             this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
         }
+
+        this.setRespawnTimer(this.getRespawnTimer() - 1);
+
     }
 }

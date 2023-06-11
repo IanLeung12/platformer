@@ -107,11 +107,7 @@ public class Slime extends Enemy{//
             this.setDirection(1);
         }
 
-
-
-
-
-
+        this.setRespawnTimer(this.getRespawnTimer() - 1);
 
 
     }

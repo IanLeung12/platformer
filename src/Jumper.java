@@ -118,8 +118,6 @@ public class Jumper extends Enemy{
 
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? (dY * interval) : (dX/this.getXSpeed()))));
 
-        System.out.println(this.getXSpeed());
-
     }
 
 
@@ -182,6 +180,7 @@ public class Jumper extends Enemy{
 
         this.immunityTick();
 
+        this.setRespawnTimer(this.getRespawnTimer() - 1);
 
     }
 

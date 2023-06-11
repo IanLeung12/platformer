@@ -100,16 +100,19 @@ public class GameEngine {
 
                 enemy.move(player, proximity);
 
-            } else if (enemy.getHealth() < 0) {
+            } else if (enemy.getHealth() <= 0) {
 
                 createOrbs(enemy, orbs);
 
                 respawnList.add(enemy);
                 enemy.setRespawnTimer(Constants.respawnTimerEnemy);
+                System.out.println("enemy died " + enemy.getCenterX());
 
                 enemies.remove(i);
             }
         }
+        respawnList.removeIf(enemy -> enemy.getImmunityTimer() <= 0);
+
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
             Attack attack = attacks.get(i);
@@ -142,6 +145,39 @@ public class GameEngine {
         }
 
         for (Enemy enemy : respawnList) {
+            if (enemy.getRespawnTimer() >= 0) {
+
+                if (enemy instanceof Slime) {
+                    Slime slime = (Slime) enemy;
+                    slime.setXSpeed(0);
+                    slime.setYSpeed(0);
+                    slime.setAbilityActive(false);
+                    slime.setImmunityTimer(1);
+                    slime.setHealth(Constants.slimeTotalHealth);
+                } else if (enemy instanceof Mosquito) {
+                    Mosquito mosquito = (Mosquito) enemy;
+                    mosquito.setXSpeed(0);
+                    mosquito.setYSpeed(0);
+                    mosquito.setAbilityActive(false);
+                    mosquito.setImmunityTimer(1);
+                    mosquito.setHealth(Constants.mosquitoTotalHealth);
+                } else if (enemy instanceof Jumper) {
+                    Jumper jumper = (Jumper) enemy;
+                    jumper.setXSpeed(0);
+                    jumper.setYSpeed(0);
+                    jumper.setAbilityActive(false);
+                    jumper.setImmunityTimer(1);
+                    jumper.setHealth(Constants.jumperMaxHP);
+                }
+
+                enemies.add(enemy);
+
+                System.out.println("respawned enemy" + enemy.getCenterX());
+            }
+
+            System.out.println(enemy.getRespawnTimer());
+
+            enemy.update();
 
         }
     }
