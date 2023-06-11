@@ -69,23 +69,28 @@ public class Mosquito extends Enemy{
             this.setXSpeed((this.getXSpeed()/2));
         }
 
-        this.translate(this.getXSpeed(),0);
+        this.setYSpeed(this.getYSpeed()/2);
+
+        this.translate(this.getXSpeed(), this.getYSpeed());
 
     }
 
     public void cooldownMovement(Player player) {
 
-        double cooldownXSpeed;
+        double cooldownXSpeed = 0;
 
         double dX = player.getCenterX() - this.getCenterX();
-        double dY = -(player.getCenterY() - this.getCenterY());
 
         if (dX > 0) {
-            cooldownXSpeed = Constants.getMosquitoSpeed() * (-1);
+            if (this.getXSpeed() > Constants.mosquitoSpeed) {
+                cooldownXSpeed = Constants.getMosquitoSpeed() * (-1);
+            }
         } else if (dX < 0) {
-            cooldownXSpeed = Constants.getMosquitoSpeed();
-        } else {
-            cooldownXSpeed = 0;
+
+            if (this.getXSpeed() < Constants.mosquitoSpeed) {
+                cooldownXSpeed = Constants.getMosquitoSpeed();
+            }
+
         }
 
         if (Math.abs(this.getYSpeed()) > (Constants.getMosquitoSpeed())) {
