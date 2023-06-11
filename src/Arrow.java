@@ -4,7 +4,7 @@ public class Arrow extends Projectile {
         super(x, y, 45, 45, (int) (5 + Power * 0.5), direction, isFriendly, 100, Constants.arrowCost);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
-        double interval = Power/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = Power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
         this.setXSpeed((int) (dX * interval));
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
         if (this.getYSpeed() > Power * 2) {

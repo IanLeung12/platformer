@@ -139,12 +139,10 @@ public class Jumper extends Enemy{
 
     public void setUpFrenzy(Player player) {
 
-        int power = Constants.jumperJumpPower;
-
         double dX = player.getCenterX() - this.getCenterX();
         double dY = -(player.getCenterY() - this.getCenterY());
 
-        double interval = power/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = 10/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
 
         this.setXSpeed((int) (dX * interval));
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
@@ -210,13 +208,7 @@ public class Jumper extends Enemy{
     }
 
     public void update() {
-
         this.immunityTick();
-
-        if (this.getImmunityTimer() > 0) {
-            this.setImmunityTimer(this.getImmunityTimer() - 1);
-        }
-
     }
 
 
