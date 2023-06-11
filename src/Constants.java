@@ -26,7 +26,7 @@ public class Constants {
 
     static int arrowCost = 15;
 
-    static int rocketCost = 50;
+    static int rocketCost = 100;
     static int jumperVision = 500;
     static int jumperSpeed = 2;
     static int jumperChargeUpXSpeed = 5;
