@@ -37,7 +37,7 @@ public class Constants {
     static int jumperJumpYMax = 30;
     static int jumperJumpXIncrament = 20;
     static int jumperJumpPower = 40;
-    static int jumperMaxJumps = 5;
+    static int jumperMaxJumps = 10;
     static int jumperAbilityCooldown = 100;
 
 

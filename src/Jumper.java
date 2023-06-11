@@ -180,11 +180,20 @@ public class Jumper extends Enemy{
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.landedFrenzy++;
+
+                System.out.println("landed");
+                System.out.println("========================================================================");
+
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.landedFrenzy++;
+
+                System.out.println("landed");
+                System.out.println("========================================================================");
 
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
@@ -213,9 +222,6 @@ public class Jumper extends Enemy{
 
         this.immunityTick();
 
-        if (this.getImmunityTimer() > 0) {
-            this.setImmunityTimer(this.getImmunityTimer() - 1);
-        }
 
     }
 
