@@ -44,10 +44,10 @@ public class GameEngine {
             String objectType = input.next();
             switch (objectType) {
                 case "Wall":
-                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    surroundings.add(new Wall((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextBoolean()));
                     break;
                 case "Spike":
-                    surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
+                    surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.nextBoolean()));
                     break;
                 case "Slime":
                     enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.slimeGoldReward));
@@ -89,7 +89,7 @@ public class GameEngine {
         }
 
         if (player.getHealth() <= 0) {
-            player = new Player(player.getRespawnPoint()[0], player.getRespawnPoint()[1], 75, 150, player.getMaxHealth(), player.getMaxEnergy());
+            player.respawn();
         }
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
@@ -219,7 +219,6 @@ public class GameEngine {
 
     public void save() throws FileNotFoundException {
 
-        System.out.println("saveing");
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
         output.println(player.getX() + " " + player.getY() + " " +  player.getWidth() + " " + player.getHeight() + " " + player.getHealth() + " " + player.getMaxHealth());
         for (Wall wall: this.surroundings) {
@@ -234,7 +233,6 @@ public class GameEngine {
 
     public void createOrbs(Enemy enemy, ArrayList<Orb> orbs ) {
         for (int i = (int) enemy.getGoldReward(); i > 0; i = i - Constants.orbValue) {
-            System.out.println(i);
             orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, Constants.orbValue, "Gold"));
         }
 

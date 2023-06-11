@@ -3,6 +3,7 @@ abstract public class Attack extends GameObject{//
     private double attackDamage;
     private boolean isFriendly;
     private int abilityDuration;
+
     private final int maxAbilityDuration;
 
     private final int direction;

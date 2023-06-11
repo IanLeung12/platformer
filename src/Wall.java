@@ -1,22 +1,22 @@
 public class Wall extends GameObject{
 
-    private boolean breakable;
+    private boolean respawnable;
 
     Wall(int x, int y, int width, int height) {
         super(x, y, width, height);
-        this.breakable = false;
+        this.respawnable = false;
     }
 
-    Wall(int x, int y, int width, int height, boolean breakable) {
+    Wall(int x, int y, int width, int height, boolean respawnable) {
         super(x, y, width, height);
-        this.breakable = breakable;
+        this.respawnable = respawnable;
     }
 
-    public boolean isBreakable() {
-        return breakable;
+    public boolean isrespawnable() {
+        return respawnable;
     }
 
-    public void setBreakable(boolean breakable) {
-        this.breakable = breakable;
+    public void setrespawnable(boolean respawnable) {
+        this.respawnable = respawnable;
     }
 }
