@@ -36,6 +36,7 @@ public class Constants {
     static int jumperGoldReward = 100;
     static int jumperJumpYMax = 30;
     static int jumperJumpXIncrament = 20;
+    static int jumperJumpPower = 40;
 
 
 
