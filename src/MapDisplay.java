@@ -122,6 +122,7 @@ public class MapDisplay extends JFrame {
 
 
         player.translate(dX, dY);
+
         System.out.println("dx is " + dX + "    dy is" + dY);
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
@@ -131,15 +132,17 @@ public class MapDisplay extends JFrame {
         }
 
         for (Enemy enemy: game.getEnemies()) {
-            enemy.translate(dX, dY);
-
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
+
+            enemy.translate(dX, dY);
+
+
 
         }
 
         for (Enemy enemy : game.getRespawnList()) {
-            enemy.translate(dX, dY);
+
             System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
@@ -157,6 +160,8 @@ public class MapDisplay extends JFrame {
         for (Orb orb: game.getOrbs()) {
             orb.translate(dX, dY);
         }
+
+
     }
 
     protected void processWindowEvent(WindowEvent e) {

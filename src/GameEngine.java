@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -85,6 +86,7 @@ public class GameEngine {
 
         if (!paused) {
             player.move();
+            System.out.println(Arrays.toString(player.getRespawnPoint()));
             player.immunityTick();
         }
 
@@ -106,6 +108,7 @@ public class GameEngine {
                 createOrbs(enemy, orbs);
 
                 respawnList.add(enemy);
+
                 enemy.setRespawnTimer(Constants.respawnTimerEnemy);
                 System.out.println("enemy died " + enemy.getCenterX());
 
@@ -113,7 +116,6 @@ public class GameEngine {
             }
         }
 
-        respawnList.removeIf(enemy -> ((enemy.getRespawnX()) == 0 && (enemy.getRespawnY() == 0)) );
 
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
@@ -153,34 +155,30 @@ public class GameEngine {
                 System.out.println("the enemy has passed and will be created");
 
                 if (enemy instanceof Slime) {
-                    Slime slime = (Slime) enemy;
-                    slime.setXSpeed(0);
-                    slime.setYSpeed(0);
-                    slime.setAbilityActive(false);
-                    slime.setImmunityTimer(10);
-                    slime.setHealth(Constants.slimeTotalHealth);
-                    slime.setLocation((int) slime.getRespawnX(), (int) slime.getRespawnY());
+                    enemy.setXSpeed(0);
+                    enemy.setYSpeed(0);
+                    enemy.setAbilityActive(false);
+                    enemy.setImmunityTimer(10);
+                    enemy.setHealth(Constants.slimeTotalHealth);
+                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
 
                 } else if (enemy instanceof Mosquito) {
-                    Mosquito mosquito = (Mosquito) enemy;
-                    mosquito.setXSpeed(0);
-                    mosquito.setYSpeed(0);
-                    mosquito.setAbilityActive(false);
-                    mosquito.setImmunityTimer(1);
-                    mosquito.setHealth(Constants.mosquitoTotalHealth);
+                    enemy.setXSpeed(0);
+                    enemy.setYSpeed(0);
+                    enemy.setAbilityActive(false);
+                    enemy.setImmunityTimer(1);
+                    enemy.setHealth(Constants.mosquitoTotalHealth);
                     //mosquito.setLocation((int) player.getCenterX(), (int) player.getCenterY() );
-
-                    mosquito.setLocation((int) mosquito.getRespawnX(), (int) mosquito.getRespawnY());
+                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
 
 
                 } else if (enemy instanceof Jumper) {
-                    Jumper jumper = (Jumper) enemy;
-                    jumper.setXSpeed(0);
-                    jumper.setYSpeed(0);
-                    jumper.setAbilityActive(false);
-                    jumper.setImmunityTimer(10);
-                    jumper.setHealth(Constants.jumperMaxHP);
-                    jumper.setLocation((int) jumper.getRespawnX(), (int) jumper.getRespawnY());
+                    enemy.setXSpeed(0);
+                    enemy.setYSpeed(0);
+                    enemy.setAbilityActive(false);
+                    enemy.setImmunityTimer(10);
+                    enemy.setHealth(Constants.jumperMaxHP);
+                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
 
                 }
 
@@ -198,6 +196,7 @@ public class GameEngine {
 
 
         respawnList.removeIf(enemy -> enemy.getRespawnTimer() < 0);
+        respawnList.removeIf(enemy -> ((enemy.getRespawnX()) == 0 && (enemy.getRespawnY() == 0)) );
 
     }
 
