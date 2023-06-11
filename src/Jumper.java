@@ -139,10 +139,12 @@ public class Jumper extends Enemy{
 
     public void setUpFrenzy(Player player) {
 
+        int power = Constants.jumperJumpPower;
+
         double dX = player.getCenterX() - this.getCenterX();
         double dY = -(player.getCenterY() - this.getCenterY());
 
-        double interval = 10/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
+        double interval = power/(Math.abs(dX) + Math.abs(dY) + 1);
 
         this.setXSpeed((int) (dX * interval));
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
@@ -178,11 +180,20 @@ public class Jumper extends Enemy{
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.landedFrenzy++;
+
+                System.out.println("landed");
+                System.out.println("========================================================================");
+
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.landedFrenzy++;
+
+                System.out.println("landed");
+                System.out.println("========================================================================");
 
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
@@ -208,7 +219,10 @@ public class Jumper extends Enemy{
     }
 
     public void update() {
+
         this.immunityTick();
+
+
     }
 
 
