@@ -41,15 +41,12 @@ public class Jumper extends Enemy{
 
             if (chargeUpCounter > 0) {
                 chargeUp(player);
-                System.out.println("chargin");
 
             } else {
-                System.out.println("jumpind");
                 porabolicMovement();
 
                 if (landedFrenzy > Constants.jumperMaxJumps) {
                     landedFrenzy = 0;
-                    System.out.println(" over max jump num");
                     this.setAbilityActive(false);
                     this.setCooldownTimerAbility(Constants.jumperAbilityCooldown);
                     chargeUpCounter = Constants.jumperGameLoopChargeUp;
@@ -74,13 +71,7 @@ public class Jumper extends Enemy{
 
                 } else {
                     this.cooldownMovement(player);
-                   System.out.println("cooldown");
                 }
-
-
-
-
-
             }
         }
     }
@@ -147,15 +138,16 @@ public class Jumper extends Enemy{
         double interval = power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
 
         this.setXSpeed((int) (dX * interval));
-        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
+        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed())));
 
+        System.out.println(this.getYSpeed());
 
     }
 
 
     public void porabolicMovement() {
 
-        this.setYSpeed(this.getYSpeed() - 1);
+        this.setYSpeed(this.getYSpeed() - Constants.gravity);
         this.translate(this.getXSpeed(), -this.getYSpeed());
 
     }
@@ -182,9 +174,6 @@ public class Jumper extends Enemy{
 
                 this.landedFrenzy++;
 
-                System.out.println("landed");
-                System.out.println("========================================================================");
-
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
@@ -192,16 +181,11 @@ public class Jumper extends Enemy{
 
                 this.landedFrenzy++;
 
-                System.out.println("landed");
-                System.out.println("========================================================================");
-
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
                 this.setXSpeed(this.getXSpeed() * -1);
 
                 this.landedFrenzy++;
-                System.out.println("landed");
-                System.out.println("========================================================================");
 
 
             } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
@@ -210,8 +194,6 @@ public class Jumper extends Enemy{
 
                 this.landedFrenzy++;
 
-                System.out.println("landed");
-                System.out.println("========================================================================");
 
 
             }
