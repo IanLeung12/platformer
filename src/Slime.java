@@ -4,22 +4,10 @@ public class Slime extends Enemy{//
 
 
 
-    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, int goldReward, int respawnTimer, int fullRespawnTimer) {
-        super(x, y, width, height, Constants.getSlimeTotalHealth(), Constants.getSlimeTotalHealth(), Constants.getSlimeDamage(), Constants.getSlimeGoldReward(), respawnTimer, fullRespawnTimer);
 
-        this.setXSpeed(Constants.getSlimeSpeed());
 
-    }
-
-    Slime(int x, int y, int width, int height) {
-        super(x, y, width, height, Constants.getSlimeTotalHealth(), Constants.getSlimeTotalHealth(), Constants.getSlimeDamage(), Constants.getSlimeGoldReward());
-
-        this.setXSpeed(Constants.getSlimeSpeed());
-
-    }
-
-    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward) {
-        super(x, y, width, height, health, totalHealth, damage, goldReward);
+    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
+        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY);
 
         this.setXSpeed(Constants.getSlimeSpeed());
 

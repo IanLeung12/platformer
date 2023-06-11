@@ -129,7 +129,13 @@ public class MapDisplay extends JFrame {
 
         for (Enemy enemy: game.getEnemies()) {
             enemy.translate(dX, dY);
+            enemy.setRespawnX((enemy.getRespawnX() + dX));
+            enemy.setRespawnY((enemy.getRespawnY() + dY));
+        }
 
+        for (Enemy enemy : game.getRespawnList()) {
+            enemy.setRespawnX((enemy.getRespawnX() + dX));
+            enemy.setRespawnY((enemy.getRespawnY() + dY));
         }
 
         for (int i = 0; i < game.getAttacks().size(); i ++) {

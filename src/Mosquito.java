@@ -9,22 +9,21 @@ public class Mosquito extends Enemy{
 
 
 
-    Mosquito(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
-        super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
+
+
+
+    Mosquito(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
+
+        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY);
 
         this.setTotalCooldownTimer(100);
         this.setXSpeed(Constants.getMosquitoSpeed());
 
     }
 
-    Mosquito(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward) {
 
-        super(x, y, width, height, health, totalHealth, damage, goldReward);
 
-        this.setTotalCooldownTimer(100);
-        this.setXSpeed(Constants.getMosquitoSpeed());
 
-    }
 
     public void move(Player player, ArrayList<GameObject> proximity) {
 

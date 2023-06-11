@@ -4,28 +4,17 @@ public class Jumper extends Enemy{
 
     private int chargeUpCounter = Constants.jumperGameLoopChargeUp;
     private int landedFrenzy = 0;
-//    private double jumpCalculationDisplacementX;
-//    private double jumpCalculationDisplacementY;
-//    private double targetX, targetY, startingX, startingY;
-//    private double previousXChange, previousYChange;
+    private double respawnX, respawnY;
 
 
 
 
+    Jumper(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
 
+        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY);
 
-    Jumper(int x, int y, int width, int height, int respawnTimer, int fullRespawnTimer) {
-        super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
-
-        this.setTotalCooldownTimer(100);
-        this.setXSpeed(Constants.jumperSpeed);
-
-    }
-
-    Jumper(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward) {
-
-        super(x, y, width, height, health, totalHealth, damage, goldReward);
-
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
         this.setTotalCooldownTimer(100);
         this.setXSpeed(Constants.jumperSpeed);
 
@@ -173,14 +162,10 @@ public class Jumper extends Enemy{
 
         this.immunityTick();
 
+        this.setRespawnTimer(this.getRespawnTimer() - 1);
+
+
 
     }
-
-
-
-
-
-
-
 
 }

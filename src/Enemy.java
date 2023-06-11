@@ -7,21 +7,18 @@ abstract public class Enemy extends Alive {//
     private int respawnTimer;
     private int cooldownTimerAbility;
     private int totalCooldownTimer;
+    private double respawnX, respawnY;
 
 
-    Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, int respawnTimer, int fullRespawnTimer) {
+
+    Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
         super(x, y, width, height, health, totalHealth, 15);
         this.damage = damage;
         this.goldReward = goldReward;
-        this.respawnTimer = respawnTimer;
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
     }
 
-    // no respawn
-    Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward) {
-        super(x, y, width, height, health, totalHealth, 15);
-        this.damage = damage;
-        this.goldReward = goldReward;
-    }
 
     public void knockback(Attack attack) {
         double interval, dX, dY;
@@ -306,7 +303,21 @@ abstract public class Enemy extends Alive {//
     }
 
 
+    public double getRespawnX() {
+        return respawnX;
+    }
 
+    public double getRespawnY() {
+        return respawnY;
+    }
+
+    public void setRespawnX(double respawnX) {
+        this.respawnX = respawnX;
+    }
+
+    public void setRespawnY(double respawnY) {
+        this.respawnY = respawnY;
+    }
 
     public double getDamage() {
         return damage;

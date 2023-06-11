@@ -52,13 +52,13 @@ public class GameEngine {
                     surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Slime":
-                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.slimeGoldReward));
+                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.slimeGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Mosquito":
-                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.mosquitoGoldReward));
+                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.mosquitoGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Jumper":
-                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.jumperGoldReward));
+                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.jumperGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
             }
         }
@@ -111,7 +111,8 @@ public class GameEngine {
                 enemies.remove(i);
             }
         }
-        respawnList.removeIf(enemy -> enemy.getImmunityTimer() <= 0);
+
+        respawnList.removeIf(enemy -> ((enemy.getRespawnX()) == 0 && (enemy.getRespawnY() == 0)) );
 
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
@@ -145,15 +146,20 @@ public class GameEngine {
         }
 
         for (Enemy enemy : respawnList) {
-            if (enemy.getRespawnTimer() >= 0) {
+            System.out.println("enemy :" + enemy + "  has this num loops left: " + enemy.getRespawnTimer());
+
+            if ((enemy.getRespawnTimer() == 0) && (((enemy.getRespawnX()) != 0 && (enemy.getRespawnY() != 0)))) {
+                System.out.println("the enemy has passed and will be created");
 
                 if (enemy instanceof Slime) {
                     Slime slime = (Slime) enemy;
                     slime.setXSpeed(0);
                     slime.setYSpeed(0);
                     slime.setAbilityActive(false);
-                    slime.setImmunityTimer(1);
+                    slime.setImmunityTimer(10);
                     slime.setHealth(Constants.slimeTotalHealth);
+                    slime.setLocation((int) slime.getRespawnX(), (int) slime.getRespawnY());
+
                 } else if (enemy instanceof Mosquito) {
                     Mosquito mosquito = (Mosquito) enemy;
                     mosquito.setXSpeed(0);
@@ -161,18 +167,25 @@ public class GameEngine {
                     mosquito.setAbilityActive(false);
                     mosquito.setImmunityTimer(1);
                     mosquito.setHealth(Constants.mosquitoTotalHealth);
+                   // mosquito.setLocation((int) player.getCenterX(), (int) player.getCenterY() );
+
+                    mosquito.setLocation((int) mosquito.getRespawnX(), (int) mosquito.getRespawnY());
+
+
                 } else if (enemy instanceof Jumper) {
                     Jumper jumper = (Jumper) enemy;
                     jumper.setXSpeed(0);
                     jumper.setYSpeed(0);
                     jumper.setAbilityActive(false);
-                    jumper.setImmunityTimer(1);
+                    jumper.setImmunityTimer(10);
                     jumper.setHealth(Constants.jumperMaxHP);
+                    jumper.setLocation((int) jumper.getRespawnX(), (int) jumper.getRespawnY());
+
                 }
 
                 enemies.add(enemy);
 
-                System.out.println("respawned enemy" + enemy.getCenterX());
+                System.out.println("respawned" + enemy + "    and respanw x and y are "  + enemy.getRespawnX() + "   " + enemy.getRespawnY());
             }
 
             System.out.println(enemy.getRespawnTimer());
@@ -180,6 +193,10 @@ public class GameEngine {
             enemy.update();
 
         }
+
+
+        respawnList.removeIf(enemy -> enemy.getRespawnTimer() < 0);
+
     }
 
     public void checkCollisions() {
@@ -265,7 +282,7 @@ public class GameEngine {
         }
         for (Enemy enemy: this.enemies) {
             output.println(enemy.getClass().getName() + " " + enemy.getX() + " " + enemy.getY() + " " +  enemy.getWidth() + " " + enemy.getHeight() + " " +
-                    enemy.getHealth() + " " + enemy.getMaxHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward());
+                    enemy.getHealth() + " " + enemy.getMaxHealth() + " " + enemy.getDamage() + " " + enemy.getGoldReward() + " " + enemy.getRespawnX() + " " + enemy.getRespawnY());
         }
         output.close();
     }
@@ -374,4 +391,7 @@ public class GameEngine {
         this.orbs = orbs;
     }
 
+    public ArrayList<Enemy> getRespawnList() {
+        return respawnList;
+    }
 }

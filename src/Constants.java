@@ -39,7 +39,7 @@ public class Constants {
     static int jumperJumpPower = 40;
     static int jumperMaxJumps = 20;
     static int jumperAbilityCooldown = 100;
-    static int respawnTimerEnemy = 40;
+    static int respawnTimerEnemy = 100;
     static int jumperMaxHP = 100;
 
 
