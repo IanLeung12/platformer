@@ -5,7 +5,6 @@ abstract public class Enemy extends Alive {//
     private double damage;
     private double goldReward;
     private int respawnTimer;
-    private int fullRespawnTimer;
     private int cooldownTimerAbility;
     private int totalCooldownTimer;
 
@@ -15,7 +14,6 @@ abstract public class Enemy extends Alive {//
         this.damage = damage;
         this.goldReward = goldReward;
         this.respawnTimer = respawnTimer;
-        this.fullRespawnTimer = fullRespawnTimer;
     }
 
     // no respawn
@@ -332,14 +330,6 @@ abstract public class Enemy extends Alive {//
 
     public void setRespawnTimer(int respawnTimer) {
         this.respawnTimer = respawnTimer;
-    }
-
-    public int getFullRespawnTimer() {
-        return fullRespawnTimer;
-    }
-
-    public void setFullRespawnTimer(int fullRespawnTimer) {
-        this.fullRespawnTimer = fullRespawnTimer;
     }
 
     public int getCooldownTimerAbility() {

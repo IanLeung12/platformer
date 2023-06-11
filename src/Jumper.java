@@ -140,7 +140,7 @@ public class Jumper extends Enemy{
         this.setXSpeed((int) (dX * interval));
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed())));
 
-        System.out.println(this.getYSpeed());
+        System.out.println(this.getXSpeed());
 
     }
 

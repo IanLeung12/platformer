@@ -12,6 +12,7 @@ public class GameEngine {
     private boolean abilityActive;
     private boolean attackActive;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Enemy> respawnList;
     private ArrayList<Orb> orbs;
 
     // private Shop shop;                       not created yet
@@ -37,6 +38,7 @@ public class GameEngine {
         this.enemies = new ArrayList<>();
         this.proximity = new ArrayList<>();
         this.orbs = new ArrayList<>();
+        this.respawnList = new ArrayList<>();
 
         this.refreshDelay = 17;
 
@@ -77,8 +79,6 @@ public class GameEngine {
 
     }
 
-    public void spawnEnemies() {}
-    public void spawnProjectile() {}
     public void moveAll() {
 
         updateProximity(proximity, surroundings, enemies);
@@ -103,6 +103,9 @@ public class GameEngine {
             } else if (enemy.getHealth() < 0) {
 
                 createOrbs(enemy, orbs);
+
+                respawnList.add(enemy);
+                enemy.setRespawnTimer(Constants.respawnTimerEnemy);
 
                 enemies.remove(i);
             }
@@ -136,6 +139,10 @@ public class GameEngine {
 
         for (Orb orb : orbs) {
             orb.move(player);
+        }
+
+        for (Enemy enemy : respawnList) {
+
         }
     }
 
@@ -188,7 +195,6 @@ public class GameEngine {
                     } else {
                         enemy.knockback(attack);
                     }
-
                 }
             }
 
