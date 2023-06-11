@@ -1,4 +1,4 @@
-public class Arrow extends Projectile{
+public class Arrow extends Projectile {
 
     Arrow(int x, int y, int targetX, int targetY, int direction, boolean isFriendly, int Power) {
         super(x, y, 45, 45, (int) (5 + Power * 0.5), direction, isFriendly, 100, Constants.arrowCost);

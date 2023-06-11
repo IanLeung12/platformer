@@ -3,11 +3,10 @@ import java.util.ArrayList;
 public class Jumper extends Enemy{
 
     private int chargeUpCounter = Constants.jumperGameLoopChargeUp;
-
-    private double jumpCalculationDisplacementX;
-    private double jumpCalculationDisplacementY;
-    private double targetX, targetY, startingX, startingY;
-    private double previousXChange, previousYChange;
+//    private double jumpCalculationDisplacementX;
+//    private double jumpCalculationDisplacementY;
+//    private double targetX, targetY, startingX, startingY;
+//    private double previousXChange, previousYChange;
 
 
 
@@ -18,7 +17,7 @@ public class Jumper extends Enemy{
         super(x, y, width, height, Constants.getMosquitoTotalHealth(), Constants.getMosquitoTotalHealth(), Constants.getMosquitoDamage(), Constants.getMosquitoGoldReward(), respawnTimer, fullRespawnTimer);
 
         this.setTotalCooldownTimer(100);
-        this.setXSpeed(Constants.getMosquitoSpeed());
+        this.setXSpeed(Constants.jumperSpeed);
 
     }
 
@@ -27,7 +26,7 @@ public class Jumper extends Enemy{
         super(x, y, width, height, health, totalHealth, damage, goldReward);
 
         this.setTotalCooldownTimer(100);
-        this.setXSpeed(Constants.getMosquitoSpeed());
+        this.setXSpeed(Constants.jumperSpeed);
 
     }
 
@@ -36,18 +35,24 @@ public class Jumper extends Enemy{
         if (isAbilityActive()) {
 
             porabolicMovement();
+            System.out.println(" jump ");
+
 
         } else {
 
             if (this.distanceToPlayer(player, proximity, false) > Constants.jumperVision) {
 
                 this.defaultMovement();
+                System.out.println(" default movemnt");
+
 
             } else if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
 
                 this.setAbilityActive(false);
 
-                this.setUpPorabolicJumpingMovement(player);
+                this.setUpPorabolicJumpingMovement(player, 20);
+                System.out.println(" start a    a ");
+
 
             }
         }
@@ -58,10 +63,8 @@ public class Jumper extends Enemy{
         if (Math.abs(this.getXSpeed()) > Constants.jumperSpeed) {
             this.setXSpeed((this.getXSpeed()/2));
         }
-        System.out.println("y speed is " + this.getYSpeed()) ;
 
         this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-        System.out.println("y speed is " + this.getYSpeed()) ;
         this.translate(this.getXSpeed(), -this.getYSpeed());
 
     }
@@ -98,45 +101,67 @@ public class Jumper extends Enemy{
     }
 
 
-    public void setUpPorabolicJumpingMovement(Player player) {
+    public void setUpPorabolicJumpingMovement(Player player, int power) {
 
         setAbilityActive(true);
 
-        startingX = this.getCenterX();
-        startingY = this.getCenterY();
+        double dX = player.getCenterX() - this.getCenterX();
+        double dY = -(player.getCenterY() - this.getCenterY());
 
-        jumpCalculationDisplacementX = this.getCenterX();
-        jumpCalculationDisplacementY = this.getCenterY();
-
-        targetX = player.getCenterX() - jumpCalculationDisplacementX;
-        targetY = player.getCenterY() - jumpCalculationDisplacementY;
-
-    }
-
-    public void porabolicMovement() {
+        double interval = power/(Math.abs(dX) + Math.abs(dY) + 1);
 
 
-        this.setXSpeed(Constants.jumperJumpXIncrament);
 
-        this.setYSpeed( (int) (porabola((this.getCenterX() + Constants.jumperJumpXIncrament), (startingY - Constants.jumperJumpYMax), (targetX), targetY )));
+        this.setXSpeed((int) (dX * interval));
+        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
 
-        this.translate((int) (this.getXSpeed() - previousXChange), (int) (this.getYSpeed() - previousYChange) * -1);
-
-        if ((this.getCenterX() == targetX + jumpCalculationDisplacementX) && (this.getCenterY() == targetY + jumpCalculationDisplacementY)) {
-            this.setAbilityActive(true);
+        if (this.getYSpeed() > power * 2) {
+            this.setYSpeed(power * 2);
         }
 
 
+//        startingX = this.getCenterX();
+//        startingY = this.getCenterY();
+//
+//        jumpCalculationDisplacementX = this.getCenterX();
+//        jumpCalculationDisplacementY = this.getCenterY();
+//
+//        targetX = player.getCenterX() - jumpCalculationDisplacementX;
+//        targetY = player.getCenterY() - jumpCalculationDisplacementY;
 
     }
 
-    public double porabola(double x, double q, double x1, double y1) {
 
-        double t = (4*Math.pow(x1, 2))*(1 - (y1/q));
-        double s = (2*x1) - Math.sqrt(t);
+    public void porabolicMovement() {
 
-        return (-(4*y1*x)/s)*(((y1*x)/(q*s)) - 1);
+        this.setYSpeed(this.getYSpeed() - 1);
+        this.translate(this.getXSpeed(), -this.getYSpeed());
+
+
+
+
+//        double newX = this.getCenterX() + Constants.jumperJumpXIncrament;
+//        double newY = startingY - Constants.jumperJumpYMax - porabola(newX - startingX, targetX, targetY);
+//
+//
+//
+//        this.setYSpeed((int) (newY - this.previousYChange));
+//
+//
+//
+//        this.translate((int) (newX - this.getCenterX()), (int) (newY - this.getCenterY()));
+//
+//        if (this.getCenterX() >= targetX + startingX && this.getCenterY() <= targetY + startingY) {
+//            this.setAbilityActive(false);
+//        }
     }
+//
+//    public double porabola(double x, double x1, double y1) {
+//        double t = (4 * Math.pow(x1, 2)) * (1 - (y1 / Constants.jumperJumpYMax));
+//        double s = (2 * x1) - Math.sqrt(t);
+//        return (-(4 * y1 * x) / s) * (((y1 * x) / (Constants.jumperJumpYMax * s)) - 1);
+//    }
+
     public void update() {
 
         if (this.getImmunityTimer() > 0) {
@@ -168,18 +193,28 @@ public class Jumper extends Enemy{
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.setAbilityActive(false);
+
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
 
+                this.setAbilityActive(false);
+
+
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
                 this.setXSpeed(this.getXSpeed() * -1);
 
+                this.setAbilityActive(false);
+
+
             } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderRight), (int) this.getY());
                 this.setXSpeed(this.getXSpeed() * -1);
+
+                this.setAbilityActive(false);
 
             }
         }
