@@ -55,6 +55,9 @@ public class GameEngine {
                 case "Mosquito":
                     enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.mosquitoGoldReward));
                     break;
+                case "Jumper":
+                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.jumperGoldReward));
+                    break;
             }
         }
 
@@ -156,6 +159,11 @@ public class GameEngine {
                     Mosquito mosquitoEnemy = (Mosquito) enemy;
                     if (mosquitoEnemy.intersects(object)) {
                         mosquitoEnemy.collision(object);
+                    }
+                } else if (enemy instanceof Jumper)  {
+                    Jumper jumperEnemy = (Jumper) enemy;
+                    if (jumperEnemy.intersects(object)) {
+                        jumperEnemy.collision(object);
                     }
                 }
 

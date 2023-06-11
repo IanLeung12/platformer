@@ -192,6 +192,15 @@ public class MapDisplay extends JFrame {
 
             }
 
+            g2d.setColor(Color.blue);
+            for (Enemy enemy: game.getEnemies()) {
+                if (enemy instanceof Jumper) {
+                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                }
+
+            }
+
 
             g2d.setColor(Color.gray);
             Player player = game.getPlayer();

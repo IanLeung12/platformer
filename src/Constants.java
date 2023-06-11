@@ -27,6 +27,16 @@ public class Constants {
     static int arrowCost = 15;
 
     static int rocketCost = 50;
+    static int jumperVision = 500;
+    static int jumperSpeed = 2;
+    static int jumperChargeUpXSpeed = 5;
+    static int jumperChargeUpYSpeed = 10;
+
+    static int jumperGameLoopChargeUp = 30;
+    static int jumperGoldReward = 100;
+    static int jumperJumpYMax = 30;
+    static int jumperJumpXIncrament = 1;
+
 
 
     public static int getMovementAbilityTotal() {
