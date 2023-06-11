@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Player extends Alive {//
 
-    private double totalGold;
+    private int totalGold;
     private double energy;
     private double maxEnergy;
     private boolean inAnim; // ian what initial value
@@ -28,7 +28,7 @@ public class Player extends Alive {//
 
 
     Player(int x, int y, int width, int height, double MaxHealth, double maxEnergy) {
-        super(x, y, width, height, MaxHealth, MaxHealth);
+        super(x, y, width, height, MaxHealth, MaxHealth, 60);
         this.energy = maxEnergy;
         this.maxEnergy = maxEnergy;
         this.totalGold = 0;
@@ -188,7 +188,7 @@ public class Player extends Alive {//
         this.setLocation(this.respawnPoint[0], this.respawnPoint[1]);
         this.setHealth(this.getMaxHealth());
         this.setEnergy(this.getMaxEnergy());
-        this.totalGold = this.totalGold * 0.9;
+        this.totalGold = (int) (this.totalGold * 0.9);
     }
 
     public void updatePlayer() {}
@@ -221,7 +221,7 @@ public class Player extends Alive {//
         return totalGold;
     }
 
-    public void setTotalGold(double totalGold) {
+    public void setTotalGold(int totalGold) {
         this.totalGold = totalGold;
     }
 

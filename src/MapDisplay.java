@@ -181,28 +181,21 @@ public class MapDisplay extends JFrame {
             g2d.setColor(Color.GREEN);
             for (Enemy enemy: game.getEnemies()) {
                 if (enemy instanceof Slime) {
-                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                    g2d.setColor(Color.GREEN);
+                } else if (enemy instanceof Mosquito) {
+                    g2d.setColor(Color.yellow);
+                } else if (enemy instanceof Jumper) {
+                    g2d.setColor(Color.blue);
                 }
 
-            }
+                g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
 
-            g2d.setColor(Color.yellow);
-            for (Enemy enemy: game.getEnemies()) {
-                if (enemy instanceof Mosquito) {
-                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                if (enemy.getHealth() != enemy.getMaxHealth()) {
+                    g2d.setColor(Color.red);
+                    g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, 50, 20);
+                    g2d.setColor(Color.green);
+                    g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, (int) (enemy.getHealth()/enemy.getMaxHealth() * 50), 20);
                 }
-
-            }
-
-            g2d.setColor(Color.blue);
-            for (Enemy enemy: game.getEnemies()) {
-                if (enemy instanceof Jumper) {
-                    g2d.drawRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                }
-
             }
 
 

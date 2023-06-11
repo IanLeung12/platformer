@@ -94,7 +94,7 @@ public class GameEngine {
 
         for (int i = enemies.size() - 1; i >= 0; i --) {
 
-            Enemy enemy = (Enemy) enemies.get(i);
+            Enemy enemy = enemies.get(i);
 
             if (enemy.getHealth() > 0) {
 
@@ -106,9 +106,6 @@ public class GameEngine {
 
                 enemies.remove(i);
             }
-
-            enemy.immunityTick();
-
         }
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
@@ -248,7 +245,7 @@ public class GameEngine {
     public void orbAbsorb(Orb orb) {
         switch (orb.getBoostType()) {
             case "Gold":
-                player.setTotalGold(player.getTotalGold() + orb.getBoostValue());
+                player.setTotalGold((int) (player.getTotalGold() + orb.getBoostValue()));
                 break;
             case "Health":
                 player.setHealth(player.getHealth() + orb.getBoostValue());

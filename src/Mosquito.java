@@ -180,24 +180,10 @@ public class Mosquito extends Enemy{
 
     public void update() {
 
-        if (this.getImmunityTimer() > 0) {
-            this.setImmunityTimer(this.getImmunityTimer() - 1);
-        }
+        this.immunityTick();
 
         if (this.getCooldownTimerAbility() > 0)  {
             this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

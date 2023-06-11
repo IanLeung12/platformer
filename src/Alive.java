@@ -10,39 +10,15 @@ abstract public class Alive extends Moveable{
     private boolean abilityActive = false;
 
     private int immunityTimer = 0;
-    private final int maxImmunity = 60;
+
+    private final int maxImmunity;
 
 
-    Alive(int x, int y, int width, int height, double health, double maxHealth) {
+    Alive(int x, int y, int width, int height, double health, double maxHealth, int maxImmunity) {
         super(x, y, width, height);
         this.health = health;
         this.maxHealth = maxHealth;
-    }
-
-    public void knockback(Attack attack) {
-        double interval, dX, dY;
-        if (attack instanceof Explosion) {
-            dX = (this.getCenterX() - attack.getCenterX());
-            dY = (attack.getCenterY() - this.getCenterY());
-            double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-            distance -= Math.sqrt((Math.pow(this.getWidth()/2, 2) + Math.pow(this.getHeight()/2, 2)));
-            if (distance <= ((Explosion) attack).getRadius()) {
-                interval = 50/(Math.abs(dX) + Math.abs(dY) + 1);
-            } else {
-                interval = 0;
-            }
-        } else {
-            this.setXSpeed((int) (attack.getAttackDamage() * attack.getDirection()));
-            this.setYSpeed(10);
-            dX = (this.getCenterX() - attack.getCenterX());
-            dY = (attack.getX() + attack.getHeight() - this.getCenterY());
-            interval = 15/(Math.abs(dX) + Math.abs(dY) + 1);
-        }
-
-        this.setImmunityTimer(1);
-        this.setHealth(this.getHealth() - attack.getAttackDamage());
-        this.setXSpeed(this.getXSpeed() + (int) (dX * interval));
-        this.setYSpeed(this.getYSpeed() + (int) (dY * interval));
+        this.maxImmunity = maxImmunity;
     }
 
     public void immunityTick() {

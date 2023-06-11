@@ -99,9 +99,7 @@ public class Slime extends Enemy{//
 
     public void update() {
 
-        if (this.getImmunityTimer() > 0) {
-            this.setImmunityTimer(this.getImmunityTimer() - 1);
-        }
+        this.immunityTick();
 
         if (this.getXSpeed() > 0) {
             this.setDirection(-1);
