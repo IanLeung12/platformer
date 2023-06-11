@@ -7,6 +7,7 @@ public class Jumper extends Enemy{
     private double jumpCalculationDisplacementX;
     private double jumpCalculationDisplacementY;
     private double targetX, targetY, startingX, startingY;
+    private double previousXChange, previousYChange;
 
 
 
@@ -119,7 +120,7 @@ public class Jumper extends Enemy{
 
         this.setYSpeed( (int) (porabola((this.getCenterX() + Constants.jumperJumpXIncrament), (startingY - Constants.jumperJumpYMax), (targetX), targetY )));
 
-        this.translate(this.getXSpeed(), -this.getYSpeed());
+        this.translate((int) (this.getXSpeed() - previousXChange), (int) (this.getYSpeed() - previousYChange) * -1);
 
         if ((this.getCenterX() == targetX + jumpCalculationDisplacementX) && (this.getCenterY() == targetY + jumpCalculationDisplacementY)) {
             this.setAbilityActive(true);
