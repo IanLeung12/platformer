@@ -70,7 +70,8 @@ public class Jumper extends Enemy{
                     this.chargeUp(player);
 
                 } else {
-                    this.cooldownMovement(player);
+                   this.defaultMovement();
+
                 }
             }
         }
@@ -85,34 +86,12 @@ public class Jumper extends Enemy{
         this.setYSpeed(this.getYSpeed() - Constants.getGravity());
         this.translate(this.getXSpeed(), -this.getYSpeed());
 
-    }
-
-    public void cooldownMovement(Player player) {
-
-        double dX = player.getCenterX() - this.getCenterX();
-
-        if (dX >= 0) {
-            if (Math.abs(this.getXSpeed()) >= Constants.jumperSpeed) {
-                this.setXSpeed(this.getXSpeed() / 2);
-            }
-
-        } else if (dX < 0) {
-            if (Math.abs(this.getXSpeed()) >= Constants.jumperSpeed) {
-                this.setXSpeed(this.getXSpeed() / -2);
-            }
-
-        }
-
-        this.setYSpeed(this.getYSpeed() - Constants.gravity);
-
-        this.translate(this.getXSpeed(), -this.getYSpeed());
-
         if (this.getCooldownTimerAbility() > 0) {
             this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
         }
 
-
     }
+
 
     public void chargeUp(Player player) {
 
@@ -137,8 +116,7 @@ public class Jumper extends Enemy{
 
         double interval = power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
 
-        this.setXSpeed((int) (dX * interval));
-        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed())));
+        this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? (dY * interval) : (dX/this.getXSpeed()))));
 
         System.out.println(this.getXSpeed());
 
