@@ -34,8 +34,7 @@ public class Jumper extends Enemy{
 
         if (isAbilityActive()) {
 
-                this.movementAbility(player, proximity);
-
+            porabolicMovement();
 
         } else {
 
@@ -91,13 +90,9 @@ public class Jumper extends Enemy{
 
     public void movementAbility(Player player, ArrayList<GameObject> proximity ) {
 
-
-
     }
 
     public void chargeUp(Player player) {
-
-
 
     }
 
