@@ -27,9 +27,9 @@ public class Player extends Alive {//
 
 
 
-    Player(int x, int y, int width, int height, double MaxHealth, double maxEnergy) {
-        super(x, y, width, height, MaxHealth, MaxHealth, 60);
-        this.energy = maxEnergy;
+    Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy) {
+        super(x, y, width, height, health, MaxHealth, 60);
+        this.energy = energy;
         this.maxEnergy = maxEnergy;
         this.totalGold = 0;
         this.jumpNum = 0;

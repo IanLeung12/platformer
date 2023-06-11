@@ -33,7 +33,7 @@ public class GameEngine {
 
     GameEngine() throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/Save2.txt"));
-        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble());
+        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -278,7 +278,7 @@ public class GameEngine {
     public void save() throws FileNotFoundException {
 
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
-        output.println((int) player.getX() + " " + (int) player.getY() + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " + (int) player.getHealth() + " " + (int) player.getMaxHealth());
+        output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " + (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy());
         for (Wall wall: this.surroundings) {
             output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
         }
