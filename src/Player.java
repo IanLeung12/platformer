@@ -67,6 +67,9 @@ public class Player extends Alive {//
         if (this.getHealth() > this.getMaxHealth()) {
             this.setHealth(this.getMaxHealth());
         }
+        if (this.energy > this.maxEnergy) {
+            this.energy = maxEnergy;
+        }
     }
 
     public void jump() {

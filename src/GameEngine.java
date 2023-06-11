@@ -52,6 +52,9 @@ public class GameEngine {
                 case "Spike":
                     surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
+                case "Crystal":
+                    surroundings.add(new Crystal((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), input.next()));
+                    break;
                 case "Slime":
                     enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
@@ -105,7 +108,7 @@ public class GameEngine {
 
             } else if (enemy.getHealth() <= 0) {
 
-                createOrbs(enemy, orbs);
+                createOrbs(enemy);
 
                 respawnList.add(enemy);
 
@@ -201,28 +204,18 @@ public class GameEngine {
     }
 
     public void checkCollisions() {
-        for (GameObject object: surroundings) {
+        for (Wall object: surroundings) {
+            if (object instanceof Crystal) {
+                ((Crystal) object).crystalTick();
+            }
             if (player.intersects(object)) {
                 player.collide(object);
                 player.setAbilityActive(false);
             }
 
             for (Enemy enemy: enemies) {
-                if (enemy instanceof Slime) {
-                    Slime slimeEnemy = (Slime) enemy;
-                    if (slimeEnemy.intersects(object)) {
-                        slimeEnemy.collision(object);
-                    }
-                } else if (enemy instanceof Mosquito)  {
-                    Mosquito mosquitoEnemy = (Mosquito) enemy;
-                    if (mosquitoEnemy.intersects(object)) {
-                        mosquitoEnemy.collision(object);
-                    }
-                } else if (enemy instanceof Jumper)  {
-                    Jumper jumperEnemy = (Jumper) enemy;
-                    if (jumperEnemy.intersects(object)) {
-                        jumperEnemy.collision(object);
-                    }
+                if (enemy.intersects(object)) {
+                    enemy.collision(object);
                 }
 
                 if (player.intersects(enemy)) {
@@ -237,7 +230,6 @@ public class GameEngine {
                     orb.collision(object);
                 }
             }
-
         }
 
         for (int i = attacks.size() - 1; i >= 0; i --) {
@@ -252,8 +244,16 @@ public class GameEngine {
                 }
             }
 
-            if (attack instanceof Projectile) {
-                for (Wall wall: surroundings) {
+            for (Wall wall: surroundings) {
+                if (wall instanceof Crystal) {
+                    if (attack.intersects(wall)) {
+                        ((Crystal) wall).takeHit(attack);
+                        if (((Crystal) wall).getHealth() <= 0) {
+                            createOrbs(wall);
+                        }
+                    }
+
+                } else if (attack instanceof Projectile) {
                     if (attack.intersects(wall)) {
                         if (attack instanceof Rocket) {
                             attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
@@ -265,6 +265,7 @@ public class GameEngine {
                 }
             }
         }
+
 
         for (int i = orbs.size() - 1; i >= 0; i -- ) {
             if (orbs.get(i).intersects(player)) {
@@ -288,16 +289,27 @@ public class GameEngine {
         output.close();
     }
 
-    public void createOrbs(Enemy enemy, ArrayList<Orb> orbs ) {
-        for (int i = (int) enemy.getGoldReward(); i > 0; i = i - Constants.orbValue) {
-            orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, Constants.orbValue, "Gold"));
-        }
+    public void createOrbs(GameObject object) {
+        if (object instanceof Enemy) {
+            Enemy enemy = (Enemy) object;
+            for (int i = (int) enemy.getGoldReward(); i > 0; i -= 10) {
+                orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 10, "Gold"));
+            }
 
-        for (int i = 0; i < 3; i ++) {
-            if (Math.random() < enemy.getGoldReward() / 300.0) {
-                orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 25, "Health"));
+            for (int i = 0; i < 3; i ++) {
+                if (Math.random() < enemy.getGoldReward() / 300.0) {
+                    orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 25, "Health"));
+                } else if (Math.random() < enemy.getGoldReward() / 600.0) {
+                    orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 20, "Energy"));
+                }
+            }
+        } else {
+            Crystal crystal = (Crystal) object;
+            for (int i = crystal.getBoostValue(); i > 0; i = i - 10) {
+                orbs.add(new Orb((int) crystal.getCenterX(), (int) crystal.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 10, crystal.getBoostType()));
             }
         }
+
 
 
     }
@@ -309,6 +321,9 @@ public class GameEngine {
                 break;
             case "Health":
                 player.setHealth(player.getHealth() + orb.getBoostValue());
+                break;
+            case "Energy":
+                player.setEnergy(player.getEnergy() + orb.getBoostValue());
                 break;
         }
     }

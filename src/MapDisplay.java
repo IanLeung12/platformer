@@ -187,12 +187,30 @@ public class MapDisplay extends JFrame {
             super.paintComponent(g); //required
             Graphics2D g2d = (Graphics2D) g;
 
-            for (GameObject thing: game.getSurroundings()) {
+            for (Wall wall: game.getSurroundings()) {
                 g.setColor(Color.darkGray);
-                if (thing instanceof Spike) {
+                if (wall instanceof Spike) {
                     g2d.setColor(Color.red);
                 }
-                g2d.fillRect((int) thing.getX(), (int) thing.getY(), (int) thing.getWidth(), (int) thing.getHeight());
+                if (wall instanceof Crystal) {
+                    Crystal crystal = (Crystal) wall;
+                    if (crystal.getRespawnTimer() == 0) {
+                        if (crystal.getBoostType().equals("Energy")) {
+                            g2d.setColor(new Color(87, 166, 158));
+                        } else {
+                            g2d.setColor(new Color(56, 110, 19));
+                        }
+                        g2d.fillRect((int) wall.getX(), (int) wall.getY(), (int) wall.getWidth(), (int) wall.getHeight());
+                        if (crystal.getHealth() != crystal.getMaxHealth()) {
+                            g2d.setColor(Color.red);
+                            g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, 50, 20);
+                            g2d.setColor(Color.green);
+                            g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, (int) ((double) crystal.getHealth()/ (double) crystal.getMaxHealth() * 50.0), 20);
+                        }
+                    }
+                }  else {
+                    g2d.fillRect((int) wall.getX(), (int) wall.getY(), (int) wall.getWidth(), (int) wall.getHeight());
+                }
 
             }
 
@@ -206,8 +224,6 @@ public class MapDisplay extends JFrame {
                     g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
                     g2d.rotate(theta, attack.getX(), attack.getY());
                 } else if (attack instanceof Explosion) {
-                    g2d.setColor(Color.blue);
-                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                     g2d.setColor(Color.GREEN);
                     g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
                 } else {
@@ -219,7 +235,16 @@ public class MapDisplay extends JFrame {
             g2d.setColor(Color.GREEN);
             for (Enemy enemy: game.getEnemies()) {
                 if (enemy instanceof Slime) {
-                    g2d.drawImage(slime, (int) enemy.getX(), (int) enemy.getY(), this);
+                    AffineTransform originalTransform = g2d.getTransform();
+                    AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
+                    if (enemy.getDirection() != 1) {
+                        tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
+                    } else {
+                        tx.translate(enemy.getX(), enemy.getY());
+                    }
+
+                    g2d.drawImage(slime, tx, this);
+                    g2d.setTransform(originalTransform);
                 } else if (enemy instanceof Mosquito) {
                     g2d.setColor(Color.yellow);
                     g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
@@ -269,11 +294,13 @@ public class MapDisplay extends JFrame {
                 Orb orb = game.getOrbs().get(i);
                 switch (orb.getBoostType()) {
                     case "Gold":
-                        g.setColor(Color.ORANGE);
+                        g2d.setColor(Color.ORANGE);
                         break;
                     case "Health":
-                        g.setColor(Color.PINK);
+                        g2d.setColor(Color.PINK);
                         break;
+                    case "Energy":
+                        g2d.setColor(Color.CYAN);
                 }
                 g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
             }
@@ -282,19 +309,6 @@ public class MapDisplay extends JFrame {
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
             g2d.drawString("gold " + player.getTotalGold(), 1000, 50);
             g2d.drawString("Health: " + player.getHealth(), 450, 50);
-
-//            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
-//            g2d.setComposite(alphaComposite);
-//            g2d.setStroke(new BasicStroke(8));
-//            g2d.setColor(new Color(67, 85, 96));
-//            g2d.fillOval(102, 802, 195, 195);
-//            g2d.setColor(Color.red);
-//            g2d.drawOval(100, 800, 200, 200);
-//            g2d.setStroke(new BasicStroke(10));
-//            alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
-//            g2d.setComposite(alphaComposite);
-//            g2d.setColor(Color.green);
-//            g2d.drawArc(100, 800, 200, 200, 90, (int) -(360 * player.getHealth()/player.getMaxHealth()));
 
             g2d.setColor(new Color(20, 20, 129));
 

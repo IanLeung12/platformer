@@ -24,6 +24,7 @@ abstract public class Enemy extends Alive {//
 
     public abstract void update();
 
+    abstract public void collision(GameObject otherObject);
 
     public void knockback(Attack attack) {
         double interval, dX, dY;
