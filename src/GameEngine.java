@@ -53,13 +53,13 @@ public class GameEngine {
                     surroundings.add(new Spike((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Slime":
-                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.slimeGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Slime((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Mosquito":
-                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.mosquitoGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Mosquito((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
                 case "Jumper":
-                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), Constants.jumperGoldReward, (int) input.nextDouble(), (int) input.nextDouble()));
+                    enemies.add(new Jumper((int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble(), (int) input.nextDouble()));
                     break;
             }
         }
