@@ -35,7 +35,7 @@ public class Jumper extends Enemy{
 
         if (isAbilityActive()) {
 
-            porabolicMovement();
+            parabolicMovement();
 
         } else {
 
@@ -47,7 +47,7 @@ public class Jumper extends Enemy{
 
                 this.setAbilityActive(false);
 
-                this.setUpPorabolicJumpingMovement(player);
+                this.setUpParabolicJumpingMovement(player);
 
             }
         }
@@ -55,13 +55,11 @@ public class Jumper extends Enemy{
 
     public void defaultMovement() {
 
-        if (Math.abs(this.getXSpeed()) > Constants.jumperSpeed) {
+        //if (Math.abs(this.getXSpeed()) > Constants.jumperSpeed) {
             this.setXSpeed((this.getXSpeed()/2));
-        }
-        System.out.println("y speed is " + this.getYSpeed()) ;
-
+       // }
+        System.out.println(this.getX() + ", " + this.getY());
         this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-        System.out.println("y speed is " + this.getYSpeed()) ;
         this.translate(this.getXSpeed(), -this.getYSpeed());
 
     }
@@ -98,7 +96,7 @@ public class Jumper extends Enemy{
     }
 
 
-    public void setUpPorabolicJumpingMovement(Player player) {
+    public void setUpParabolicJumpingMovement(Player player) {
 
         setAbilityActive(true);
 
@@ -113,7 +111,7 @@ public class Jumper extends Enemy{
 
     }
 
-    public void porabolicMovement() {
+    public void parabolicMovement() {
 
 
         this.setXSpeed(Constants.jumperJumpXIncrament);
@@ -167,19 +165,23 @@ public class Jumper extends Enemy{
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop - this.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
+                this.setAbilityActive(false);
 
             } else if (this.getY() < otherObjectTop + otherObject.getHeight() && playerBottom > otherObjectTop + otherObject.getHeight() && (playerRight - this.getXSpeed() - 2 > colliderLeft) && (playerLeft - this.getXSpeed() + 2 < colliderRight)) {
 
                 this.setLocation((int) this.getX(), (int) (otherObjectTop + otherObject.getHeight()));
                 this.setYSpeed(((this.getYSpeed() / 4) * 3) * (-1));
+                this.setAbilityActive(false);
 
             } else if (playerRight > colliderLeft && playerLeft < colliderLeft && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderLeft - this.getWidth()), (int) this.getY());
                 this.setXSpeed(this.getXSpeed() * -1);
+                this.setAbilityActive(false);
 
             } else if (this.getX() < colliderRight && playerRight > colliderRight && playerBottom > otherObjectTop && this.getY() < otherObjectTop + otherObject.getHeight()) {
                 this.setLocation((int) (colliderRight), (int) this.getY());
                 this.setXSpeed(this.getXSpeed() * -1);
+                this.setAbilityActive(false);
 
             }
         }

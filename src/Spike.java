@@ -2,10 +2,6 @@
 public class Spike extends Wall{
     private double damage;
 
-    Spike(int x, int y, int width, int height, boolean respawnable) {
-        super(x, y, width, height, respawnable);
-        this.damage = 25;
-    }
     Spike(int x, int y, int width, int height) {
         super(x, y, width, height);
         this.damage = 25;
