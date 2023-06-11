@@ -144,7 +144,7 @@ public class Jumper extends Enemy{
         double dX = player.getCenterX() - this.getCenterX();
         double dY = -(player.getCenterY() - this.getCenterY());
 
-        double interval = power/(Math.abs(dX) + Math.abs(dY) + 1);
+        double interval = power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);
 
         this.setXSpeed((int) (dX * interval));
         this.setYSpeed((int) ((dY * interval) + (this.getXSpeed() == 0 ? dY * interval : dX/this.getXSpeed()/2)));
