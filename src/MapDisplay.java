@@ -342,8 +342,10 @@ public class MapDisplay extends JFrame {
             g2d.drawRect(100, 800, (int) (player.getMaxHealth() * 3), 50);
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getMaxHealth(), 120, 840);
+            g2d.drawRect((int) (player.getCenterX() - 300), (int) (player.getCenterY() - 100), 600, 200);
 
             g2d.setColor(new Color(29, 37, 80));
+            g2d.drawRect((int) (player.getCenterX() - 600), (int) (player.getCenterY() - 200), 1200, 400);
             g2d.fillRect(102, 902, (int) (player.getMaxEnergy() * 3) - 4, 46);
             g2d.setColor(new Color(32, 127, 178));
             g2d.fillRect(100, 900, (int) (player.getEnergy() * 3), 50);
