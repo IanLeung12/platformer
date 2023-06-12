@@ -23,7 +23,8 @@ public class Player extends Alive {//
     private int[] respawnPoint;
 
     private Wall lastWall;
-    private ArrayList<String> Weapons;
+
+    private ArrayList<String> weapons;
 
     private int attackCooldown;
 
@@ -37,6 +38,7 @@ public class Player extends Alive {//
         this.jumpNum = 0;
         this.maxJumps = maxJumps;
         this.setImmunityTimer(1);
+        this.weapons = new ArrayList<>();
         this.respawnPoint = new int[]{x, y};
         this.dashUnlocked = dashUnlocked;
         this.bashUnlocked = bashUnlocked;
@@ -302,11 +304,11 @@ public class Player extends Alive {//
     }
 
     public ArrayList<String> getWeapons() {
-        return Weapons;
+        return weapons;
     }
 
     public void setWeapons(ArrayList<String> weapons) {
-        Weapons = weapons;
+        weapons = weapons;
     }
 
     public int getAbilityTravelled() {

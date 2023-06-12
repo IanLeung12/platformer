@@ -41,6 +41,7 @@ public class ShopItem extends GameObject{
 
     public boolean buy(Player player) {
         if (player.getTotalGold() >= price) {
+            player.setTotalGold((int) (player.getTotalGold() - price));
             switch (name) {
                 case "Hammer":
                     player.getWeapons().add("Hammer");

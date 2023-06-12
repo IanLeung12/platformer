@@ -74,6 +74,11 @@ public class Jumper extends Enemy{
                 }
             }
         }
+        if (this.getXSpeed() > 0) {
+            this.setDirection(1);
+        } else if (this.getXSpeed() < 0){
+            this.setDirection(-1);
+        }
     }
 
     public void chargeUp(Player player) {

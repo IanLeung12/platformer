@@ -48,6 +48,10 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage slime;
 
+    static BufferedImage mosquito;
+
+    static BufferedImage jumper;
+
     static BufferedImage eButton;
 
     static Rectangle buyRect = new Rectangle(560, 800, 200, 50);
@@ -85,6 +89,8 @@ public class MapDisplay extends JFrame {
             playerFrames[5] = image("Pictures/player5.png");
 
             slime = image("Pictures/slime.png");
+            mosquito = image("Pictures/mosquito.png");
+            jumper = image("Pictures/jumper.png");
             eButton = image("Pictures/e.png");
             System.out.println("e");
         } catch (IOException ex){
@@ -252,24 +258,24 @@ public class MapDisplay extends JFrame {
 
             g2d.setColor(Color.GREEN);
             for (Enemy enemy: game.getEnemies()) {
-                if (enemy instanceof Slime) {
-                    AffineTransform originalTransform = g2d.getTransform();
-                    AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
-                    if (enemy.getDirection() != 1) {
-                        tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
-                    } else {
-                        tx.translate(enemy.getX(), enemy.getY());
-                    }
-
-                    g2d.drawImage(slime, tx, this);
-                    g2d.setTransform(originalTransform);
-                } else if (enemy instanceof Mosquito) {
-                    g2d.setColor(Color.yellow);
-                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
-                } else if (enemy instanceof Jumper) {
-                    g2d.setColor(Color.blue);
-                    g2d.fillRect((int) enemy.getX(), (int) enemy.getY(), (int) enemy.getWidth(), (int) enemy.getHeight());
+                AffineTransform originalTransform = g2d.getTransform();
+                AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
+                if (enemy.getDirection() != 1) {
+                    tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
+                } else {
+                    tx.translate(enemy.getX(), enemy.getY());
                 }
+
+                if (enemy instanceof Slime) {
+                    g2d.drawImage(slime, tx, this);
+                } else if (enemy instanceof Mosquito) {
+                    g2d.drawImage(mosquito, tx, this);
+                } else {
+                    g2d.drawImage(jumper, tx, this);
+                }
+
+                g2d.setTransform(originalTransform);
+
 
 
 
@@ -369,7 +375,20 @@ public class MapDisplay extends JFrame {
                     break;
             }
             for (int i = 0; i < weaponIcons.length; i ++) {
-                g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+                if (i == 0) {
+                    g2d.drawImage(weaponIcons[i], 100, 700, this);
+                } else if ((i == 1) && (player.getWeapons().contains("Hammer"))) {
+                    g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+                } else if ((i == 2) && (player.getWeapons().contains("Bow"))) {
+                    g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+                } else if ((i == 3) && (player.getWeapons().contains("Rocket"))) {
+                    g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+                } else {
+                    g2d.setColor(Color.black);
+                    g2d.fillRect(100 + 75 * i, 700, 50, 50);
+                }
+
+
             }
 
             g2d.setStroke(new BasicStroke(4));
@@ -464,8 +483,11 @@ public class MapDisplay extends JFrame {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 if (game.isInShop()) {
                     if (buyRect.contains(e.getPoint())) {
+
                         if (game.getShop().get(currentShopItem).buy(player)) {
-                            game.getShop().remove(currentShopItem);
+                            if (game.getShop().get(currentShopItem).getPrice() != 6000) {
+                                game.getShop().remove(currentShopItem);
+                            }
                             game.setInShop(false);
                         }
                     } else if (cancelRect.contains(e.getPoint())) {
@@ -628,16 +650,22 @@ public class MapDisplay extends JFrame {
                     player.jump();
                     break;
                 case '1':
-                    player.setCurrentWeapon("Sword");
+                    if (player.getWeapons().contains("Sword")) {
+                        player.setCurrentWeapon("Sword");
+                    }
                     break;
                 case '2':
-                    player.setCurrentWeapon("Hammer");
+                    if (player.getWeapons().contains("Hammer")) {
+                        player.setCurrentWeapon("Hammer");
+                    }
                     break;
                 case '3':
-                    player.setCurrentWeapon("Bow");
+                    if (player.getWeapons().contains("Bow")) {
+                        player.setCurrentWeapon("Bow");
+                    }
                     break;
                 case '4':
-                    player.setCurrentWeapon("Rocket");
+                    player.setCurrentWeapon("Bow");
                     break;
             }
         }

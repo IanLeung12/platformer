@@ -79,9 +79,17 @@ public class GameEngine {
                     break;
                 case "Shop":
                     shop.add(new ShopItem(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next(), input.nextInt()));
+                    System.out.println("yes");
+                    break;
+                case "Weapon":
+                    player.getWeapons().add(input.next());
+                    break;
             }
         }
 
+        for (ShopItem item: shop) {
+            System.out.println(item);
+        }
         input.close();
     }
 
@@ -381,6 +389,9 @@ public class GameEngine {
         output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " +
                 (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " +
                 player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isDashUnlocked() + " " + player.getDamageBoost());
+        for (String weapon: player.getWeapons()) {
+            output.println("Weapon " + weapon);
+        }
         for (Wall wall: this.surroundings) {
             output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  +
                     (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
@@ -388,6 +399,9 @@ public class GameEngine {
         for (Enemy enemy: this.enemies) {
             output.println(enemy.getClass().getName() + " " + (int) enemy.getX() + " " + (int) enemy.getY() + " " + (int) enemy.getWidth() + " " + (int) enemy.getHeight() + " " +
                     (int) enemy.getHealth() + " " + (int) enemy.getMaxHealth() + " " + (int) enemy.getDamage() + " " + (int) enemy.getGoldReward() + " " + (int) enemy.getRespawnX() + " " + (int) enemy.getRespawnY());
+        }
+        for (ShopItem item: this.shop) {
+            output.println("Shop " + item.getX() + " " + item.getY() + " " + item.getWidth() + " " + item.getHeight() + " " + item.getName() + " " + item.getPrice());
         }
         output.close();
     }
