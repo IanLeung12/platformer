@@ -1,7 +1,4 @@
 0 0 75 150 100 100 100 100 1 false false 1
-Weapon Hammer
-Weapon Bow
-Weapon Rocket
 Wall 0 0 0 0 false
  Wall -900 -1500 900 2300 true
  Wall 0 0 1900 600 true
