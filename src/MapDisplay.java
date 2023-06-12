@@ -3,7 +3,6 @@
  * @author ICS3U
  * @version Dec 2017
  */
-import javafx.stage.Screen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage[] weaponIcons = new BufferedImage[4];
 
-    static BufferedImage[] playerFrames = new BufferedImage[100];
+    static BufferedImage[] playerFrames = new BufferedImage[7];
 
     static BufferedImage slime;
 
@@ -88,12 +87,9 @@ public class MapDisplay extends JFrame {
             weaponIcons[2] = image("Pictures/BowIcon.png");
             weaponIcons[3] = image("Pictures/RocketIcon.png");
 
-            playerFrames[0] = image("Pictures/player0.png");
-            playerFrames[1] = image("Pictures/player1.png");
-            playerFrames[2] = image("Pictures/player2.png");
-            playerFrames[3] = image("Pictures/player3.png");
-            playerFrames[4] = image("Pictures/player4.png");
-            playerFrames[5] = image("Pictures/player5.png");
+            for (int i = 0; i < playerFrames.length; i ++) {
+                playerFrames[i] = image("Pictures/player" + i + ".png");
+            }
 
             slime = image("Pictures/slime.png");
             mosquito = image("Pictures/mosquito.png");
@@ -154,8 +150,8 @@ public class MapDisplay extends JFrame {
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
 
-        for (GameObject surrounding: game.getSurroundings()) {
-            surrounding.translate(dX, dY);
+        for (int i = 0; i < game.getSurroundings().size(); i ++) {
+            game.getSurroundings().get(i).translate(dX, dY);
         }
 
         for (Enemy enemy: game.getEnemies()) {
@@ -301,20 +297,21 @@ public class MapDisplay extends JFrame {
             Player player = game.getPlayer();
             if (player.getImmunityTimer()/10 % 2 == 0) {
                 int speed = Math.abs(player.getXSpeed());
-                if (speed < 30){
-                    AffineTransform originalTransform = g2d.getTransform();
-                    AffineTransform tx = AffineTransform.getScaleInstance(player.getDirection(), 1);
-                    if (player.getDirection() != 1) {
-                        tx.translate(-(player.getX() + playerFrames[speed / 5].getWidth()), player.getY());
-                    } else {
-                        tx.translate(player.getX(), player.getY());
-                    }
-
-                    g2d.drawImage(playerFrames[speed / 5], tx, this);
-                    g2d.setTransform(originalTransform);
+                AffineTransform originalTransform = g2d.getTransform();
+                AffineTransform tx = AffineTransform.getScaleInstance(player.getDirection(), 1);
+                if (player.getDirection() != 1) {
+                    tx.translate(-(player.getX() + playerFrames[0].getWidth()), player.getY());
                 } else {
-                    g2d.fillRect((int) player.getX(), (int) player.getY(), (int) player.getWidth(), (int) player.getHeight());
+                    tx.translate(player.getX(), player.getY());
                 }
+                if (speed < 30) {
+                    g2d.drawImage(playerFrames[speed / 5], tx, this);
+
+                } else {
+                    g2d.drawImage(playerFrames[6], tx, this);
+                }
+
+                g2d.setTransform(originalTransform);
             }
 
             if (aimingBash) {
@@ -362,11 +359,10 @@ public class MapDisplay extends JFrame {
 
 
 
+            g2d.setColor(Color.BLACK);
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
-            g2d.drawString("gold " + player.getTotalGold(), 1000, 50);
-            g2d.drawString("x: " + player.getX(), 450, 50);
-            g2d.drawString("y: " + player.getY(), 450, 150);
+            g2d.drawString("Gold: $" + player.getTotalGold(), 50, 100);
 
 
             g2d.setColor(new Color(20, 20, 129));
@@ -415,9 +411,7 @@ public class MapDisplay extends JFrame {
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getMaxHealth(), 120, 840);
             g2d.drawRect((int) (player.getCenterX() - 300), (int) (player.getCenterY() - 100), 600, 200);
-
             g2d.setColor(new Color(29, 37, 80));
-            g2d.drawString(" " + game.getRequiredKills(), 600, 60);
             g2d.drawRect((int) (player.getCenterX() - 600), (int) (player.getCenterY() - 200), 1200, 400);
             g2d.fillRect(102, 902, (int) (player.getMaxEnergy() * 3) - 4, 46);
             g2d.setColor(new Color(32, 127, 178));
