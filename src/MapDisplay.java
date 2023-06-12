@@ -50,6 +50,12 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage eButton;
 
+    static Rectangle buyRect = new Rectangle(560, 800, 200, 50);
+
+    static Rectangle cancelRect = new Rectangle(1160, 800, 200, 50);
+
+    static int currentShopItem = 0;
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
@@ -168,6 +174,10 @@ public class MapDisplay extends JFrame {
 
         for (Rectangle hitbox: game.getObeliskHitboxes()) {
             hitbox.translate(dX, dY);
+        }
+
+        for (ShopItem item: game.getShop()) {
+            item.translate(dX, dY);
         }
 
     }
@@ -323,6 +333,13 @@ public class MapDisplay extends JFrame {
                 }
             }
 
+            for (ShopItem item: game.getShop()) {
+                g2d.fillRect((int) item.getX(), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight());
+                if (player.intersects(item)){
+                    g2d.drawImage(eButton, (int) item.getCenterX() - 50, (int) item.getCenterY() - 50, this);
+                }
+            }
+
 
 
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
@@ -375,8 +392,33 @@ public class MapDisplay extends JFrame {
             g2d.drawRect(100, 900, (int) (player.getMaxEnergy() * 3), 50);
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("Energy: " + (int) player.getEnergy() + " / " + (int) player.getMaxEnergy(), 120, 940);
+            if (game.isInShop()) {
+                drawShopScreen(g2d, game.getShop().get(currentShopItem));
+            }
 
         } // paintComponent method end
+
+        public void drawShopScreen(Graphics2D g2d, ShopItem item) {
+
+            g2d.setColor(new Color(3, 72, 131, 205));
+            g2d.fillRect(320, 180, 1280, 720);
+            g2d.setColor(Color.green);
+            g2d.fillRect(buyRect.x, buyRect.y - 25, buyRect.width, buyRect.height);
+            g2d.setColor(Color.red);
+            g2d.fillRect(cancelRect.x, cancelRect.y - 25, cancelRect.width, cancelRect.height);
+            g2d.setColor(Color.BLACK);
+            g2d.setStroke(new BasicStroke(6));
+            g2d.drawRect(320, 180, 1280, 720);
+            g2d.drawRect(buyRect.x, buyRect.y - 25, buyRect.width, buyRect.height);
+            g2d.drawRect(cancelRect.x, cancelRect.y - 25, cancelRect.width, cancelRect.height);
+            g2d.drawString("BUY", buyRect.x + 50, (int) (buyRect.getMaxY() - 35));
+            g2d.drawString("CANCEL", cancelRect.x + 15, (int) (cancelRect.getMaxY() - 35));
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(item.getName(), 875, 400);
+            g2d.drawString(item.getDescription(), 400, 500);
+            g2d.drawString("Price: $" + item.getPrice(), 400, 600);
+
+        }
     } // GraphicsPanel class end
 
 
@@ -420,36 +462,52 @@ public class MapDisplay extends JFrame {
         @Override
         public void mouseReleased(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                int direction = e.getX() > player.getCenterX() ? 1 : -1;
-                switch (player.getCurrentWeapon()) {
-                    case "Sword":
-                        game.getAttacks().add(new Sword((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() : -150)),
-                                (int) (player.getY() - 50), player.getDirection(), true));
-                        break;
-                    case "Hammer":
-                        game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
-                                (int) (player.getY() - 50), player.getDirection(), true));
-                        break;
-                    case "Bow":
-                        if (bowCharging) {
-                            if (bowPower > 20) {
-                                game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
-                                        e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower));
-                                player.setEnergy(player.getEnergy() - Constants.arrowCost);
-                            }
-                            bowPower = 1;
-                            bowCharging = false;
+                if (game.isInShop()) {
+                    if (buyRect.contains(e.getPoint())) {
+                        if (game.getShop().get(currentShopItem).buy(player)) {
+                            game.getShop().remove(currentShopItem);
+                            game.setInShop(false);
                         }
+                    } else if (cancelRect.contains(e.getPoint())) {
+                        game.setInShop(false);
+                    }
+                } else {
+                    if (player.getAttackCooldown() == 0) {
+                        int direction = e.getX() > player.getCenterX() ? 1 : -1;
+                        switch (player.getCurrentWeapon()) {
+                            case "Sword":
+                                game.getAttacks().add(new Sword((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() : -150)),
+                                        (int) (player.getY() - 50), player.getDirection(), true, player.getDamageBoost()));
+                                player.setAttackCooldown(15);
+                                break;
+                            case "Hammer":
+                                game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
+                                        (int) (player.getY() - 50), player.getDirection(), true, player.getDamageBoost()));
+                                player.setAttackCooldown(25);
+                                break;
+                            case "Bow":
+                                if (bowCharging) {
+                                    if (bowPower > 20) {
+                                        game.getAttacks().add(new Arrow((int) player.getCenterX(), (int) player.getCenterY() - 25,
+                                                e.getX() + cameraX, e.getY() + cameraY, direction, true, bowPower, player.getDamageBoost()));
+                                        player.setEnergy(player.getEnergy() - Constants.arrowCost);
+                                    }
+                                    bowPower = 1;
+                                    bowCharging = false;
+                                }
 
-                        break;
+                                break;
 
-                    case "Rocket":
-                        if (player.getEnergy() >= Constants.rocketCost) {
-                            game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
-                                    e.getX() + cameraX, e.getY() + cameraY, direction, true));
-                            player.setEnergy(player.getEnergy() - Constants.rocketCost);
+                            case "Rocket":
+                                if (player.getEnergy() >= Constants.rocketCost) {
+                                    game.getAttacks().add(new Rocket((int) player.getCenterX() - 50, (int) player.getCenterY() - 25,
+                                            e.getX() + cameraX, e.getY() + cameraY, direction, true, player.getDamageBoost()));
+                                    player.setEnergy(player.getEnergy() - Constants.rocketCost);
+                                    player.setAttackCooldown(100);
+                                }
+                                break;
                         }
-                        break;
+                    }
                 }
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -518,6 +576,12 @@ public class MapDisplay extends JFrame {
                             if (player.intersects(game.getObeliskHitboxes().get(i))) {
                                 game.activateObelisk(i);
                             }
+                        }
+                    }
+                    for (int i = 0; i < game.getShop().size(); i ++) {
+                        if (player.intersects(game.getShop().get(i))) {
+                            game.setInShop(true);
+                            currentShopItem = i;
                         }
                     }
             }

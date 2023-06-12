@@ -6,8 +6,8 @@ public class Explosion extends Attack{
 
     private int lastRadius;
 
-    Explosion(int x, int y, boolean isFriendly, int maxRadius) {
-        super(x, y, 0, 0, 150, 0, isFriendly, 15);
+    Explosion(int x, int y, boolean isFriendly, int maxRadius, double damageBoost) {
+        super(x, y, 0, 0, (int) (150 * damageBoost), 0, isFriendly, 15);
         this.maxRadius = maxRadius;
         this.radius = 0;
         this.lastRadius = 0;

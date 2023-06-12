@@ -1,7 +1,7 @@
 public class Arrow extends Projectile {
 
-    Arrow(int x, int y, int targetX, int targetY, int direction, boolean isFriendly, int Power) {
-        super(x, y, 45, 45, (int) (5 + Power * 0.5), direction, isFriendly, 100, Constants.arrowCost);
+    Arrow(int x, int y, int targetX, int targetY, int direction, boolean isFriendly, int Power, double damageBoost) {
+        super(x, y, 45, 45, (int) (5 + Power * 0.5 * damageBoost), direction, isFriendly, 100, Constants.arrowCost);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
         double interval = Power/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2) + 1);

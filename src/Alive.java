@@ -1,7 +1,7 @@
 abstract public class Alive extends Moveable{
 
     private double health;
-    private final double maxHealth;
+    private double maxHealth;
 
     private int direction;
 
@@ -41,6 +41,10 @@ abstract public class Alive extends Moveable{
 
     public double getMaxHealth() {
         return maxHealth;
+    }
+
+    public void setMaxHealth(double maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     public int getImmunityTimer() {

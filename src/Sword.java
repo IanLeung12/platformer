@@ -2,7 +2,7 @@ public class Sword extends Attack{//
 
 
     // sword
-    Sword(int x, int y, int direction, boolean isFriendly) {
-        super(x, y, 150, 200, 30, direction, isFriendly, 12);
+    Sword(int x, int y, int direction, boolean isFriendly, double damageBoost) {
+        super(x, y, 150, 200, (int) (30 * damageBoost), direction, isFriendly, 12);
     }
 }

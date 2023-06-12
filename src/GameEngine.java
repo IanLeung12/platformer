@@ -17,7 +17,6 @@ public class GameEngine {
     private ArrayList<Enemy> respawnList;
     private ArrayList<Orb> orbs;
 
-    // private Shop shop;                       not created yet
     private int frameNum;
 
     boolean paused = false;
@@ -36,20 +35,20 @@ public class GameEngine {
 
     private int requiredKills = 0;
 
-    private int currentKills;
+    private boolean inShop = false;
 
-    //private int[] obelisk1
-
+    private ArrayList<ShopItem> shop;
 
     GameEngine() throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/Save.txt"));
-        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextInt(), input.nextBoolean(), input.nextBoolean());
+        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextInt(), input.nextBoolean(), input.nextBoolean(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.orbs = new ArrayList<>();
         this.respawnList = new ArrayList<>();
         this.obeliskHitboxes = new ArrayList<>();
+        this.shop = new ArrayList<>();
         this.obeliskSpawns = new int[] {0, 0, 0};
 
         this.refreshDelay = 17;
@@ -78,6 +77,8 @@ public class GameEngine {
                 case "Hitbox":
                     obeliskHitboxes.add(new Rectangle(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
+                case "Shop":
+                    shop.add(new ShopItem(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next(), input.nextInt()));
             }
         }
 
@@ -142,7 +143,7 @@ public class GameEngine {
 
             if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
                 if (attack instanceof Rocket) {
-                    attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                    attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
                 } else {
                     attacks.remove(i);
                 }
@@ -218,8 +219,13 @@ public class GameEngine {
         for (Wall object: surroundings) {
             if (object instanceof Crystal) {
                 ((Crystal) object).crystalTick();
-            }
-            if (player.intersects(object)) {
+                if (((Crystal) object).getRespawnTimer() == 0) {
+                    if (player.intersects(object)) {
+                        player.collide(object);
+                        player.setAbilityActive(false);
+                    }
+                }
+            } else if (player.intersects(object)) {
                 player.collide(object);
                 player.setAbilityActive(false);
             }
@@ -248,7 +254,7 @@ public class GameEngine {
             for (Enemy enemy: enemies) {
                 if (enemy.intersects(attack) && attack.isFriendly()) {
                     if (attack instanceof Rocket) {
-                        attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                        attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
                     } else {
                         enemy.knockback(attack);
                     }
@@ -267,7 +273,7 @@ public class GameEngine {
                 } else if (attack instanceof Projectile) {
                     if (attack.intersects(wall)) {
                         if (attack instanceof Rocket) {
-                            attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300));
+                            attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
                         } else {
                             attacks.remove(i);
                             break;
@@ -294,9 +300,9 @@ public class GameEngine {
             }
 
             for (int i = 0; i < 3; i ++) {
-                if (Math.random() < enemy.getGoldReward() / 300.0) {
+                if (Math.random() < enemy.getGoldReward() / 800.0) {
                     orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 25, "Health"));
-                } else if (Math.random() < enemy.getGoldReward() / 600.0) {
+                } else if (Math.random() < enemy.getGoldReward() / 1200.0) {
                     orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 20, "Energy"));
                 }
             }
@@ -347,6 +353,9 @@ public class GameEngine {
                     if (player.getMaxJumps() < 2) {
                         player.setMaxJumps(2);
                     }
+                    if (player.getMaxHealth() < 200) {
+                        player.setMaxHealth(200);
+                    }
                     player.setDashUnlocked(true);
             }
         } else {
@@ -370,7 +379,8 @@ public class GameEngine {
 
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
         output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " +
-                (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " + player.getMaxJumps() + " " + player.isDashUnlocked() + " " +player.isDashUnlocked());
+                (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " +
+                player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isDashUnlocked() + " " + player.getDamageBoost());
         for (Wall wall: this.surroundings) {
             output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  +
                     (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
@@ -479,5 +489,21 @@ public class GameEngine {
 
     public void setInObelisk(boolean inObelisk) {
         this.inObelisk = inObelisk;
+    }
+
+    public boolean isInShop() {
+        return inShop;
+    }
+
+    public void setInShop(boolean inShop) {
+        this.inShop = inShop;
+    }
+
+    public ArrayList<ShopItem> getShop() {
+        return shop;
+    }
+
+    public void setShop(ArrayList<ShopItem> shop) {
+        this.shop = shop;
     }
 }

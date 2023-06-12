@@ -8,7 +8,7 @@ abstract public class Attack extends GameObject{//
 
     private final int direction;
 
-    Attack(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly,int maxDuration) {
+    Attack(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly, int maxDuration) {
         super(x, y, width, height);
         this.attackDamage = attackDamage;
         this.direction = direction;
