@@ -4,7 +4,7 @@ public class Spike extends Wall{
 
     Spike(int x, int y, int width, int height) {
         super(x, y, width, height);
-        this.damage = 25;
+        this.damage = 50;
     }
 
     public void setDamage(double damage) {

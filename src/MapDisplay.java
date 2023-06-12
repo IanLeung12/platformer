@@ -434,6 +434,7 @@ public class MapDisplay extends JFrame {
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
                 if ((!player.isAbilityActive()) && (player.isBashUnlocked()) && (!player.isBashUsed())) {
+                    System.out.println("Bash Target: (" + (e.getX() + cameraX) + ", " + e.getY() + cameraY + ")");
                     player.bash(e.getX() + cameraX, e.getY() + cameraY);
                     aimingBash = false;
                     game.setRefreshDelay(17);
