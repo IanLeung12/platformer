@@ -34,6 +34,7 @@ public class Jumper extends Enemy{
             } else {
                 this.translate(this.getXSpeed(), -this.getYSpeed());
                 this.setYSpeed(this.getYSpeed() - Constants.gravity);
+
                 if (landedFrenzy > Constants.jumperMaxJumps) {
                     landedFrenzy = 0;
                     this.setAbilityActive(false);
@@ -46,7 +47,23 @@ public class Jumper extends Enemy{
 
         } else {
 
-            if (this.distanceToPlayer(player, proximity, false) > Constants.jumperVision) {
+            if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
+
+                if (this.getCooldownTimerAbility() <= 0) {
+
+                    this.setAbilityActive(true);
+                    this.chargeUp(player);
+
+                } else {
+                    this.translate(this.getXSpeed(), -this.getYSpeed());
+                    this.setYSpeed(this.getYSpeed() - Constants.gravity);
+
+                    if (this.getCooldownTimerAbility() > 0) {
+                        this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
+                    }
+
+                }
+            } else {
 
                 this.translate(this.getXSpeed(), -this.getYSpeed());
                 this.setYSpeed(this.getYSpeed() - Constants.gravity);
@@ -55,25 +72,9 @@ public class Jumper extends Enemy{
                     this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
                 }
 
-
-            } else if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
-
-               if (this.getCooldownTimerAbility() <= 0) {
-
-                    this.setAbilityActive(true);
-                    this.chargeUp(player);
-
-                } else {
-                   this.translate(this.getXSpeed(), -this.getYSpeed());
-                   this.setYSpeed(this.getYSpeed() - Constants.gravity);
-
-                   if (this.getCooldownTimerAbility() > 0) {
-                       this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
-                   }
-
-                }
             }
         }
+
         if (this.getXSpeed() > 0) {
             this.setDirection(1);
         } else if (this.getXSpeed() < 0){
