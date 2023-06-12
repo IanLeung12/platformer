@@ -74,7 +74,7 @@ public class Constants {
         return mosquitoGoldReward;
     }
 
-    static int rayTracingStep = 10;
+    static int rayTracingStep = 40;
 
 
 
