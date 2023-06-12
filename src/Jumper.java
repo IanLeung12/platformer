@@ -20,6 +20,17 @@ public class Jumper extends Enemy{
 
     }
 
+    Jumper(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY, boolean obeliskEnemy) {
+
+        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY, obeliskEnemy);
+
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
+        this.setTotalCooldownTimer(100);
+        this.setXSpeed(Constants.jumperSpeed);
+
+    }
+
 
 
 

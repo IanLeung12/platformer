@@ -3,6 +3,8 @@
  * @author ICS3U
  * @version Dec 2017
  */
+import javafx.stage.Screen;
+
 import javax.swing.*;
 import java.awt.*;
 // the following imports are needed for pictures
@@ -58,6 +60,7 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage hCrystal;
 
+    static Rectangle screenRect = new Rectangle(0, 0, 1920, 1080);
     static Rectangle buyRect = new Rectangle(560, 800, 200, 50);
 
     static Rectangle cancelRect = new Rectangle(1160, 800, 200, 50);
@@ -218,77 +221,78 @@ public class MapDisplay extends JFrame {
             Graphics2D g2d = (Graphics2D) g;
 
             for (Wall wall: game.getSurroundings()) {
-                g.setColor(Color.darkGray);
-                if (wall instanceof Spike) {
-                    g2d.setColor(Color.red);
-                }
-                if (wall instanceof Crystal) {
-                    Crystal crystal = (Crystal) wall;
-                    if (crystal.getRespawnTimer() == 0) {
-                        if (crystal.getBoostType().equals("Energy")) {
-                            g2d.drawImage(eCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
-                        } else {
-                            g2d.drawImage(hCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
-                        }
-                        if (crystal.getHealth() != crystal.getMaxHealth()) {
-                            g2d.setColor(Color.red);
-                            g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, 50, 20);
-                            g2d.setColor(Color.green);
-                            g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, (int) ((double) crystal.getHealth()/ (double) crystal.getMaxHealth() * 50.0), 20);
-                        }
+                if (wall.intersects(screenRect)) {
+                    g.setColor(Color.darkGray);
+                    if (wall instanceof Spike) {
+                        g2d.setColor(Color.red);
                     }
-                }  else {
-                    g2d.fillRect((int) wall.getX(), (int) wall.getY(), (int) wall.getWidth(), (int) wall.getHeight());
+                    if (wall instanceof Crystal) {
+                        Crystal crystal = (Crystal) wall;
+                        if (crystal.getRespawnTimer() == 0) {
+                            if (crystal.getBoostType().equals("Energy")) {
+                                g2d.drawImage(eCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
+                            } else {
+                                g2d.drawImage(hCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
+                            }
+                            if (crystal.getHealth() != crystal.getMaxHealth()) {
+                                g2d.setColor(Color.red);
+                                g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, 50, 20);
+                                g2d.setColor(Color.green);
+                                g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, (int) ((double) crystal.getHealth()/ (double) crystal.getMaxHealth() * 50.0), 20);
+                            }
+                        }
+                    }  else {
+                        g2d.fillRect((int) wall.getX(), (int) wall.getY(), (int) wall.getWidth(), (int) wall.getHeight());
+                    }
                 }
-
             }
 
             g2d.setColor(Color.GREEN);
             for (int i = 0; i < game.getAttacks().size(); i ++) {
                 Attack attack = game.getAttacks().get(i);
-
-                if (attack instanceof Projectile) {
-                    double theta = Math.atan((double) ((Projectile) attack).getYSpeed() / ((Projectile) attack).getXSpeed());
-                    g2d.rotate(-theta, attack.getX(), attack.getY());
-                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
-                    g2d.rotate(theta, attack.getX(), attack.getY());
-                } else if (attack instanceof Explosion) {
-                    g2d.setColor(Color.GREEN);
-                    g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
-                } else {
-                    g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                if (attack.intersects(screenRect)) {
+                    if (attack instanceof Projectile) {
+                        double theta = Math.atan((double) ((Projectile) attack).getYSpeed() / ((Projectile) attack).getXSpeed());
+                        g2d.rotate(-theta, attack.getX(), attack.getY());
+                        g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
+                        g2d.rotate(theta, attack.getX(), attack.getY());
+                    } else if (attack instanceof Explosion) {
+                        g2d.setColor(Color.GREEN);
+                        g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
+                    } else {
+                        g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
+                    }
                 }
-
             }
 
             g2d.setColor(Color.GREEN);
-            for (Enemy enemy: game.getEnemies()) {
-                AffineTransform originalTransform = g2d.getTransform();
-                AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
-                if (enemy.getDirection() != 1) {
-                    tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
-                } else {
-                    tx.translate(enemy.getX(), enemy.getY());
-                }
+            for (int i = 0; i < game.getEnemies().size(); i ++) {
+                Enemy enemy = game.getEnemies().get(i);
+                if (enemy.intersects(screenRect)) {
+                    AffineTransform originalTransform = g2d.getTransform();
+                    AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
+                    if (enemy.getDirection() != 1) {
+                        tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
+                    } else {
+                        tx.translate(enemy.getX(), enemy.getY());
+                    }
 
-                if (enemy instanceof Slime) {
-                    g2d.drawImage(slime, tx, this);
-                } else if (enemy instanceof Mosquito) {
-                    g2d.drawImage(mosquito, tx, this);
-                } else {
-                    g2d.drawImage(jumper, tx, this);
-                }
+                    if (enemy instanceof Slime) {
+                        g2d.drawImage(slime, tx, this);
+                    } else if (enemy instanceof Mosquito) {
+                        g2d.drawImage(mosquito, tx, this);
+                    } else {
+                        g2d.drawImage(jumper, tx, this);
+                    }
 
-                g2d.setTransform(originalTransform);
+                    g2d.setTransform(originalTransform);
 
-
-
-
-                if (enemy.getHealth() != enemy.getMaxHealth()) {
-                    g2d.setColor(Color.red);
-                    g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, 50, 20);
-                    g2d.setColor(Color.green);
-                    g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, (int) (enemy.getHealth()/enemy.getMaxHealth() * 50), 20);
+                    if (enemy.getHealth() != enemy.getMaxHealth()) {
+                        g2d.setColor(Color.red);
+                        g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, 50, 20);
+                        g2d.setColor(Color.green);
+                        g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, (int) (enemy.getHealth()/enemy.getMaxHealth() * 50), 20);
+                    }
                 }
             }
 
@@ -321,17 +325,21 @@ public class MapDisplay extends JFrame {
 
             for (int i = 0; i < game.getOrbs().size(); i ++) {
                 Orb orb = game.getOrbs().get(i);
-                switch (orb.getBoostType()) {
-                    case "Gold":
-                        g2d.setColor(Color.ORANGE);
-                        break;
-                    case "Health":
-                        g2d.setColor(Color.PINK);
-                        break;
-                    case "Energy":
-                        g2d.setColor(Color.CYAN);
+                if (orb.intersects(screenRect)) {
+                    switch (orb.getBoostType()) {
+                        case "Gold":
+                            g2d.setColor(Color.ORANGE);
+                            break;
+                        case "Health":
+                            g2d.setColor(Color.PINK);
+                            break;
+                        case "Energy":
+                            g2d.setColor(Color.CYAN);
+                            break;
+                    }
+                    g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
+
                 }
-                g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
             }
 
 
@@ -340,6 +348,7 @@ public class MapDisplay extends JFrame {
                     if (player.intersects(hitbox)) {
                         g2d.drawImage(eButton, (int) hitbox.getCenterX() - 50, (int) hitbox.getCenterY() - 50, this);
                     }
+                    g2d.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
                 }
             }
 
@@ -363,10 +372,6 @@ public class MapDisplay extends JFrame {
 
             g2d.fillRect(90, 690, 295, 70);
             g2d.setColor(new Color(159, 243, 245));
-
-            for (Rectangle rect: game.getObeliskHitboxes()) {
-                g2d.drawRect(rect.x, rect.y, rect.width, rect.height);
-            }
 
             switch (player.getCurrentWeapon()) {
                 case "Sword":

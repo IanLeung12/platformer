@@ -13,6 +13,13 @@ public class Slime extends Enemy{//
 
     }
 
+    Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY, boolean obeliskEnemy) {
+        super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY, obeliskEnemy);
+
+        this.setXSpeed(Constants.getSlimeSpeed());
+
+    }
+
 
 
 

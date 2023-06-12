@@ -128,7 +128,9 @@ public class GameEngine {
 
             } else if (enemy.getHealth() <= 0) {
 
-                requiredKills --;
+                if (enemy.isObeliskEnemy()) {
+                    requiredKills --;
+                }
 
                 createOrbs(enemy);
 
@@ -168,8 +170,10 @@ public class GameEngine {
             enemy.update();
         }
 
-        for (Orb orb : orbs) {
-            orb.move(player);
+        for (int i = orbs.size() - 1; i >= 0; i --) {
+            if (!orbs.get(i).move(player)) {
+                orbs.remove(i);
+            }
         }
 
         for (Enemy enemy : respawnList) {
@@ -310,6 +314,8 @@ public class GameEngine {
                     orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 20, "Energy"));
                 }
             }
+
+
         } else {
             Crystal crystal = (Crystal) object;
             for (int i = crystal.getBoostValue(); i > 0; i = i - 10) {
@@ -344,12 +350,14 @@ public class GameEngine {
             case 0:
                 this.obeliskSpawns.add(new int[] {25, 0, 0});
                 requiredKills = 25;
+                break;
             case 1:
                 this.obeliskSpawns.add(new int[] {0, 5, 0});
                 this.requiredKills = 5;
                 this.obeliskSpawns.add(new int[] {5, 3, 0});
                 this.obeliskSpawns.add(new int[] {0, 8, 0});
                 this.obeliskSpawns.add(new int[] {10, 5, 0});
+                break;
         }
     }
 
@@ -369,11 +377,13 @@ public class GameEngine {
                             player.setMaxHealth(player.getMaxHealth() + 100);
                             player.setDashUnlocked(true);
                         }
+                        break;
                     case 1:
                         if (!player.isBashUnlocked()) {
                             player.setMaxHealth(player.getMaxHealth() + 100);
                             player.setBashUnlocked(true);
                         }
+                        break;
 
                 }
             } else {
@@ -392,10 +402,11 @@ public class GameEngine {
                         obeliskSpawns.get(0)[i] --;
                         switch (i) {
                             case 0:
-                                enemies.add(new Slime((int) (obelisk.getX() - 100 + ((int) (Math.random() * 2)) * (obelisk.getWidth() + 200)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 100, 100, 100, 100, 15, 100, 0, 150000));
+                                enemies.add(new Slime((int) (obelisk.getX() - 100 + ((int) (Math.random() * 2)) * (obelisk.getWidth() + 200)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 100, 100, 100, 100, 15, 0, 0, 150000, true));
+                                break;
                             case 1:
-                                enemies.add(new Mosquito((int) (Math.random() * (obelisk.getWidth() - 50)), (int) (Math.random() * (obelisk.getHeight() - 50)), 50, 50, 100, 100, 20, 100, 0, 150000));
-
+                                enemies.add(new Mosquito((int) (Math.random() * (obelisk.getWidth() - 50)), (int) (Math.random() * (obelisk.getHeight() - 50)), 50, 50, 100, 100, 20, 0, 0, 150000, true));
+                                break;
                         }
                     }
                 }

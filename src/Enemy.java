@@ -9,6 +9,8 @@ abstract public class Enemy extends Alive {//
     private int totalCooldownTimer;
     private double respawnX, respawnY;
 
+    private boolean obeliskEnemy;
+
 
 
     Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
@@ -17,7 +19,18 @@ abstract public class Enemy extends Alive {//
         this.goldReward = goldReward;
         this.respawnX = respawnX;
         this.respawnY = respawnY;
+        obeliskEnemy = false;
     }
+
+    Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY, boolean obeliskEnemy) {
+        super(x, y, width, height, health, totalHealth, 15);
+        this.damage = damage;
+        this.goldReward = goldReward;
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
+        this.obeliskEnemy = obeliskEnemy;
+    }
+
 
 
     public abstract void move(Player player, ArrayList<Wall> proximity);
@@ -362,5 +375,13 @@ abstract public class Enemy extends Alive {//
 
     public void setTotalCooldownTimer(int totalCooldownTimer) {
         this.totalCooldownTimer = totalCooldownTimer;
+    }
+
+    public boolean isObeliskEnemy() {
+        return obeliskEnemy;
+    }
+
+    public void setObeliskEnemy(boolean obeliskEnemy) {
+        this.obeliskEnemy = obeliskEnemy;
     }
 }

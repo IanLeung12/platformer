@@ -13,12 +13,14 @@ public class Orb extends Moveable{
         this.boostType = boostType;
     }
 
-    public void move(Player player) {
+    public boolean move(Player player) {
         double dX = player.getCenterX() - this.getCenterX();
         double dY = player.getCenterY() - this.getCenterY();
         double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)) + 1;
 
-        if (distance < 750) {
+        if (distance > 3000) {
+            return false;
+        } else if (distance < 750) {
             following = true;
             double interval = 20/distance;
             this.setXSpeed((int) (dX * interval + Math.random() * 11 - 5));
@@ -32,6 +34,7 @@ public class Orb extends Moveable{
         }
         this.translate(this.getXSpeed(), -this.getYSpeed());
         this.setYSpeed(this.getYSpeed() - Constants.gravity);
+        return true;
     }
 
     public void collision(GameObject otherObject) {
