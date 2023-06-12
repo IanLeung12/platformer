@@ -18,7 +18,7 @@ public class Orb extends Moveable{
         double dY = player.getCenterY() - this.getCenterY();
         double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)) + 1;
 
-        if (distance < 500) {
+        if (distance < 750) {
             following = true;
             double interval = 20/distance;
             this.setXSpeed((int) (dX * interval + Math.random() * 11 - 5));

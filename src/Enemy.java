@@ -20,7 +20,7 @@ abstract public class Enemy extends Alive {//
     }
 
 
-    public abstract void move(Player player, ArrayList<GameObject> proximity);
+    public abstract void move(Player player, ArrayList<Wall> proximity);
 
     public abstract void update();
 
@@ -56,7 +56,7 @@ abstract public class Enemy extends Alive {//
 
 
 
-    public double distanceToPlayer(Player player, ArrayList<GameObject> listObjects, boolean justDistance) {
+    public double distanceToPlayer(Player player, ArrayList<Wall> listObjects, boolean justDistance) {
 
         double distance;
 
@@ -248,7 +248,7 @@ abstract public class Enemy extends Alive {//
                     testY = (m * testX) + b;
 
 
-                    for (GameObject gameObject: listObjects) {
+                        for (GameObject gameObject: listObjects) {
                         if (gameObject.contains(testX, testY)) {
                             intersected = true;
                         }

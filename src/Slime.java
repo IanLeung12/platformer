@@ -19,7 +19,7 @@ public class Slime extends Enemy{//
 
 
 
-    public void move(Player player, ArrayList<GameObject> proximity) {
+    public void move(Player player, ArrayList<Wall> proximity) {
 
 
         if (this.distanceToPlayer(player, proximity, false) > Constants.getSlimeVision()) {

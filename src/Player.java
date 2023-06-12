@@ -28,7 +28,7 @@ public class Player extends Alive {//
 
 
     Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy) {
-        super(x, y, width, height, health, MaxHealth, 60);
+        super(x, y, width, height, health, MaxHealth, 30);
         this.energy = energy;
         this.maxEnergy = maxEnergy;
         this.totalGold = 0;
@@ -195,14 +195,6 @@ public class Player extends Alive {//
         this.totalGold = (int) (this.totalGold * 0.9);
     }
 
-    public void updatePlayer() {}
-
-
-    //collision(GameObject otherObject) {}
-    // attack()
-    // jump()
-    //dash(speedX, speedY)
-    // bash()
 
 
     public double getMaxEnergy() {

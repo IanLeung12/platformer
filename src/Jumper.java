@@ -24,7 +24,7 @@ public class Jumper extends Enemy{
 
 
 
-    public void move(Player player, ArrayList<GameObject> proximity) {
+    public void move(Player player, ArrayList<Wall> proximity) {
 
         if (isAbilityActive()) {
 

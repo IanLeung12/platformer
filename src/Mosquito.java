@@ -25,7 +25,7 @@ public class Mosquito extends Enemy{
 
 
 
-    public void move(Player player, ArrayList<GameObject> proximity) {
+    public void move(Player player, ArrayList<Wall> proximity) {
 
         if (isAbilityActive()) {
 
@@ -101,7 +101,7 @@ public class Mosquito extends Enemy{
     }
 
 
-    public void movementAbility(Player player, ArrayList<GameObject> proximity ) {
+    public void movementAbility(Player player, ArrayList<Wall> proximity ) {
 
 
 
