@@ -91,6 +91,7 @@ public class GameEngine {
 
 
     public void moveAll() {
+
         if (inObelisk) {
             obeliskTick();
         }
@@ -112,8 +113,7 @@ public class GameEngine {
                         enemies.remove(i);
                     }
                 }
-                this.activateObelisk(currentObelisk);
-
+                inObelisk = false;
             }
             player.respawn();
         }
@@ -322,9 +322,12 @@ public class GameEngine {
                 orbs.add(new Orb((int) crystal.getCenterX(), (int) crystal.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 10, crystal.getBoostType()));
             }
         }
+    }
 
-
-
+    public void createOrbs(int orbAmount, Rectangle hitbox, String orbType) {
+        for (int i = orbAmount; i > 0; i -= 10) {
+            orbs.add(new Orb((int) (hitbox.getX() + hitbox.getWidth() * Math.random()), (int) (hitbox.getY() + Math.random() * 200), Constants.orbDimensions, Constants.orbDimensions, 10, orbType));
+        }
     }
 
     public void orbAbsorb(Orb orb) {
@@ -358,6 +361,14 @@ public class GameEngine {
                 this.obeliskSpawns.add(new int[] {0, 8, 0});
                 this.obeliskSpawns.add(new int[] {10, 5, 0});
                 break;
+            case 2:
+                this.obeliskSpawns.add(new int[] {0, 0, 4});
+                this.requiredKills = 4;
+                this.obeliskSpawns.add(new int[] {5, 3, 2});
+                this.obeliskSpawns.add(new int[] {8, 2, 4});
+                this.obeliskSpawns.add(new int[] {0, 5, 5});
+                this.obeliskSpawns.add(new int[] {8, 10, 6});
+                break;
         }
     }
 
@@ -377,11 +388,15 @@ public class GameEngine {
                             player.setMaxHealth(player.getMaxHealth() + 100);
                             player.setDashUnlocked(true);
                         }
+
+                        createOrbs(2000, obeliskHitboxes.get(0), "Gold");
+
                         break;
                     case 1:
                         if (!player.isBashUnlocked()) {
                             player.setMaxHealth(player.getMaxHealth() + 100);
                             player.setBashUnlocked(true);
+                            createOrbs(4000, obeliskHitboxes.get(1), "Gold");
                         }
                         break;
 
@@ -390,7 +405,8 @@ public class GameEngine {
                 for (int i = 0; i < this.obeliskSpawns.get(0).length; i++) {
                     requiredKills += this.obeliskSpawns.get(0)[i];
                 }
-                System.out.println(requiredKills);
+                createOrbs(30, obeliskHitboxes.get(currentObelisk), "Health");
+                createOrbs(50, obeliskHitboxes.get(currentObelisk), "Energy");
             }
 
 
@@ -405,7 +421,10 @@ public class GameEngine {
                                 enemies.add(new Slime((int) (obelisk.getX() - 100 + ((int) (Math.random() * 2)) * (obelisk.getWidth() + 200)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 100, 100, 100, 100, 15, 0, 0, 150000, true));
                                 break;
                             case 1:
-                                enemies.add(new Mosquito((int) (Math.random() * (obelisk.getWidth() - 50)), (int) (Math.random() * (obelisk.getHeight() - 50)), 50, 50, 100, 100, 20, 0, 0, 150000, true));
+                                enemies.add(new Mosquito((int) (obelisk.getX() + Math.random() * (obelisk.getWidth() - 50)), (int) (obelisk.getY() + Math.random() * (obelisk.getHeight() + 50)), 50, 50, 100, 100, 20, 0, 0, 150000, true));
+                                break;
+                            case 2:
+                                enemies.add(new Jumper((int) (obelisk.getX() - 150 + Math.random() * (obelisk.getWidth() - 150)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 150, 150, 150, 150, 40, 0, 0, 150000, true));
                                 break;
                         }
                     }
@@ -557,5 +576,9 @@ public class GameEngine {
 
     public void setShop(ArrayList<ShopItem> shop) {
         this.shop = shop;
+    }
+
+    public int getRequiredKills() {
+        return requiredKills;
     }
 }

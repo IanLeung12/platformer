@@ -352,6 +352,7 @@ public class MapDisplay extends JFrame {
                 }
             }
 
+            g2d.setColor(new Color(22, 162, 206));
             for (ShopItem item: game.getShop()) {
                 g2d.fillRect((int) item.getX(), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight());
                 if (player.intersects(item)){
@@ -416,6 +417,7 @@ public class MapDisplay extends JFrame {
             g2d.drawRect((int) (player.getCenterX() - 300), (int) (player.getCenterY() - 100), 600, 200);
 
             g2d.setColor(new Color(29, 37, 80));
+            g2d.drawString(" " + game.getRequiredKills(), 600, 60);
             g2d.drawRect((int) (player.getCenterX() - 600), (int) (player.getCenterY() - 200), 1200, 400);
             g2d.fillRect(102, 902, (int) (player.getMaxEnergy() * 3) - 4, 46);
             g2d.setColor(new Color(32, 127, 178));
@@ -518,7 +520,7 @@ public class MapDisplay extends JFrame {
                             case "Hammer":
                                 game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
                                         (int) (player.getY() - 50), player.getDirection(), true, player.getDamageBoost()));
-                                player.setAttackCooldown(25);
+                                player.setAttackCooldown(50);
                                 break;
                             case "Bow":
                                 if (bowCharging) {
@@ -547,7 +549,6 @@ public class MapDisplay extends JFrame {
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
                 if ((!player.isAbilityActive()) && (player.isBashUnlocked()) && (!player.isBashUsed())) {
-                    System.out.println("Bash Target: (" + e.getX() + ", " + e.getY()+ ")");
                     player.bash(e.getX() + cameraX, e.getY() + cameraY);
                     aimingBash = false;
                     game.setRefreshDelay(17);
@@ -646,6 +647,11 @@ public class MapDisplay extends JFrame {
                     break;
                 case 'q':
                     game.paused = false;
+                    break;
+                case 'm':
+                    if (!(game.isInObelisk()) && (player.isBashUnlocked())) {
+                        player.setLocation((int) game.getShop().get(0).getX(), (int) game.getShop().get(0).getY());
+                    }
                     break;
             }
         }
