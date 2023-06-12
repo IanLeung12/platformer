@@ -149,7 +149,7 @@ public class Mosquito extends Enemy{
     public void collision(GameObject otherObject) {
 
         if (otherObject instanceof Spike) {
-            //this.setHealth(-1);
+            this.setHealth(-1);
         } else {
 
             double playerBottom = this.getY() + this.getHeight();
