@@ -45,11 +45,8 @@ public class Mosquito extends Enemy{
             }
 
         } else {
-            if (this.distanceToPlayer(player, proximity, false) > Constants.getMosquitoVision()) {
 
-                this.defaultMovement();
-
-            } else if (this.distanceToPlayer(player, proximity, false) <= Constants.getMosquitoVision()) {
+            if (this.distanceToPlayer(player, proximity, false) <= Constants.getMosquitoVision()) {
 
                 if (this.getCooldownTimerAbility() == 0) {
 
@@ -65,6 +62,10 @@ public class Mosquito extends Enemy{
                     this.cooldownMovement(player);
 
                 }
+
+            } else {
+
+                this.defaultMovement();
 
             }
         }

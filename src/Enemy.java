@@ -309,10 +309,18 @@ abstract public class Enemy extends Alive {//
 
     public boolean onEdge(GameObject otherObject) {
         double bottomRightX = (int) (this.getX() + this.getWidth());
-        double bottomRightY = (int) (this.getY() + this.getHeight());
-        double bottomLeftY = (int) (this.getY() + this.getHeight());
+        double middleBottomRightX = bottomRightX - 10;
+        double bottomY = (int) (this.getY() + this.getHeight());
+        double middleBottomLeftX = this.getX() + 10;
 
-        if (((otherObject.contains(bottomRightX, bottomRightY)) && (!otherObject.contains(this.getX(), bottomLeftY))) || ((!otherObject.contains(bottomRightX, bottomRightY)) && (otherObject.contains(this.getX(), bottomLeftY)))) {
+
+        if (   ( ((otherObject.contains(bottomRightX, bottomY)) && ((otherObject.contains(middleBottomRightX, bottomY))) )  && ((!otherObject.contains(this.getX(), bottomY)) && (!otherObject.contains(middleBottomLeftX, bottomY)) ) )
+            || ( ((!otherObject.contains(bottomRightX, bottomY)) && ((!otherObject.contains(middleBottomRightX, bottomY))) )  && ((otherObject.contains(this.getX(), bottomY)) && (otherObject.contains(middleBottomLeftX, bottomY)) ) )   )
+        {
+            this.setHealth(-1);
+            return true;
+        } else if (    ( ((otherObject.contains(middleBottomRightX, bottomY)) && (otherObject.contains(middleBottomLeftX, bottomY))) && (((otherObject.contains(this.getX(), bottomY)) || (otherObject.contains(bottomRightX, bottomY))) && ((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY)) )    )          )
+                &&   ( (((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY))) && ((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY)) ) )    )    ) {
             return true;
         } else {
             return false;
