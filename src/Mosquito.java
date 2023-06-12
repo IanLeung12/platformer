@@ -1,6 +1,6 @@
 /**
  * File Name - [Mosquito.java]
- * Description - enemy
+ * Description - Mosquito
  * @Author - Michael Khart & Ian Leung
  * @Date - June 8, 2023
  */

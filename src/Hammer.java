@@ -8,7 +8,7 @@ public class Hammer extends Attack{
 
     /**
      * Hammer
-     * construct hammer
+     * Constructs a hammer
      * @param x x
      * @param y y
      * @param direction direction

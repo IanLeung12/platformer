@@ -1,3 +1,9 @@
+/**
+ * [Orb.java]
+ * This class represents a orb which follows and boosts a player
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 public class Orb extends Moveable{
 
     private boolean following;
@@ -6,6 +12,16 @@ public class Orb extends Moveable{
 
     private String boostType;
 
+    /**
+     * Orb
+     * Constructs an orb
+     * @param x the x position
+     * @param y the y position
+     * @param width the width
+     * @param height the height
+     * @param boostValue the amount it boost the player
+     * @param boostType the type of boost it gives
+     */
     Orb(int x, int y, int width, int height, int boostValue, String boostType) {
         super(x, y, width, height);
         this.following = false;
@@ -13,6 +29,12 @@ public class Orb extends Moveable{
         this.boostType = boostType;
     }
 
+    /**
+     * move
+     * This method moves the orb depending on the player
+     * @param player the player
+     * @return if the orb is within 3000 units of the player (for despawning)
+     */
     public boolean move(Player player) {
         double dX = player.getCenterX() - this.getCenterX();
         double dY = player.getCenterY() - this.getCenterY();
@@ -20,27 +42,46 @@ public class Orb extends Moveable{
 
         if (distance > 3000) {
             return false;
+
         } else if (distance < 750) {
             following = true;
+
+            // Calculates x and y speed to have a total speed of 20
             double interval = 20/distance;
+
+            // Random movement
             this.setXSpeed((int) (dX * interval + Math.random() * 11 - 5));
             this.setYSpeed((int) -(dY * interval + Math.random() * 11 - 5));
 
         } else {
+
+            // Stops moving if player is too far
             this.following = false;
+
             if (this.getXSpeed() != 0) {
                 this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()));
             }
         }
+
+        // Move & gravity
         this.translate(this.getXSpeed(), -this.getYSpeed());
         this.setYSpeed(this.getYSpeed() - Constants.gravity);
         return true;
     }
 
+    /**
+     * collision
+     * This method computes a collision between the orb and something ele
+     * @param otherObject the other object
+     */
     public void collision(GameObject otherObject) {
 
+        // Collisions only occur if orb is not following player
         if (!following) {
+
             if (!(otherObject instanceof Spike)) {
+
+                // Collision computing
                 double playerBottom = this.getY() + this.getHeight();
                 double otherObjectTop = otherObject.getY();
                 double playerRight = this.getX() + this.getWidth();
@@ -68,13 +109,6 @@ public class Orb extends Moveable{
         }
     }
 
-    public boolean isFollowing() {
-        return following;
-    }
-
-    public void setFollowing(boolean following) {
-        this.following = following;
-    }
 
     public int getBoostValue() {
         return boostValue;
@@ -84,7 +118,4 @@ public class Orb extends Moveable{
         return boostType;
     }
 
-    public void setBoostType(String boostType) {
-        this.boostType = boostType;
-    }
 }

@@ -1,8 +1,8 @@
 /**
- * File Name - [Jumper.java]
- * Description - enemy
- * @Author - Michael Khart & Ian Leung
- * @Date - June 8, 2023
+ * [Constants.java]
+ * This class stores constant values to easily get within the program
+ * @author - Michael Khart & Ian Leung
+ * @version 1.0 June 8, 2023
  */
 
 public class Constants {

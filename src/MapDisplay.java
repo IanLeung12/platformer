@@ -65,9 +65,6 @@ public class MapDisplay extends JFrame {
 
     static int currentShopItem = 0;
 
-
-    //------------------------------------------------------------------------------
-
     /**
      * MapDisplay
      * Creates a display
@@ -118,7 +115,6 @@ public class MapDisplay extends JFrame {
         addMouseListener(new Mouse());
         addMouseMotionListener(new Mouse());
 
-        // load the picture from a file
         this.setVisible(true);
 
     } // main method end
@@ -499,20 +495,25 @@ public class MapDisplay extends JFrame {
             g2d.setStroke(new BasicStroke(4));
             g2d.setColor(Color.red);
             g2d.fillRect(102, 802, (int) (player.getMaxHealth() * 3) - 4, 46);
+
             g2d.setColor(Color.GREEN);
             g2d.fillRect(100, 800, (int) (player.getHealth() * 3), 50);
+
             g2d.setColor(Color.black);
             g2d.drawRect(100, 800, (int) (player.getMaxHealth() * 3), 50);
+
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("HP: " + (int) player.getHealth() + " / " + (int) player.getMaxHealth(), 120, 840);
-            g2d.drawRect((int) (player.getCenterX() - 300), (int) (player.getCenterY() - 100), 600, 200);
+
             g2d.setColor(new Color(29, 37, 80));
-            g2d.drawRect((int) (player.getCenterX() - 600), (int) (player.getCenterY() - 200), 1200, 400);
             g2d.fillRect(102, 902, (int) (player.getMaxEnergy() * 3) - 4, 46);
+
             g2d.setColor(new Color(32, 127, 178));
             g2d.fillRect(100, 900, (int) (player.getEnergy() * 3), 50);
+
             g2d.setColor(Color.black);
             g2d.drawRect(100, 900, (int) (player.getMaxEnergy() * 3), 50);
+
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("Energy: " + (int) player.getEnergy() + " / " + (int) player.getMaxEnergy(), 120, 940);
 

@@ -12,6 +12,15 @@ public class Explosion extends Attack{
 
     private int lastRadius;
 
+    /**
+     * Explosion
+     * Constructs explosion class
+     * @param x x
+     * @param y y
+     * @param isFriendly friendly
+     * @param maxRadius Max possible radius
+     * @param damageBoost multiplier
+     */
     Explosion(int x, int y, boolean isFriendly, int maxRadius, double damageBoost) {
         super(x, y, 0, 0, (int) (150 * damageBoost), 0, isFriendly, 15);
         this.maxRadius = maxRadius;
@@ -24,6 +33,7 @@ public class Explosion extends Attack{
      * Expands the explosion
      */
     public void expand() {
+        // Size is based on current life vs max lifetime
         this.lastRadius = radius;
         this.radius = maxRadius * this.getAbilityDuration()/this.getMaxAbilityDuration();
         this.translate(-radius + lastRadius, -radius + lastRadius);

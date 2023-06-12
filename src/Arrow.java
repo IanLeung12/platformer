@@ -31,7 +31,7 @@ public class Arrow extends Projectile {
 
     /**
      * move
-     * Translate with gravity
+     * Moves the arrow and applies gravity
      */
     public void move() {
         super.move();

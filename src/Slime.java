@@ -1,15 +1,13 @@
 /**
  * File Name - [slime.java]
- * Description - enemy
+ * Description - slime
  * @Author - Michael Khart & Ian Leung
  * @Date - June 8, 2023
  */
 
 import java.util.ArrayList;
 
-public class Slime extends Enemy{//
-
-
+public class Slime extends Enemy{
 
 
 

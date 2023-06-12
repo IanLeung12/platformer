@@ -1,6 +1,6 @@
 /**
  * File Name - [Jumper.java]
- * Description -  enemy
+ * Description -  Jumper
  * @Author - Michael Khart & Ian Leung
  * @Date - June 8, 2023
  */

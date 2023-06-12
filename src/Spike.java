@@ -1,12 +1,12 @@
 /**
- * File Name - [Jumper.java]
- * Description - enemy
- * @Author - Michael Khart & Ian Leung
- * @Date - June 8, 2023
+ * [Spike.java]
+ * This class represents a spike which does damage to the player and acts as a boundary
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
  */
 
 public class Spike extends Wall{
-    private double damage;
+    private final double damage;
 
     /**
      * spike

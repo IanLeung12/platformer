@@ -1,20 +1,17 @@
 /**
- * File Name - [Jumper.java]
- * Description - enemy
- * @Author - Michael Khart & Ian Leung
- * @Date - June 8, 2023
+ * [Player.java]
+ * This class represents a player that the user controls
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
  */
 
 import java.util.ArrayList;
 
-public class Player extends Alive {//
+public class Player extends Alive {
 
     private int totalGold;
     private double energy;
     private double maxEnergy;
-    private boolean inAnim; // ian what initial value
-    private int animFrames;// ian what initial value
-    private String currentAnim;// ian what initial value
     private int jumpNum;
     private int maxJumps;
     private boolean dashUnlocked;
@@ -23,7 +20,6 @@ public class Player extends Alive {//
     private boolean bashUsed = false;
     private String currentWeapon = "Sword";
     private int abilityTravelled = 0;
-    private boolean attackActive;
     private boolean movingRight;
     private boolean movingLeft;
     private int[] respawnPoint;

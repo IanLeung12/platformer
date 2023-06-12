@@ -4,11 +4,10 @@
  * @author Ian Leung, Michael Khart
  * @version 1.0, June 12, 2023
  */
-import java.awt.*;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -210,39 +209,25 @@ public class GameEngine {
             // Respawns once timer is ended
             if ((enemy.getRespawnTimer() == 0) && (((enemy.getRespawnX()) != 0 && (enemy.getRespawnY() != 0)))) {
 
+                enemy.setXSpeed(0);
+                enemy.setYSpeed(0);
+                enemy.setAbilityActive(false);
+                enemy.setImmunityTimer(10);
+
+                enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
                 if (enemy instanceof Slime) {
-                    enemy.setXSpeed(0);
-                    enemy.setYSpeed(0);
-                    enemy.setAbilityActive(false);
-                    enemy.setImmunityTimer(10);
                     enemy.setHealth(Constants.slimeTotalHealth);
-                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
 
                 } else if (enemy instanceof Mosquito) {
-                    enemy.setXSpeed(0);
-                    enemy.setYSpeed(0);
-                    enemy.setAbilityActive(false);
-                    enemy.setImmunityTimer(1);
                     enemy.setHealth(Constants.mosquitoTotalHealth);
-                    //mosquito.setLocation((int) player.getCenterX(), (int) player.getCenterY() );
-                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
-
 
                 } else if (enemy instanceof Jumper) {
-                    enemy.setXSpeed(0);
-                    enemy.setYSpeed(0);
-                    enemy.setAbilityActive(false);
-                    enemy.setImmunityTimer(10);
                     enemy.setHealth(Constants.jumperMaxHP);
-                    enemy.setLocation((int) enemy.getRespawnX(), (int) enemy.getRespawnY());
-
                 }
 
                 enemies.add(enemy);
 
             }
-
-
             enemy.update();
 
         }
@@ -574,7 +559,7 @@ public class GameEngine {
     /**
      * save
      * This method saves the progress
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if file not found
      */
     public void save() throws FileNotFoundException {
 

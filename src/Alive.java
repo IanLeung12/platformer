@@ -1,3 +1,9 @@
+/**
+ * [Alive.java]
+ * This class represents an alive, moving game object
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 abstract public class Alive extends Moveable{
 
     private double health;
@@ -14,6 +20,17 @@ abstract public class Alive extends Moveable{
     private final int maxImmunity;
 
 
+    /**
+     * Alive
+     * This method constructs an alive object
+     * @param x the x position
+     * @param y the y position
+     * @param width the width
+     * @param height the height
+     * @param health the health
+     * @param maxHealth the max health
+     * @param maxImmunity the max immunity timer
+     */
     Alive(int x, int y, int width, int height, double health, double maxHealth, int maxImmunity) {
         super(x, y, width, height);
         this.health = health;
@@ -22,7 +39,13 @@ abstract public class Alive extends Moveable{
         this.direction = 1;
     }
 
+    /**
+     * immunityTick
+     * This method ticks to count immunity frames
+     */
     public void immunityTick() {
+
+        // Counts up to max immunity
         if (this.immunityTimer > 0) {
             this.immunityTimer ++;
         }

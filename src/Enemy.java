@@ -440,7 +440,7 @@ abstract public class Enemy extends Alive {//
 
     /**
      * get gold reward
-     * @returngold reawed
+     * @return gold reawed
      */
     public double getGoldReward() {
         return goldReward;
