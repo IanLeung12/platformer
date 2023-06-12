@@ -1,3 +1,9 @@
+/**
+ * [Attack.java]
+ * Class represent attack
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 abstract public class Attack extends GameObject{//
 
     private double attackDamage;
@@ -8,6 +14,18 @@ abstract public class Attack extends GameObject{//
 
     private final int direction;
 
+    /**
+     * Attack
+     * COnstructs Attack
+     * @param x x
+     * @param y y
+     * @param width width
+     * @param height height
+     * @param attackDamage damage
+     * @param direction direction
+     * @param isFriendly friendly to player
+     * @param maxDuration how long it last
+     */
     Attack(int x, int y, int width, int height, int attackDamage, int direction, boolean isFriendly, int maxDuration) {
         super(x, y, width, height);
         this.attackDamage = attackDamage;
@@ -21,16 +39,9 @@ abstract public class Attack extends GameObject{//
         return attackDamage;
     }
 
-    public void setAttackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
-    }
 
     public boolean isFriendly() {
         return isFriendly;
-    }
-
-    public void setFriendly(boolean friendly) {
-        isFriendly = friendly;
     }
 
     public int getAbilityDuration() {

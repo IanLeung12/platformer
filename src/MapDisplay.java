@@ -1,12 +1,11 @@
-/* UsingPictures
- * Desc: Demonstrates how to load from file and draw a picture
- * @author ICS3U
- * @version Dec 2017
+/**
+ * [MapDisplay.java]
+ * This class displays the game onto swing, and uses camera movement relative to the player
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
  */
-
 import javax.swing.*;
 import java.awt.*;
-// the following imports are needed for pictures
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
@@ -68,6 +67,12 @@ public class MapDisplay extends JFrame {
 
 
     //------------------------------------------------------------------------------
+
+    /**
+     * MapDisplay
+     * Creates a display
+     * @param game game to display
+     */
     MapDisplay(GameEngine game){
         super("Game Window");
         this.setSize(WIDTH,HEIGHT);
@@ -80,6 +85,7 @@ public class MapDisplay extends JFrame {
         bowPower = 1;
         this.bowCharging = false;
 
+        // Images
         try {
             bashAimImage = image("Pictures/arrow.png");
             weaponIcons[0] = image("Pictures/SwordIcon.png");
@@ -107,6 +113,7 @@ public class MapDisplay extends JFrame {
         canvas = new GraphicsPanel();
         this.add(canvas);
 
+        // Listeners
         addKeyListener(new Keyboard());
         addMouseListener(new Mouse());
         addMouseMotionListener(new Mouse());
@@ -116,23 +123,37 @@ public class MapDisplay extends JFrame {
 
     } // main method end
 
+    /**
+     * Image
+     * Loads an image
+     * @param path image location
+     * @return the image
+     * @throws IOException yes
+     */
     public BufferedImage image(String path) throws IOException {
         return ImageIO.read(new File(path));
     }
 
+    /**
+     * refresh
+     * This method refreshes the game to display and handle camera
+     */
     public void refresh() {
         this.repaint();
 
+        // Charges bow
         if (bowCharging && bowPower < 50) {
             bowPower ++;
         }
 
+        // Moves the camera relative to the player
         cameraX = (int) player.getX() - 900;
         cameraY = (int) player.getY() - 500;
 
         int dX = lastCamX - cameraX;
         int dY = lastCamY - cameraY;
 
+        // Camera has a max speed of 26
         if ((Math.abs(dX) > 26) && (Math.abs(dX) < 500)) {
             dX = dX/Math.abs(dX) * 26;
         }
@@ -143,10 +164,8 @@ public class MapDisplay extends JFrame {
 
 
 
-
+        // Translates all objects relative to the camera
         player.translate(dX, dY);
-
-       // System.out.println("dx is " + dX + "    dy is" + dY);
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
 
@@ -166,10 +185,8 @@ public class MapDisplay extends JFrame {
 
         for (Enemy enemy : game.getRespawnList()) {
 
-            //System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
-            //System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
 
         }
 
@@ -194,16 +211,21 @@ public class MapDisplay extends JFrame {
 
     }
 
+    /**
+     * processWindowEvent
+     * handles window closing
+     * @param e  the window event
+     */
     protected void processWindowEvent(WindowEvent e) {
+
+        // Saves before closing the game
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            // Call your save method here
             try {
                 game.save();
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
 
-            // Close the program
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         super.processWindowEvent(e);
@@ -212,24 +234,41 @@ public class MapDisplay extends JFrame {
     static class GraphicsPanel extends JPanel{
         public GraphicsPanel(){
         }
+
+        /**
+         * paintComponent
+         * this method draws the game
+         * @param g the <code>Graphics</code> object to protect
+         */
         public void paintComponent(Graphics g){
             super.paintComponent(g); //required
             Graphics2D g2d = (Graphics2D) g;
 
+            // Draws walls
             for (Wall wall: game.getSurroundings()) {
+
                 if (wall.intersects(screenRect)) {
+
                     g.setColor(Color.darkGray);
+
                     if (wall instanceof Spike) {
                         g2d.setColor(Color.red);
                     }
+
+                    // Crystals have seperate images
                     if (wall instanceof Crystal) {
                         Crystal crystal = (Crystal) wall;
+
                         if (crystal.getRespawnTimer() == 0) {
+
                             if (crystal.getBoostType().equals("Energy")) {
                                 g2d.drawImage(eCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
+
                             } else {
                                 g2d.drawImage(hCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
                             }
+
+                            // Health bar
                             if (crystal.getHealth() != crystal.getMaxHealth()) {
                                 g2d.setColor(Color.red);
                                 g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, 50, 20);
@@ -243,46 +282,64 @@ public class MapDisplay extends JFrame {
                 }
             }
 
+
+            //Attacks
             g2d.setColor(Color.GREEN);
             for (int i = 0; i < game.getAttacks().size(); i ++) {
                 Attack attack = game.getAttacks().get(i);
+
                 if (attack.intersects(screenRect)) {
+
+                    // Projectiles shoot at an angle
                     if (attack instanceof Projectile) {
                         double theta = Math.atan((double) ((Projectile) attack).getYSpeed() / ((Projectile) attack).getXSpeed());
                         g2d.rotate(-theta, attack.getX(), attack.getY());
                         g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth() * 2, (int) attack.getHeight());
                         g2d.rotate(theta, attack.getX(), attack.getY());
+
+                        // Explosions are circular
                     } else if (attack instanceof Explosion) {
                         g2d.setColor(Color.GREEN);
                         g2d.fillOval((int) attack.getX(), (int) attack.getY(), ((Explosion) attack).getRadius() * 2, ((Explosion) attack).getRadius() * 2);
+
                     } else {
                         g2d.fillRect((int) attack.getX(), (int) attack.getY(), (int) attack.getWidth(), (int) attack.getHeight());
                     }
                 }
             }
 
+            // Enemies
             g2d.setColor(Color.GREEN);
             for (int i = 0; i < game.getEnemies().size(); i ++) {
+
                 Enemy enemy = game.getEnemies().get(i);
+
                 if (enemy.intersects(screenRect)) {
+
+                    // Enemies reflect based on the direction they are going in
                     AffineTransform originalTransform = g2d.getTransform();
                     AffineTransform tx = AffineTransform.getScaleInstance(enemy.getDirection(), 1);
+
                     if (enemy.getDirection() != 1) {
                         tx.translate(-(enemy.getX() + enemy.width), enemy.getY());
+
                     } else {
                         tx.translate(enemy.getX(), enemy.getY());
                     }
 
                     if (enemy instanceof Slime) {
                         g2d.drawImage(slime, tx, this);
+
                     } else if (enemy instanceof Mosquito) {
                         g2d.drawImage(mosquito, tx, this);
+
                     } else {
                         g2d.drawImage(jumper, tx, this);
                     }
 
                     g2d.setTransform(originalTransform);
 
+                    // Health bar
                     if (enemy.getHealth() != enemy.getMaxHealth()) {
                         g2d.setColor(Color.red);
                         g2d.fillRect((int) enemy.getCenterX() - 25, (int) enemy.getY() - 50, 50, 20);
@@ -293,17 +350,25 @@ public class MapDisplay extends JFrame {
             }
 
 
-            g2d.setColor(Color.gray);
+
             Player player = game.getPlayer();
-            if (player.getImmunityTimer()/10 % 2 == 0) {
+            //Player flashes on and off when immunity is active
+            if (player.getImmunityTimer()/5 % 2 == 0) {
+
                 int speed = Math.abs(player.getXSpeed());
+
+                // Player is reflected based on the direction it is going in
                 AffineTransform originalTransform = g2d.getTransform();
                 AffineTransform tx = AffineTransform.getScaleInstance(player.getDirection(), 1);
+
                 if (player.getDirection() != 1) {
                     tx.translate(-(player.getX() + playerFrames[0].getWidth()), player.getY());
+
                 } else {
                     tx.translate(player.getX(), player.getY());
                 }
+
+                // Player has different sprites based on x speed
                 if (speed < 30) {
                     g2d.drawImage(playerFrames[speed / 5], tx, this);
 
@@ -314,44 +379,60 @@ public class MapDisplay extends JFrame {
                 g2d.setTransform(originalTransform);
             }
 
+            // Bash arrow
             if (aimingBash) {
+                // Rotation based on mouse position
                 g2d.rotate(bashAngle - Math.PI, player.getCenterX(), player.getCenterY());
                 g2d.drawImage(bashAimImage, (int) player.getX() - 100, (int) player.getCenterY() - 300, this);
                 g2d.rotate(-bashAngle + Math.PI, player.getCenterX(), player.getCenterY());
             }
 
+            // Orbs have different colors representing their boost type
             for (int i = 0; i < game.getOrbs().size(); i ++) {
+
                 Orb orb = game.getOrbs().get(i);
+
                 if (orb.intersects(screenRect)) {
+
                     switch (orb.getBoostType()) {
                         case "Gold":
                             g2d.setColor(Color.ORANGE);
                             break;
+
                         case "Health":
                             g2d.setColor(Color.PINK);
                             break;
+
                         case "Energy":
                             g2d.setColor(Color.CYAN);
                             break;
                     }
+
                     g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
 
                 }
             }
 
-
+            // Obelisk
             if (!game.isInObelisk()) {
+
                 for (Rectangle hitbox: game.getObeliskHitboxes()) {
+
+                    // E button to interact
                     if (player.intersects(hitbox)) {
                         g2d.drawImage(eButton, (int) hitbox.getCenterX() - 50, (int) hitbox.getCenterY() - 50, this);
                     }
+
                     g2d.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
                 }
             }
 
+            // Shop items
             g2d.setColor(new Color(22, 162, 206));
             for (ShopItem item: game.getShop()) {
                 g2d.fillRect((int) item.getX(), (int) item.getY(), (int) item.getWidth(), (int) item.getHeight());
+
+                // E interact button
                 if (player.intersects(item)){
                     g2d.drawImage(eButton, (int) item.getCenterX() - 50, (int) item.getCenterY() - 50, this);
                 }
@@ -359,6 +440,7 @@ public class MapDisplay extends JFrame {
 
 
 
+            // String stats
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
@@ -370,29 +452,41 @@ public class MapDisplay extends JFrame {
             g2d.fillRect(90, 690, 295, 70);
             g2d.setColor(new Color(159, 243, 245));
 
+            // Weapon selected icon
             switch (player.getCurrentWeapon()) {
                 case "Sword":
                     g2d.fillRect(98, 698, 54, 54);
                     break;
+
                 case "Hammer":
                     g2d.fillRect(98 + 75, 698, 54, 54);
                     break;
+
                 case "Bow":
                     g2d.fillRect(98 + 150, 698, 54, 54);
                     break;
+
                 case "Rocket":
                     g2d.fillRect(98 + 225, 698, 54, 54);
                     break;
             }
+
+            // Weapon icons
             for (int i = 0; i < weaponIcons.length; i ++) {
+
+                // Only shows unlocked weapons
                 if (i == 0) {
                     g2d.drawImage(weaponIcons[i], 100, 700, this);
+
                 } else if ((i == 1) && (player.getWeapons().contains("Hammer"))) {
                     g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+
                 } else if ((i == 2) && (player.getWeapons().contains("Bow"))) {
                     g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+
                 } else if ((i == 3) && (player.getWeapons().contains("Rocket"))) {
                     g2d.drawImage(weaponIcons[i], 100 + 75 * i, 700, this);
+
                 } else {
                     g2d.setColor(Color.black);
                     g2d.fillRect(100 + 75 * i, 700, 50, 50);
@@ -401,6 +495,7 @@ public class MapDisplay extends JFrame {
 
             }
 
+            // Stat bars
             g2d.setStroke(new BasicStroke(4));
             g2d.setColor(Color.red);
             g2d.fillRect(102, 802, (int) (player.getMaxHealth() * 3) - 4, 46);
@@ -420,14 +515,23 @@ public class MapDisplay extends JFrame {
             g2d.drawRect(100, 900, (int) (player.getMaxEnergy() * 3), 50);
             g2d.setColor(new Color(211, 230, 255));
             g2d.drawString("Energy: " + (int) player.getEnergy() + " / " + (int) player.getMaxEnergy(), 120, 940);
+
+            // Shop screen
             if (game.isInShop()) {
                 drawShopScreen(g2d, game.getShop().get(currentShopItem));
             }
 
         } // paintComponent method end
 
+        /**
+         * drawShopScreen
+         * Draws shop purchase screen
+         * @param g2d graphic
+         * @param item shop item
+         */
         public void drawShopScreen(Graphics2D g2d, ShopItem item) {
 
+            // Item info
             g2d.setColor(new Color(3, 72, 131, 205));
             g2d.fillRect(320, 180, 1280, 720);
             g2d.setColor(Color.green);
@@ -439,6 +543,8 @@ public class MapDisplay extends JFrame {
             g2d.drawRect(320, 180, 1280, 720);
             g2d.drawRect(buyRect.x, buyRect.y - 25, buyRect.width, buyRect.height);
             g2d.drawRect(cancelRect.x, cancelRect.y - 25, cancelRect.width, cancelRect.height);
+
+            // Buy and cancel buttons
             g2d.drawString("BUY", buyRect.x + 50, (int) (buyRect.getMaxY() - 35));
             g2d.drawString("CANCEL", cancelRect.x + 15, (int) (cancelRect.getMaxY() - 35));
             g2d.setColor(Color.WHITE);
@@ -470,11 +576,14 @@ public class MapDisplay extends JFrame {
          */
         @Override
         public void mousePressed(MouseEvent e) {
+
+            // Left click = attack, right click = bash
             if (e.getButton() == MouseEvent.BUTTON1) {
                 if ((player.getCurrentWeapon().equals("Bow")) && (player.getEnergy() >= Constants.arrowCost)) {
                     bowCharging = true;
                 }
             }
+
             if ((e.getButton() == MouseEvent.BUTTON3) && (player.isBashUnlocked()) && (!player.isBashUsed())) {
                 aimingBash = true;
                 bashAngle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
@@ -489,33 +598,44 @@ public class MapDisplay extends JFrame {
          */
         @Override
         public void mouseReleased(MouseEvent e) {
+            // Left click = attack, right click = bash
             if (e.getButton() == MouseEvent.BUTTON1) {
+
+                // Shop screen
                 if (game.isInShop()) {
+
                     if (buyRect.contains(e.getPoint())) {
 
                         if (game.getShop().get(currentShopItem).buy(player)) {
+
                             if (game.getShop().get(currentShopItem).getPrice() != 6000) {
                                 game.getShop().remove(currentShopItem);
                             }
                             game.setInShop(false);
                         }
+
                     } else if (cancelRect.contains(e.getPoint())) {
                         game.setInShop(false);
                     }
+
                 } else {
                     if (player.getAttackCooldown() == 0) {
                         int direction = e.getX() > player.getCenterX() ? 1 : -1;
+
+                        // attack based on current attack
                         switch (player.getCurrentWeapon()) {
                             case "Sword":
                                 game.getAttacks().add(new Sword((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() : -150)),
                                         (int) (player.getY() - 50), player.getDirection(), true, player.getDamageBoost()));
                                 player.setAttackCooldown(15);
                                 break;
+
                             case "Hammer":
                                 game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
                                         (int) (player.getY() - 50), player.getDirection(), true, player.getDamageBoost()));
                                 player.setAttackCooldown(50);
                                 break;
+
                             case "Bow":
                                 if (bowCharging) {
                                     if (bowPower > 20) {
@@ -526,7 +646,6 @@ public class MapDisplay extends JFrame {
                                     bowPower = 1;
                                     bowCharging = false;
                                 }
-
                                 break;
 
                             case "Rocket":
@@ -552,6 +671,7 @@ public class MapDisplay extends JFrame {
 
         @Override
         public void mouseDragged(MouseEvent e) {
+            // Bash angle calculation
             bashAngle = Math.atan2((player.getCenterY() - e.getY()), (player.getCenterX() - e.getX()));
         }
 
@@ -586,6 +706,7 @@ public class MapDisplay extends JFrame {
          * @param e
          */
         public void keyPressed(KeyEvent e) {
+            // a,d movement, e to interact, shift to dash
             switch (Character.toLowerCase(e.getKeyChar())) {
                 case 'a':
                     player.setMovingLeft(true);
@@ -597,9 +718,7 @@ public class MapDisplay extends JFrame {
                     player.setMovingLeft(false);
                     player.setDirection(1);
                     break;
-                case 'q':
-                    game.paused = true;
-                    break;
+
                 case 'e':
                     if (!game.isInObelisk()) {
                         for (int i = 0; i < game.getObeliskHitboxes().size(); i ++) {
@@ -631,16 +750,16 @@ public class MapDisplay extends JFrame {
          * @param e
          */
         public void keyReleased(KeyEvent e) {
+
             char key = Character.toLowerCase(e.getKeyChar());
+
+            // a, d move, m teleport to shop
             switch (Character.toLowerCase(e.getKeyChar())) {
                 case 'a':
                     player.setMovingLeft(false);
                     break;
                 case 'd':
                     player.setMovingRight(false);
-                    break;
-                case 'q':
-                    game.paused = false;
                     break;
                 case 'm':
                     if (!(game.isInObelisk()) && (player.isBashUnlocked())) {
@@ -659,6 +778,8 @@ public class MapDisplay extends JFrame {
          */
         public void keyTyped(KeyEvent e) {
             switch (Character.toLowerCase(e.getKeyChar())) {
+
+                // Space to jump, numbers for weapon shopping
                 case ' ':
                     player.jump();
                     break;

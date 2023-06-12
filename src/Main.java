@@ -1,3 +1,10 @@
+/**
+ * [Main.java]
+ * This program is a platformer game
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
+
 import java.io.FileNotFoundException;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,

@@ -1,3 +1,9 @@
+/**
+ * [GameEngine.java]
+ * This class is the engine and brain of the game, allowing it to run
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +25,6 @@ public class GameEngine {
 
     private int frameNum;
 
-    boolean paused = false;
 
     boolean playing = true;
 
@@ -40,6 +45,8 @@ public class GameEngine {
     private ArrayList<ShopItem> shop;
 
     GameEngine() throws FileNotFoundException {
+
+        // Checks for default or new save
         Scanner input = new Scanner(new File("src/Save2.txt"));
         if (input.next().equals("new")) {
             input = new Scanner(new File("src/Save.txt"));
@@ -56,6 +63,7 @@ public class GameEngine {
 
         this.refreshDelay = 17;
 
+        // Reading save file
         while (input.hasNext()) {
             String objectType = input.next();
             switch (objectType) {
@@ -98,18 +106,23 @@ public class GameEngine {
     }
 
 
+    /**
+     * moveAll
+     * This method moves, and ticks all the objects on the map
+     */
     public void moveAll() {
 
         if (inObelisk) {
             obeliskTick();
         }
 
-        if (!paused) {
-            player.move();
-            player.immunityTick();
-        }
+        player.move();
+        player.immunityTick();
 
+        // Respawning
         if (player.getHealth() <= 0) {
+
+            // Ends obelisk
             if (inObelisk) {
                 for (int i = enemies.size() - 1; i >= 0; i --) {
                     Enemy enemy = enemies.get(i);
@@ -131,15 +144,17 @@ public class GameEngine {
             player.respawn();
         }
 
+        // Enemies
         for (int i = enemies.size() - 1; i >= 0; i --) {
 
             Enemy enemy = enemies.get(i);
+            enemy.update();
 
             if (enemy.getHealth() > 0) {
 
                 enemy.move(player, surroundings);
 
-            } else if (enemy.getHealth() <= 0) {
+            } else if (enemy.getHealth() <= 0) { // Dead enemy
 
                 if (enemy.isObeliskEnemy()) {
                     requiredKills --;
@@ -147,6 +162,7 @@ public class GameEngine {
 
                 createOrbs(enemy);
 
+                // Respawning
                 respawnList.add(enemy);
 
                 enemy.setRespawnTimer(Constants.respawnTimerEnemy);
@@ -157,9 +173,11 @@ public class GameEngine {
 
 
 
+        // Attacks
         for (int i = attacks.size() - 1; i >= 0; i --) {
             Attack attack = attacks.get(i);
 
+            // Attack duration functionality
             if (attack.getAbilityDuration() > attack.getMaxAbilityDuration()) {
                 if (attack instanceof Rocket) {
                     attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
@@ -179,18 +197,17 @@ public class GameEngine {
             attack.setAbilityDuration(attack.getAbilityDuration() + 1);
         }
 
-        for (Enemy enemy : enemies) {
-            enemy.update();
-        }
-
+        // Orbs
         for (int i = orbs.size() - 1; i >= 0; i --) {
             if (!orbs.get(i).move(player)) {
                 orbs.remove(i);
             }
         }
 
+        // Enemy respawning
         for (Enemy enemy : respawnList) {
 
+            // Respawns once timer is ended
             if ((enemy.getRespawnTimer() == 0) && (((enemy.getRespawnX()) != 0 && (enemy.getRespawnY() != 0)))) {
 
                 if (enemy instanceof Slime) {
@@ -231,27 +248,41 @@ public class GameEngine {
         }
 
 
+        // Some enemies do not respawn
         respawnList.removeIf(enemy -> enemy.getRespawnTimer() < 0);
         respawnList.removeIf(enemy -> (enemy.getRespawnY() > 99999) );
 
     }
 
+    /**
+     * checkCollisions
+     * This method handles the collisions in the game
+     */
     public void checkCollisions() {
+        // Checks walls
         for (Wall object: surroundings) {
+
+            // Crystals only have collisions if they are alive
             if (object instanceof Crystal) {
+
                 ((Crystal) object).crystalTick();
+
                 if (((Crystal) object).getRespawnTimer() == 0) {
+
                     if (player.intersects(object)) {
                         player.collide(object);
                         player.setAbilityActive(false);
                     }
                 }
+
             } else if (player.intersects(object)) {
                 player.collide(object);
                 player.setAbilityActive(false);
             }
 
+            // Collision for enemies and wall
             for (Enemy enemy: enemies) {
+
                 if (enemy.intersects(object)) {
                     enemy.collision(object);
                 }
@@ -270,10 +301,15 @@ public class GameEngine {
             }
         }
 
+        // Attack collisions
         for (int i = attacks.size() - 1; i >= 0; i --) {
+
             Attack attack = attacks.get(i);
             for (Enemy enemy: enemies) {
+
                 if (enemy.intersects(attack) && attack.isFriendly()) {
+
+                    // Rocket explodes on hit
                     if (attack instanceof Rocket) {
                         attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
                     } else {
@@ -283,18 +319,28 @@ public class GameEngine {
             }
 
             for (Wall wall: surroundings) {
+
                 if (wall instanceof Crystal) {
+
                     if (attack.intersects(wall)) {
+
+                        // Crystal takes damage
                         ((Crystal) wall).takeHit(attack);
+
                         if (((Crystal) wall).getHealth() <= 0) {
                             createOrbs(wall);
                         }
                     }
 
                 } else if (attack instanceof Projectile) {
+
                     if (attack.intersects(wall)) {
+
+                        // Rockets explode
                         if (attack instanceof Rocket) {
+
                             attacks.set(i, new Explosion((int) (attack.getCenterX()), (int) (attack.getCenterY()), true, 300, player.getDamageBoost()));
+
                         } else {
                             attacks.remove(i);
                             break;
@@ -306,23 +352,36 @@ public class GameEngine {
 
 
         for (int i = orbs.size() - 1; i >= 0; i -- ) {
+
             if (orbs.get(i).intersects(player)) {
+
                 orbAbsorb(orbs.get(i));
                 orbs.remove(i);
             }
         }
     }
 
+    /**
+     * createOrbs
+     * this method creates orbs from a dead object
+     * @param object object to create orbs from
+     */
     public void createOrbs(GameObject object) {
+
         if (object instanceof Enemy) {
+
             Enemy enemy = (Enemy) object;
+
+            // Orb spawning
             for (int i = (int) enemy.getGoldReward(); i > 0; i -= 10) {
                 orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 10, "Gold"));
             }
 
+            // Health/energy orbs have a chance to spawn
             for (int i = 0; i < 3; i ++) {
                 if (Math.random() < enemy.getGoldReward() / 800.0) {
                     orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 25, "Health"));
+
                 } else if (Math.random() < enemy.getGoldReward() / 1200.0) {
                     orbs.add(new Orb((int) enemy.getCenterX(), (int) enemy.getCenterY(), Constants.orbDimensions, Constants.orbDimensions, 20, "Energy"));
                 }
@@ -337,48 +396,75 @@ public class GameEngine {
         }
     }
 
+    /**
+     * createOrbs
+     * Creates orbs based on input instead of object
+     * @param orbAmount how many orbs to make
+     * @param hitbox obelisk to spawn from
+     * @param orbType type of orb
+     */
     public void createOrbs(int orbAmount, Rectangle hitbox, String orbType) {
         for (int i = orbAmount; i > 0; i -= 10) {
             orbs.add(new Orb((int) (hitbox.getX() + hitbox.getWidth() * Math.random()), (int) (hitbox.getY() + Math.random() * 200), Constants.orbDimensions, Constants.orbDimensions, 10, orbType));
         }
     }
 
+    /**
+     * orbAbsorb
+     * Player absorbs orb method
+     * @param orb the orb
+     */
     public void orbAbsorb(Orb orb) {
+        // Effect depends on orb type
         switch (orb.getBoostType()) {
             case "Gold":
                 player.setTotalGold((int) (player.getTotalGold() + orb.getBoostValue()));
                 break;
+
             case "Health":
                 player.setHealth(player.getHealth() + orb.getBoostValue());
                 break;
+
             case "Energy":
                 player.setEnergy(player.getEnergy() + orb.getBoostValue());
                 break;
         }
     }
 
+    /**
+     * activateObelisk
+     * Activates an obelisk
+     * @param obeliskNum the obelisk in question
+     */
     public void activateObelisk(int obeliskNum) {
         this.inObelisk = true;
         this.currentObelisk = obeliskNum;
         this.obeliskSpawns.clear();
+
         Wall baseWall = surroundings.get(0);
+
+        // Walls to prevent player from exiting obelisk
         surroundings.add(new Wall((int) (baseWall.getX() + 7400), (int) (baseWall.getY() -900), 100, 300, false));
         surroundings.add(new Wall((int) (baseWall.getX() + 5800), (int) (baseWall.getY() -900), 100, 300, false));
         surroundings.add(new Wall((int) (baseWall.getX() + 12100), (int) (baseWall.getY() -4800), 100, 200, false));
         surroundings.add(new Wall((int) (baseWall.getX() + 20400), (int) (baseWall.getY() -800), 100, 300, false));
 
+        // Obelisk waves are based on obelisk number
         switch (obeliskNum) {
             case 0:
                 this.obeliskSpawns.add(new int[] {25, 0, 0});
                 requiredKills = 25;
                 break;
+
             case 1:
+                // Each array represents a wave
                 this.obeliskSpawns.add(new int[] {0, 5, 0});
                 this.requiredKills = 5;
                 this.obeliskSpawns.add(new int[] {5, 3, 0});
                 this.obeliskSpawns.add(new int[] {0, 8, 0});
                 this.obeliskSpawns.add(new int[] {10, 5, 0});
                 break;
+
             case 2:
                 this.obeliskSpawns.add(new int[] {0, 0, 4});
                 this.requiredKills = 4;
@@ -391,15 +477,29 @@ public class GameEngine {
     }
 
 
+    /**
+     * obeliskTick
+     * This method ticks an obelisk
+     */
     public void obeliskTick() {
+        // When all enemies are killed
         if (requiredKills <= 0) {
             requiredKills = 0;
+
+            // Moves to next wave
             obeliskSpawns.remove(0);
+
+            // If all waves are cleared
             if (obeliskSpawns.size() == 0) {
+
+                // Removes obelisk walls
                 for (int i = 0; i < 4; i ++) {
                     surroundings.remove(surroundings.size() - 1);
                 }
+
                 this.inObelisk = false;
+
+                // Reward depends on which obelisk
                 switch (currentObelisk) {
                     case 0:
                         if (player.getMaxJumps() < 2) {
@@ -413,6 +513,7 @@ public class GameEngine {
                         createOrbs(2000, obeliskHitboxes.get(0), "Gold");
 
                         break;
+
                     case 1:
                         if (!player.isBashUnlocked()) {
                             player.setMaxHealth(player.getMaxHealth() + 100);
@@ -420,32 +521,46 @@ public class GameEngine {
                             createOrbs(4000, obeliskHitboxes.get(1), "Gold");
                         }
                         break;
+
                     case 2:
                         createOrbs(8000, obeliskHitboxes.get(2), "Gold");
                         break;
                 }
+
+            // Next wave
             } else {
                 for (int i = 0; i < this.obeliskSpawns.get(0).length; i++) {
                     requiredKills += this.obeliskSpawns.get(0)[i];
                 }
+
+                // Orbs to heal player
                 createOrbs(30, obeliskHitboxes.get(currentObelisk), "Health");
                 createOrbs(50, obeliskHitboxes.get(currentObelisk), "Energy");
             }
 
 
         } else {
+
             Rectangle obelisk = this.obeliskHitboxes.get(this.currentObelisk);
+
+            // Loops through enemies to spawn
             for (int i = 0; i < obeliskSpawns.get(0).length; i ++) {
+
                 if (obeliskSpawns.get(0)[i] > 0) {
+
                     if (Math.random() < 0.1) {
                         obeliskSpawns.get(0)[i] --;
+
+                        // index of number represents a type of enemy to spawn
                         switch (i) {
                             case 0:
                                 enemies.add(new Slime((int) (obelisk.getX() - 100 + ((int) (Math.random() * 2)) * (obelisk.getWidth() + 200)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 100, 100, 100, 100, 15, 0, 0, 150000, true));
                                 break;
+
                             case 1:
                                 enemies.add(new Mosquito((int) (obelisk.getX() + Math.random() * (obelisk.getWidth() - 50)), (int) (obelisk.getY() + Math.random() * (obelisk.getHeight() + 50)), 50, 50, 100, 100, 20, 0, 0, 150000, true));
                                 break;
+
                             case 2:
                                 enemies.add(new Jumper((int) (obelisk.getX() - 150 + Math.random() * (obelisk.getWidth() - 150)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 150, 150, 150, 150, 40, 0, 0, 150000, true));
                                 break;
@@ -456,16 +571,28 @@ public class GameEngine {
         }
     }
 
+    /**
+     * save
+     * This method saves the progress
+     * @throws FileNotFoundException
+     */
     public void save() throws FileNotFoundException {
 
+        // Saves to non-base file
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
         output.println("notNew");
+
+        //Player save
         output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " +
                 (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " +
                 player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isDashUnlocked() + " " + player.getDamageBoost());
+
+        // Weapons save
         for (String weapon: player.getWeapons()) {
             output.println("Weapon " + weapon);
         }
+
+        // Walls save
         for (Wall wall: this.surroundings) {
             if (wall instanceof Spike){
                 output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (int) ((Spike) wall).getDamage());
@@ -474,25 +601,30 @@ public class GameEngine {
                 output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
             }
         }
+
+        // Enemy save
         for (Enemy enemy: this.enemies) {
             output.println(enemy.getClass().getName() + " " + (int) enemy.getX() + " " + (int) enemy.getY() + " " + (int) enemy.getWidth() + " " + (int) enemy.getHeight() + " " +
                     (int) enemy.getHealth() + " " + (int) enemy.getMaxHealth() + " " + (int) enemy.getDamage() + " " + (int) enemy.getGoldReward() + " " + (int) enemy.getRespawnX() + " " + (int) enemy.getRespawnY());
         }
+
+        // Shop save
         for (ShopItem item: this.shop) {
             output.println("Shop " + (int) item.getX() + " " + (int) item.getY() + " " + (int) item.getWidth() + " " + (int) item.getHeight() + " " + item.getName() + " " + item.getPrice());
         }
 
+        // Obelisk save
         for (Rectangle hitbox: this.obeliskHitboxes) {
             output.println("Hitbox " + (int) hitbox.getX() + " " + (int) hitbox.getY() + " " + (int) hitbox.getWidth() + " " + (int) hitbox.getHeight());
         }
+
         output.close();
     }
 
 
 
     // ================================================================
-    // print writter
-    // mouse listener stuff
+    // Getters and setters
     // ================================================================
 
     public Player getPlayer() {
@@ -548,7 +680,4 @@ public class GameEngine {
         return shop;
     }
 
-    public int getRequiredKills() {
-        return requiredKills;
-    }
 }
