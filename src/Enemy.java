@@ -1,4 +1,10 @@
-import java.lang.reflect.Array;
+/**
+ * File Name - [Enemy.java]
+ * Description -  enemy
+ * @Author - Michael Khart & Ian Leung
+ * @Date - June 8, 2023
+ */
+
 import java.util.ArrayList;
 abstract public class Enemy extends Alive {//
 
@@ -13,6 +19,20 @@ abstract public class Enemy extends Alive {//
 
 
 
+    /**
+     * Enemy
+     Constructs an Enemy object with the specified parameters.
+     @param x the x-coordinate of the enemy's position
+     @param y the y-coordinate of the enemy's position
+     @param width the width of the enemy
+     @param height the height of the enemy
+     @param health the current health of the enemy
+     @param totalHealth the total health of the enemy
+     @param damage the damage inflicted by the enemy
+     @param goldReward the amount of gold rewarded upon defeating the enemy
+     @param respawnX the x-coordinate of the enemy's respawn location
+     @param respawnY the y-coordinate of the enemy's respawn location
+     */
     Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
         super(x, y, width, height, health, totalHealth, 15);
         this.damage = damage;
@@ -22,6 +42,21 @@ abstract public class Enemy extends Alive {//
         obeliskEnemy = false;
     }
 
+    /**
+    Enemy
+     Constructs an Enemy object with the specified parameters, including the obeliskEnemy flag.
+     @param x the x-coordinate of the enemy's position
+     @param y the y-coordinate of the enemy's position
+     @param width the width of the enemy
+     @param height the height of the enemy
+     @param health the current health of the enemy
+     @param totalHealth the total health of the enemy
+     @param damage the damage inflicted by the enemy
+     @param goldReward the amount of gold rewarded upon defeating the enemy
+     @param respawnX the x-coordinate of the enemy's respawn location
+     @param respawnY the y-coordinate of the enemy's respawn location
+     @param obeliskEnemy a flag indicating if the enemy is associated with an obelisk
+     */
     Enemy(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY, boolean obeliskEnemy) {
         super(x, y, width, height, health, totalHealth, 15);
         this.damage = damage;
@@ -33,12 +68,22 @@ abstract public class Enemy extends Alive {//
 
 
 
-    public abstract void move(Player player, ArrayList<Wall> proximity);
 
-    public abstract void update();
+    public abstract void move(Player player, ArrayList<Wall> proximity); // how all the enemies will move
 
-    abstract public void collision(GameObject otherObject);
+    public abstract void update(); // something to update all their counters
 
+    abstract public void collision(GameObject otherObject); // how they will interact with other objects
+
+
+    /**
+     * distanceToPlayer
+     * uses ray tracing and an advanced calucations for line length between objects
+     * @param player - the player
+     * @param listObjects - the list of walls in game
+     * @param justDistance - boolean if the clal wants just a distance return without raytracing
+     * @return - distance
+     */
     public double distanceToPlayer(Player player, ArrayList<Wall> listObjects, boolean justDistance) {
 
         double distance;
@@ -61,17 +106,14 @@ abstract public class Enemy extends Alive {//
         double enemyY = 0;
         double playerY = 0;
 
-        int numPoints = 0;
-
         double m, b;
 
-
+        // finding the equation of line between centers
         if (Math.abs(player.getCenterX()) - Math.abs(this.getCenterX()) == 0) {
             m = Integer.MAX_VALUE;
         } else {
             m = ((player.getCenterY() - this.getCenterY()) / (player.getCenterX() - this.getCenterX()));
         }
-
 
         b = ((this.getCenterY() - (m * this.getCenterX())));
 
@@ -79,7 +121,7 @@ abstract public class Enemy extends Alive {//
         playerY = ((m * player.getX()) + b);
 
 
-
+        // finding if the line exits vertically or horizontally for enemy and player
         if ((enemyY <= this.getY() + this.getHeight()) && (enemyY >= this.getY())) {
             enemyHorizontalExit = true;
         } else {
@@ -93,6 +135,7 @@ abstract public class Enemy extends Alive {//
         }
 
 
+        // seeing which side it comes out of for both player and enenmy
         if (enemyHorizontalExit) {
             if (player.getX() - this.getX() >= 0) {
                 playerPosition = "right";
@@ -118,6 +161,8 @@ abstract public class Enemy extends Alive {//
 
 
 
+        // finding the point of exit based on the exit sides for both player and enemy
+        // find the unknown cordinate on the slide
         if (enemyVerticleExit) {
 
             if (playerPosition.equals("up")) {
@@ -169,12 +214,14 @@ abstract public class Enemy extends Alive {//
 
         }
 
+        // this is the ditance between both objects excluding their widths and lengths
         distance = Math.sqrt( Math.pow((playerXpointIntersection - enemyXpointIntersection), 2) + Math.pow((playerYpointIntersection - enemyYpointIntersection), 2) );
 
-        if (justDistance) {
+        if (justDistance) { // return if they want just distance
             return distance;
         }
 
+        // number of points for raytracing to check
         int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.rayTracingStep;
         int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.rayTracingStep;
 
@@ -183,6 +230,8 @@ abstract public class Enemy extends Alive {//
 
         boolean intersected = false;
 
+        // checking all the points across the line for both x and y distance of raytracing step - there to stop a very verticle or horizontal line from breaking code
+        // uses known exit points and sides to check all points
         if (enemyVerticleExit) {
 
             if (playerPosition.equals("up")) {
@@ -264,18 +313,27 @@ abstract public class Enemy extends Alive {//
 
 
 
-        if (!(intersected)) {
+        if (!(intersected)) { // returns the distance if there is nothing between
             return distance;
         } else {
-            return Integer.MAX_VALUE;
+            return Integer.MAX_VALUE; // this means there is wall between so infinite length
         }
 
     }
 
+
+    /**
+     * knockback
+     * physics of how knockback should work
+     * @param attack- incoing attack - for calculations
+     */
     public void knockback(Attack attack) {
+
         double interval, dX, dY;
-        if (this.getImmunityTimer() == 0) {
-            if (attack instanceof Explosion) {
+
+        if (this.getImmunityTimer() == 0) { // if we can take damage
+
+            if (attack instanceof Explosion) { // if we hit by rocket, set x and y spped from rocket x and y and take damage
                 dX = (this.getCenterX() - attack.getCenterX());
                 dY = (attack.getCenterY() - this.getCenterY());
                 double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
@@ -285,7 +343,8 @@ abstract public class Enemy extends Alive {//
                 } else {
                     interval = 0;
                 }
-            } else {
+
+            } else { // otherwise just knockback away from attack and take damage without such complex speed calculations
                 this.setXSpeed((int) (attack.getAttackDamage() * attack.getDirection()));
                 this.setYSpeed(10);
                 dX = (this.getCenterX() - attack.getCenterX());
@@ -301,18 +360,29 @@ abstract public class Enemy extends Alive {//
     }
 
 
+    /**
+     * onEdge
+     * checks if the enemy is on an edge of an object
+     * @param otherObject - collider
+     * @return - if we are on edge
+     */
     public boolean onEdge(GameObject otherObject) {
+
         double bottomRightX = (int) (this.getX() + this.getWidth());
         double middleBottomRightX = bottomRightX - 10;
         double bottomY = (int) (this.getY() + this.getHeight());
         double middleBottomLeftX = this.getX() + 10;
 
 
+        // if we are touching half on the collider and other half not on the collider (roughly)
         if (   ( ((otherObject.contains(bottomRightX, bottomY)) && ((otherObject.contains(middleBottomRightX, bottomY))) )  && ((!otherObject.contains(this.getX(), bottomY)) && (!otherObject.contains(middleBottomLeftX, bottomY)) ) )
             || ( ((!otherObject.contains(bottomRightX, bottomY)) && ((!otherObject.contains(middleBottomRightX, bottomY))) )  && ((otherObject.contains(this.getX(), bottomY)) && (otherObject.contains(middleBottomLeftX, bottomY)) ) )   )
         {
             this.setHealth(-1);
             return true;
+
+        // if we are touching at three points move back away from ledge
+
         } else if (    ( ((otherObject.contains(middleBottomRightX, bottomY)) && (otherObject.contains(middleBottomLeftX, bottomY))) && (((otherObject.contains(this.getX(), bottomY)) || (otherObject.contains(bottomRightX, bottomY))) && ((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY)) )    )          )
                 &&   ( (((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY))) && ((!otherObject.contains(this.getX(), bottomY)) || (!otherObject.contains(bottomRightX, bottomY)) ) )    )    ) {
             return true;
@@ -323,67 +393,116 @@ abstract public class Enemy extends Alive {//
     }
 
 
+    /**
+     * getrespawnx
+     * gets the respawnX
+     * @return respawnx
+     */
     public double getRespawnX() {
         return respawnX;
     }
 
+    /**
+     * getRespawnY
+     * get respawn y
+     * @return respawn y
+     */
     public double getRespawnY() {
         return respawnY;
     }
 
+    /**
+     * respawnaX
+     * retunrs respawn x
+     * @param respawnX
+     */
     public void setRespawnX(double respawnX) {
         this.respawnX = respawnX;
     }
 
+    /**
+     * sterespawnY
+     * set respawny
+     * @param respawnY
+     */
     public void setRespawnY(double respawnY) {
         this.respawnY = respawnY;
     }
 
+    /**
+     * getDamage
+     * get damage
+     * @return damage
+     */
     public double getDamage() {
         return damage;
     }
 
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
+    /**
+     * get gold reward
+     * @returngold reawed
+     */
     public double getGoldReward() {
         return goldReward;
     }
 
-    public void setGoldReward(int goldReward) {
-        this.goldReward = goldReward;
-    }
-
+    /**
+     * getRespanwtimer
+     * gets respawn timer
+     * @return - respawntimer
+     */
     public int getRespawnTimer() {
         return respawnTimer;
     }
+
+
+    /**
+     * set repsawn tiemr
+     * @param respawnTimer
+     */
 
     public void setRespawnTimer(int respawnTimer) {
         this.respawnTimer = respawnTimer;
     }
 
+    /**
+     * gets gooldownability
+     * @return - cooldown ability
+     */
     public int getCooldownTimerAbility() {
         return cooldownTimerAbility;
     }
 
+    /**
+     * sets cooldowntimer
+     * @param cooldownTimerAbility - timer
+     */
     public void setCooldownTimerAbility(int cooldownTimerAbility) {
         this.cooldownTimerAbility = cooldownTimerAbility;
     }
 
+    /**
+     * gettotal timer
+     * @return gettotal cooldowntimer
+     */
     public int getTotalCooldownTimer() {
         return totalCooldownTimer;
     }
 
+    /**
+     * setstotalcooldowntier
+     * @param totalCooldownTimer - totalcooldowntimer
+     */
     public void setTotalCooldownTimer(int totalCooldownTimer) {
         this.totalCooldownTimer = totalCooldownTimer;
     }
 
+    /**
+     * if oblesk enemy
+     * @return
+     */
     public boolean isObeliskEnemy() {
         return obeliskEnemy;
     }
 
-    public void setObeliskEnemy(boolean obeliskEnemy) {
-        this.obeliskEnemy = obeliskEnemy;
-    }
 }

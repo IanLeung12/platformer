@@ -1,3 +1,10 @@
+/**
+ * File Name - [Jumper.java]
+ * Description - enemy
+ * @Author - Michael Khart & Ian Leung
+ * @Date - June 8, 2023
+ */
+
 public class Constants {
 
     static int gravity = 2;
