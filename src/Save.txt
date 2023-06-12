@@ -22,21 +22,25 @@ Wall 3200 -600 100 50 true
 Wall 3800 -700 400 50 false
 Slime 3900 -800 100 100 100 100 15 100 3900 -800
 
+
+
 Wall 3900 -2200 600 600 false
 Wall 4200 -2200 900 900 false
 Wall 4600 -300 300 600 true
-Wall 4900 -700 1000 1500 true
+Wall 4900 -650 1000 1500 true
 Wall 4900 -2000 1000 1100 false
 Crystal 4750 -350 50 50 Health
-
-
-
 Wall 5900 -2000 1500 800 false
 Wall 5900 -200 1500 1500 true
-Wall 5900 -700 100 50 true
-Wall 7400 -700 1000 1500 false
-Wall 7400 -2000 1000 1100 false
-Wall 7300 -700 100 50 false
+Wall 4900 -700 1100 50 true
+Wall 7300 -700 1100 50 false
+Wall 7400 -5000 1000 4100 false
+Wall 7400 -650 1000 2000 false
+
+
+
+
+
 
 
 
