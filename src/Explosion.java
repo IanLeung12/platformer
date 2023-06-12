@@ -1,3 +1,9 @@
+/**
+ * [Explosion.java]
+ * Class represent explosion
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 public class Explosion extends Attack{
 
     private final int maxRadius;
@@ -13,6 +19,10 @@ public class Explosion extends Attack{
         this.lastRadius = 0;
     }
 
+    /**
+     * expand
+     * Expands the explosion
+     */
     public void expand() {
         this.lastRadius = radius;
         this.radius = maxRadius * this.getAbilityDuration()/this.getMaxAbilityDuration();

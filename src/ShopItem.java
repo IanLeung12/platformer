@@ -1,3 +1,9 @@
+/**
+ * [Shopitem.java]
+ * Class represent shopitem
+ * @author Ian Leung, Michael Khart
+ * @version 1.0, June 12, 2023
+ */
 public class ShopItem extends GameObject{
 
     private String name;
@@ -9,6 +15,7 @@ public class ShopItem extends GameObject{
     ShopItem(int x, int y, int width, int height, String name, int price) {
         super(x, y, width, height);
         this.name = name;
+        // Shop description based on name
         switch (name) {
             case "Hammer":
                 this.description = "A bigger, stronger sword with a blindspot";
@@ -39,6 +46,7 @@ public class ShopItem extends GameObject{
     public boolean buy(Player player) {
         if (player.getTotalGold() >= price) {
             player.setTotalGold((int) (player.getTotalGold() - price));
+            // Effect based on name
             switch (name) {
                 case "Hammer":
                     player.getWeapons().add("Hammer");
