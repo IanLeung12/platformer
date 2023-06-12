@@ -46,22 +46,31 @@ public class Mosquito extends Enemy{
 
         } else {
 
-            if (this.distanceToPlayer(player, proximity, false) <= Constants.getMosquitoVision()) {
+            double distance = Math.sqrt( Math.pow((player.getCenterY() - this.getCenterY()) , 2) +  Math.pow((player.getCenterX() - this.getCenterX()) , 2) );
 
-                if (this.getCooldownTimerAbility() == 0) {
+            if (distance < Constants.mosquitoVision) {
+                if (this.distanceToPlayer(player, proximity, false) <= Constants.getMosquitoVision()) {
 
-                    chargeUpDistanceTraveled = 0;
-                    startingChargeUpX = (int) this.getCenterX();
-                    startingChargeUpY = (int) this.getCenterY();
-                    this.chargeUpCounter = Constants.getMosquitoGameLoopChargeUp();
+                    if (this.getCooldownTimerAbility() == 0) {
 
-                    this.chargeUp(player);
+                        chargeUpDistanceTraveled = 0;
+                        startingChargeUpX = (int) this.getCenterX();
+                        startingChargeUpY = (int) this.getCenterY();
+                        this.chargeUpCounter = Constants.getMosquitoGameLoopChargeUp();
 
+                        this.chargeUp(player);
+
+                    } else {
+
+                        this.cooldownMovement(player);
+
+                    }
                 } else {
-
-                    this.cooldownMovement(player);
+                    this.defaultMovement();
 
                 }
+
+
 
             } else {
 

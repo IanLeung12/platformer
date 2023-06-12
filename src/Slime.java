@@ -28,16 +28,25 @@ public class Slime extends Enemy{//
 
     public void move(Player player, ArrayList<Wall> proximity) {
 
-        if (this.distanceToPlayer(player, proximity, false) <= Constants.getSlimeVision()) {
+        double distance = Math.sqrt( Math.pow((player.getCenterY() - this.getCenterY()) , 2) +  Math.pow((player.getCenterX() - this.getCenterX()) , 2) );
 
-            if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
-                this.setXSpeed(this.getXSpeed() + 1);
-            } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
-                this.setXSpeed(this.getXSpeed() - 1);
+        if (distance < Constants.slimeVision) {
+            if (this.distanceToPlayer(player, proximity, false) <= Constants.getSlimeVision()) {
+
+                if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
+                    this.setXSpeed(this.getXSpeed() + 1);
+                } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
+                    this.setXSpeed(this.getXSpeed() - 1);
+                }
+
+                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.translate(this.getXSpeed(), -this.getYSpeed());
+
+            } else {
+
+                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.translate(this.getXSpeed(), -this.getYSpeed());
             }
-
-            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
-            this.translate(this.getXSpeed(), -this.getYSpeed());
         } else {
 
             this.setYSpeed(this.getYSpeed() - Constants.getGravity());

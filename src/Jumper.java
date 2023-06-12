@@ -58,13 +58,25 @@ public class Jumper extends Enemy{
 
         } else {
 
-            if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
+            double distance = Math.sqrt( Math.pow((player.getCenterY() - this.getCenterY()) , 2) +  Math.pow((player.getCenterX() - this.getCenterX()) , 2) );
 
-                if (this.getCooldownTimerAbility() <= 0) {
+            if (distance < Constants.jumperVision) {
+                if (this.distanceToPlayer(player, proximity, false) <= Constants.jumperVision) {
 
-                    this.setAbilityActive(true);
-                    this.chargeUp(player);
+                    if (this.getCooldownTimerAbility() <= 0) {
 
+                        this.setAbilityActive(true);
+                        this.chargeUp(player);
+
+                    } else {
+                        this.translate(this.getXSpeed(), -this.getYSpeed());
+                        this.setYSpeed(this.getYSpeed() - Constants.gravity);
+
+                        if (this.getCooldownTimerAbility() > 0) {
+                            this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
+                        }
+
+                    }
                 } else {
                     this.translate(this.getXSpeed(), -this.getYSpeed());
                     this.setYSpeed(this.getYSpeed() - Constants.gravity);
@@ -72,7 +84,6 @@ public class Jumper extends Enemy{
                     if (this.getCooldownTimerAbility() > 0) {
                         this.setCooldownTimerAbility(this.getCooldownTimerAbility() - 1);
                     }
-
                 }
             } else {
 
