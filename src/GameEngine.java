@@ -30,7 +30,7 @@ public class GameEngine {
 
 
     GameEngine() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/Save2.txt"));
+        Scanner input = new Scanner(new File("src/Save.txt"));
         this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
