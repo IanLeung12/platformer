@@ -54,6 +54,10 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage eButton;
 
+    static BufferedImage eCrystal;
+
+    static BufferedImage hCrystal;
+
     static Rectangle buyRect = new Rectangle(560, 800, 200, 50);
 
     static Rectangle cancelRect = new Rectangle(1160, 800, 200, 50);
@@ -92,6 +96,9 @@ public class MapDisplay extends JFrame {
             mosquito = image("Pictures/mosquito.png");
             jumper = image("Pictures/jumper.png");
             eButton = image("Pictures/e.png");
+            eCrystal = image("Pictures/eCrystal.png");
+            hCrystal = image("Pictures/hCrystal.png");
+
             System.out.println("e");
         } catch (IOException ex){
             System.out.println("a");
@@ -220,11 +227,10 @@ public class MapDisplay extends JFrame {
                     Crystal crystal = (Crystal) wall;
                     if (crystal.getRespawnTimer() == 0) {
                         if (crystal.getBoostType().equals("Energy")) {
-                            g2d.setColor(new Color(87, 166, 158));
+                            g2d.drawImage(eCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
                         } else {
-                            g2d.setColor(new Color(56, 110, 19));
+                            g2d.drawImage(hCrystal, (int) crystal.getX(), (int) crystal.getY(), this);
                         }
-                        g2d.fillRect((int) wall.getX(), (int) wall.getY(), (int) wall.getWidth(), (int) wall.getHeight());
                         if (crystal.getHealth() != crystal.getMaxHealth()) {
                             g2d.setColor(Color.red);
                             g2d.fillRect((int) crystal.getCenterX() - 25, (int) crystal.getY() - 50, 50, 20);
