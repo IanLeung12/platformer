@@ -40,7 +40,10 @@ public class GameEngine {
     private ArrayList<ShopItem> shop;
 
     GameEngine() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/Save.txt"));
+        Scanner input = new Scanner(new File("src/Save2.txt"));
+        if (input.next().equals("new")) {
+            input = new Scanner(new File("src/Save.txt"));
+        }
         this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextInt(), input.nextBoolean(), input.nextBoolean(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
@@ -78,7 +81,12 @@ public class GameEngine {
                     obeliskHitboxes.add(new Rectangle(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
                 case "Shop":
-                    shop.add(new ShopItem(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next(), input.nextInt()));
+                    shop.add(new ShopItem(input.nextInt(),
+                            input.nextInt(),
+                            input.nextInt(),
+                            input.nextInt(),
+                            input.next(),
+                            input.nextInt()));
                     break;
                 case "Weapon":
                     player.getWeapons().add(input.next());
@@ -111,7 +119,12 @@ public class GameEngine {
                         enemy.setRespawnTimer(Constants.respawnTimerEnemy);
 
                         enemies.remove(i);
+
                     }
+                }
+
+                for (int i = 0; i < 4; i ++) {
+                    surroundings.remove(surroundings.size() - 1);
                 }
                 inObelisk = false;
             }
@@ -348,6 +361,11 @@ public class GameEngine {
         this.inObelisk = true;
         this.currentObelisk = obeliskNum;
         this.obeliskSpawns.clear();
+        Wall baseWall = surroundings.get(0);
+        surroundings.add(new Wall((int) (baseWall.getX() + 7400), (int) (baseWall.getY() -900), 100, 300, false));
+        surroundings.add(new Wall((int) (baseWall.getX() + 5800), (int) (baseWall.getY() -900), 100, 300, false));
+        surroundings.add(new Wall((int) (baseWall.getX() + 12100), (int) (baseWall.getY() -4800), 100, 200, false));
+        surroundings.add(new Wall((int) (baseWall.getX() + 20400), (int) (baseWall.getY() -800), 100, 300, false));
 
         switch (obeliskNum) {
             case 0:
@@ -378,6 +396,9 @@ public class GameEngine {
             requiredKills = 0;
             obeliskSpawns.remove(0);
             if (obeliskSpawns.size() == 0) {
+                for (int i = 0; i < 4; i ++) {
+                    surroundings.remove(surroundings.size() - 1);
+                }
                 this.inObelisk = false;
                 switch (currentObelisk) {
                     case 0:
@@ -399,7 +420,9 @@ public class GameEngine {
                             createOrbs(4000, obeliskHitboxes.get(1), "Gold");
                         }
                         break;
-
+                    case 2:
+                        createOrbs(8000, obeliskHitboxes.get(2), "Gold");
+                        break;
                 }
             } else {
                 for (int i = 0; i < this.obeliskSpawns.get(0).length; i++) {
@@ -436,6 +459,7 @@ public class GameEngine {
     public void save() throws FileNotFoundException {
 
         PrintWriter output = new PrintWriter(new File("src/Save2.txt"));
+        output.println("notNew");
         output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " +
                 (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " +
                 player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isDashUnlocked() + " " + player.getDamageBoost());
@@ -443,10 +467,7 @@ public class GameEngine {
             output.println("Weapon " + weapon);
         }
         for (Wall wall: this.surroundings) {
-            if (wall instanceof Wall) {
-                output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight());
-
-            } else if (wall instanceof Spike){
+            if (wall instanceof Spike){
                 output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (int) ((Spike) wall).getDamage());
 
             } else {
@@ -458,7 +479,11 @@ public class GameEngine {
                     (int) enemy.getHealth() + " " + (int) enemy.getMaxHealth() + " " + (int) enemy.getDamage() + " " + (int) enemy.getGoldReward() + " " + (int) enemy.getRespawnX() + " " + (int) enemy.getRespawnY());
         }
         for (ShopItem item: this.shop) {
-            output.println("Shop " + item.getX() + " " + item.getY() + " " + item.getWidth() + " " + item.getHeight() + " " + item.getName() + " " + item.getPrice());
+            output.println("Shop " + (int) item.getX() + " " + (int) item.getY() + " " + (int) item.getWidth() + " " + (int) item.getHeight() + " " + item.getName() + " " + item.getPrice());
+        }
+
+        for (Rectangle hitbox: this.obeliskHitboxes) {
+            output.println("Hitbox " + (int) hitbox.getX() + " " + (int) hitbox.getY() + " " + (int) hitbox.getWidth() + " " + (int) hitbox.getHeight());
         }
         output.close();
     }
@@ -474,10 +499,6 @@ public class GameEngine {
         return player;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     public ArrayList<Attack> getAttacks() {
         return attacks;
     }
@@ -486,36 +507,8 @@ public class GameEngine {
         return enemies;
     }
 
-    public void setEnemies(ArrayList<Enemy> enemies) {
-        this.enemies = enemies;
-    }
-
-    public void setAttacks(ArrayList<Attack> attacks) {
-        this.attacks = attacks;
-    }
-
     public ArrayList<Wall> getSurroundings() {
         return surroundings;
-    }
-
-    public void setSurroundings(ArrayList<Wall> surroundings) {
-        this.surroundings = surroundings;
-    }
-
-    public boolean isAbilityActive() {
-        return abilityActive;
-    }
-
-    public void setAbilityActive(boolean abilityActive) {
-        this.abilityActive = abilityActive;
-    }
-
-    public boolean isAttackActive() {
-        return attackActive;
-    }
-
-    public void setAttackActive(boolean attackActive) {
-        this.attackActive = attackActive;
     }
 
     public int getRefreshDelay() {
@@ -526,21 +519,10 @@ public class GameEngine {
         this.refreshDelay = refreshDelay;
     }
 
-    public int getFrameNum() {
-        return frameNum;
-    }
-
-    public void setFrameNum(int frameNum) {
-        this.frameNum = frameNum;
-    }
-
     public ArrayList<Orb> getOrbs() {
         return orbs;
     }
 
-    public void setOrbs(ArrayList<Orb> orbs) {
-        this.orbs = orbs;
-    }
 
     public ArrayList<Enemy> getRespawnList() {
         return respawnList;
@@ -550,16 +532,8 @@ public class GameEngine {
         return obeliskHitboxes;
     }
 
-    public void setObeliskHitboxes(ArrayList<Rectangle> obeliskHitboxes) {
-        this.obeliskHitboxes = obeliskHitboxes;
-    }
-
     public boolean isInObelisk() {
         return inObelisk;
-    }
-
-    public void setInObelisk(boolean inObelisk) {
-        this.inObelisk = inObelisk;
     }
 
     public boolean isInShop() {
@@ -572,10 +546,6 @@ public class GameEngine {
 
     public ArrayList<ShopItem> getShop() {
         return shop;
-    }
-
-    public void setShop(ArrayList<ShopItem> shop) {
-        this.shop = shop;
     }
 
     public int getRequiredKills() {

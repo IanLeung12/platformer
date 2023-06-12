@@ -20,19 +20,16 @@ public class ShopItem extends GameObject{
                 this.description = "Use 100 energy to create a massive explosion";
                 break;
             case "TripleJump":
-                this.name = "Triple Jump";
+                this.name = "TripleJump";
                 this.description = "I wonder what this does";
                 break;
             case "Health":
-                this.name = "Health Boost";
                 this.description = "Increase max health by 100";
                 break;
             case "Energy":
-                this.name = "Energy Boost";
                 this.description = "Increase max energy by 100";
                 break;
             case "Damage":
-                this.name = "Damage Boost";
                 this.description = "Multiplies damage by 1.2x";
                 break;
         }
@@ -52,10 +49,10 @@ public class ShopItem extends GameObject{
                 case "Rocket":
                     player.getWeapons().add("Rocket");
                     break;
-                case "Triple Jump":
+                case "TripleJump":
                     player.setMaxJumps(3);
                     break;
-                case "Health Boost":
+                case "Health":
                     player.setMaxHealth(player.getMaxHealth() + 100);
                     break;
                 case "Energy":
