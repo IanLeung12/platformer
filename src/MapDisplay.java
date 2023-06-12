@@ -57,6 +57,8 @@ public class MapDisplay extends JFrame {
         MapDisplay.game = game;
 
         this.player = game.getPlayer();
+        cameraX = (int) player.getX() - 900;
+        cameraY = (int) player.getY() - 500;
         bowPower = 1;
         this.bowCharging = false;
 
@@ -110,11 +112,11 @@ public class MapDisplay extends JFrame {
         int dX = lastCamX - cameraX;
         int dY = lastCamY - cameraY;
 
-        if (Math.abs(dX) > 26) {
+        if ((Math.abs(dX) > 26) && (Math.abs(dX) < 500)) {
             dX = dX/Math.abs(dX) * 26;
         }
 
-        if (Math.abs(dY) > 26) {
+        if ((Math.abs(dY) > 26) && (Math.abs(dY) < 500)) {
             dY = dY/Math.abs(dY) * 26;
         }
 
