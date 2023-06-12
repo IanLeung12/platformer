@@ -60,7 +60,7 @@ public class GameEngine {
                     surroundings.add(new Wall(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextBoolean()));
                     break;
                 case "Spike":
-                    surroundings.add(new Spike(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
+                    surroundings.add(new Spike(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt()));
                     break;
                 case "Crystal":
                     surroundings.add(new Crystal(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next()));
@@ -424,8 +424,15 @@ public class GameEngine {
             output.println("Weapon " + weapon);
         }
         for (Wall wall: this.surroundings) {
-            output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  +
-                    (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
+            if (wall instanceof Wall) {
+                output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight());
+
+            } else if (wall instanceof Spike){
+                output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (int) ((Spike) wall).getDamage());
+
+            } else {
+                output.println(wall.getClass().getName() + " " + (int) wall.getX() + " " + (int) wall.getY() + " "  + (int) wall.getWidth() + " " + (int) wall.getHeight() + " " + (wall instanceof Crystal ? ((Crystal) wall).getBoostType() :  wall.isrespawnable()));
+            }
         }
         for (Enemy enemy: this.enemies) {
             output.println(enemy.getClass().getName() + " " + (int) enemy.getX() + " " + (int) enemy.getY() + " " + (int) enemy.getWidth() + " " + (int) enemy.getHeight() + " " +
