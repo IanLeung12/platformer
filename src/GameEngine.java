@@ -32,7 +32,7 @@ public class GameEngine {
 
 
     GameEngine() throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/Save2.txt"));
+        Scanner input = new Scanner(new File("src/Save.txt"));
         this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
@@ -89,7 +89,7 @@ public class GameEngine {
 
         if (!paused) {
             player.move();
-            System.out.println(Arrays.toString(player.getRespawnPoint()));
+            //System.out.println(Arrays.toString(player.getRespawnPoint()));
             player.immunityTick();
         }
 
@@ -104,7 +104,7 @@ public class GameEngine {
             if (enemy.getHealth() > 0) {
 
                 enemy.move(player, proximity);
-                System.out.println("enemy respawn x :" + enemy.getRespawnX() + " respawn y" + enemy.getRespawnY());
+                //System.out.println("enemy respawn x :" + enemy.getRespawnX() + " respawn y" + enemy.getRespawnY());
 
             } else if (enemy.getHealth() <= 0) {
 
@@ -113,7 +113,7 @@ public class GameEngine {
                 respawnList.add(enemy);
 
                 enemy.setRespawnTimer(Constants.respawnTimerEnemy);
-                System.out.println("enemy died " + enemy.getCenterX());
+                //System.out.println("enemy died " + enemy.getCenterX());
 
                 enemies.remove(i);
             }
@@ -152,10 +152,10 @@ public class GameEngine {
         }
 
         for (Enemy enemy : respawnList) {
-            System.out.println("enemy :" + enemy + "  has this num loops left: " + enemy.getRespawnTimer());
+            //System.out.println("enemy :" + enemy + "  has this num loops left: " + enemy.getRespawnTimer());
 
             if ((enemy.getRespawnTimer() == 0) && (((enemy.getRespawnX()) != 0 && (enemy.getRespawnY() != 0)))) {
-                System.out.println("the enemy has passed and will be created");
+               //System.out.println("the enemy has passed and will be created");
 
                 if (enemy instanceof Slime) {
                     enemy.setXSpeed(0);
@@ -187,11 +187,11 @@ public class GameEngine {
 
                 enemies.add(enemy);
 
-                System.out.println("respawned" + enemy + "    and respanw x and y are "  + enemy.getRespawnX() + "   " + enemy.getRespawnY());
-                System.out.println(" player x and y " + player.getCenterX() + "   " + player.getCenterY());
+                //System.out.println("respawned" + enemy + "    and respanw x and y are "  + enemy.getRespawnX() + "   " + enemy.getRespawnY());
+                //System.out.println(" player x and y " + player.getCenterX() + "   " + player.getCenterY());
             }
 
-            System.out.println(enemy.getRespawnTimer());
+           // System.out.println(enemy.getRespawnTimer());
 
             enemy.update();
 

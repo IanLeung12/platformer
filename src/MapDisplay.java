@@ -123,7 +123,7 @@ public class MapDisplay extends JFrame {
 
         player.translate(dX, dY);
 
-        System.out.println("dx is " + dX + "    dy is" + dY);
+       // System.out.println("dx is " + dX + "    dy is" + dY);
 
         player.setRespawnPoint(new int[]{player.getRespawnPoint()[0] + dX, player.getRespawnPoint()[1] + dY});
 
@@ -143,10 +143,10 @@ public class MapDisplay extends JFrame {
 
         for (Enemy enemy : game.getRespawnList()) {
 
-            System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
+            //System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
             enemy.setRespawnX((enemy.getRespawnX() + dX));
             enemy.setRespawnY((enemy.getRespawnY() + dY));
-            System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
+            //System.out.println(" respawn x is and y is :" + enemy.getRespawnX() + "    " + enemy.getRespawnY());
 
         }
 
@@ -308,7 +308,9 @@ public class MapDisplay extends JFrame {
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
             g2d.drawString("gold " + player.getTotalGold(), 1000, 50);
-            g2d.drawString("Health: " + player.getHealth(), 450, 50);
+            g2d.drawString("x: " + player.getX(), 450, 50);
+            g2d.drawString("y: " + player.getY(), 450, 150);
+
 
             g2d.setColor(new Color(20, 20, 129));
 
