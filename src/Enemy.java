@@ -39,36 +39,6 @@ abstract public class Enemy extends Alive {//
 
     abstract public void collision(GameObject otherObject);
 
-    public void knockback(Attack attack) {
-        double interval, dX, dY;
-        if (this.getImmunityTimer() == 0) {
-            if (attack instanceof Explosion) {
-                dX = (this.getCenterX() - attack.getCenterX());
-                dY = (attack.getCenterY() - this.getCenterY());
-                double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-                distance -= Math.sqrt((Math.pow(this.getWidth()/2, 2) + Math.pow(this.getHeight()/2, 2)));
-                if (distance <= ((Explosion) attack).getRadius()) {
-                    interval = 75/(Math.abs(dX) + Math.abs(dY) + 1);
-                } else {
-                    interval = 0;
-                }
-            } else {
-                this.setXSpeed((int) (attack.getAttackDamage() * attack.getDirection()));
-                this.setYSpeed(10);
-                dX = (this.getCenterX() - attack.getCenterX());
-                dY = (attack.getX() + attack.getHeight() - this.getCenterY());
-                interval = 15/(Math.abs(dX) + Math.abs(dY) + 1);
-            }
-
-            this.setImmunityTimer(1);
-            this.setHealth(this.getHealth() - attack.getAttackDamage());
-            this.setXSpeed(this.getXSpeed() + (int) (dX * interval));
-            this.setYSpeed(this.getYSpeed() + (int) (dY * interval));
-        }
-    }
-
-
-
     public double distanceToPlayer(Player player, ArrayList<Wall> listObjects, boolean justDistance) {
 
         double distance;
@@ -205,8 +175,8 @@ abstract public class Enemy extends Alive {//
             return distance;
         }
 
-        int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.getRayTracingStep();
-        int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.getRayTracingStep();
+        int numXPoints = (int) Math.abs(enemyXpointIntersection - playerXpointIntersection) / Constants.rayTracingStep;
+        int numYPoints = (int) Math.abs(enemyYpointIntersection - playerYpointIntersection) / Constants.rayTracingStep;
 
         double testX = enemyXpointIntersection;
         double testY = enemyYpointIntersection;
@@ -219,7 +189,7 @@ abstract public class Enemy extends Alive {//
 
                 for (int i = 1; i < (numYPoints - 1); i++) {
 
-                    testY = enemyYpointIntersection - (i * Constants.getRayTracingStep());
+                    testY = enemyYpointIntersection - (i * Constants.rayTracingStep);
                     testX = ((testY - b) / m);
 
                     for (GameObject gameObject: listObjects) {
@@ -237,7 +207,7 @@ abstract public class Enemy extends Alive {//
 
                 for (int i = 1; i < (numYPoints - 1); i++) {
 
-                    testY = enemyYpointIntersection + (i * Constants.getRayTracingStep());
+                    testY = enemyYpointIntersection + (i * Constants.rayTracingStep);
                     testX = ((testY - b) / m);
 
 
@@ -257,7 +227,7 @@ abstract public class Enemy extends Alive {//
 
                 for (int i = 1; i < (numXPoints - 1); i++) {
 
-                    testX = enemyXpointIntersection + (i * Constants.getRayTracingStep());
+                    testX = enemyXpointIntersection + (i * Constants.rayTracingStep);
                     testY = (m * testX) + b;
 
 
@@ -275,7 +245,7 @@ abstract public class Enemy extends Alive {//
 
                 for (int i = 1; i < (numXPoints - 1); i++) {
 
-                    testX = enemyXpointIntersection - (i * Constants.getRayTracingStep());
+                    testX = enemyXpointIntersection - (i * Constants.rayTracingStep);
                     testY = (m * testX) + b;
 
 
@@ -302,9 +272,33 @@ abstract public class Enemy extends Alive {//
 
     }
 
+    public void knockback(Attack attack) {
+        double interval, dX, dY;
+        if (this.getImmunityTimer() == 0) {
+            if (attack instanceof Explosion) {
+                dX = (this.getCenterX() - attack.getCenterX());
+                dY = (attack.getCenterY() - this.getCenterY());
+                double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+                distance -= Math.sqrt((Math.pow(this.getWidth()/2, 2) + Math.pow(this.getHeight()/2, 2)));
+                if (distance <= ((Explosion) attack).getRadius()) {
+                    interval = 75/(Math.abs(dX) + Math.abs(dY) + 1);
+                } else {
+                    interval = 0;
+                }
+            } else {
+                this.setXSpeed((int) (attack.getAttackDamage() * attack.getDirection()));
+                this.setYSpeed(10);
+                dX = (this.getCenterX() - attack.getCenterX());
+                dY = (attack.getX() + attack.getHeight() - this.getCenterY());
+                interval = 15/(Math.abs(dX) + Math.abs(dY) + 1);
+            }
 
-
-
+            this.setImmunityTimer(1);
+            this.setHealth(this.getHealth() - attack.getAttackDamage());
+            this.setXSpeed(this.getXSpeed() + (int) (dX * interval));
+            this.setYSpeed(this.getYSpeed() + (int) (dY * interval));
+        }
+    }
 
 
     public boolean onEdge(GameObject otherObject) {

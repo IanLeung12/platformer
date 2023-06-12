@@ -9,14 +9,14 @@ public class Slime extends Enemy{//
     Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY) {
         super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY);
 
-        this.setXSpeed(Constants.getSlimeSpeed());
+        this.setXSpeed(Constants.slimeSpeed);
 
     }
 
     Slime(int x, int y, int width, int height, double health, double totalHealth, double damage, double goldReward, double respawnX, double respawnY, boolean obeliskEnemy) {
         super(x, y, width, height, health, totalHealth, damage, goldReward, respawnX, respawnY, obeliskEnemy);
 
-        this.setXSpeed(Constants.getSlimeSpeed());
+        this.setXSpeed(Constants.slimeSpeed);
 
     }
 
@@ -31,30 +31,30 @@ public class Slime extends Enemy{//
         double distance = Math.sqrt( Math.pow((player.getCenterY() - this.getCenterY()) , 2) +  Math.pow((player.getCenterX() - this.getCenterX()) , 2) );
 
         if (distance < Constants.slimeVision) {
-            if (this.distanceToPlayer(player, proximity, false) <= Constants.getSlimeVision()) {
+            if (this.distanceToPlayer(player, proximity, false) <= Constants.slimeVision) {
 
-                if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.getSlimeSpeed())) {
+                if ((player.getCenterX() - this.getCenterX() >= 0) && (this.getXSpeed() < Constants.slimeSpeed)) {
                     this.setXSpeed(this.getXSpeed() + 1);
-                } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.getSlimeSpeed())) {
+                } else if ((player.getCenterX() - this.getCenterX() < 0) && (this.getXSpeed() > -Constants.slimeSpeed)) {
                     this.setXSpeed(this.getXSpeed() - 1);
                 }
 
-                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.setYSpeed(this.getYSpeed() - Constants.gravity);
                 this.translate(this.getXSpeed(), -this.getYSpeed());
 
             } else {
 
-                this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+                this.setYSpeed(this.getYSpeed() - Constants.gravity);
                 this.translate(this.getXSpeed(), -this.getYSpeed());
             }
         } else {
 
-            this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+            this.setYSpeed(this.getYSpeed() - Constants.gravity);
             this.translate(this.getXSpeed(), -this.getYSpeed());
 
         }
 
-        if (Math.abs(this.getXSpeed()) > Constants.getSlimeSpeed()) {
+        if (Math.abs(this.getXSpeed()) > Constants.slimeSpeed) {
             this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * 2);
         }
 

@@ -60,15 +60,15 @@ public class Player extends Alive {//
         }
 
         this.translate(this.getXSpeed(),  -this.getYSpeed());
-        this.setYSpeed(this.getYSpeed() - Constants.getGravity());
+        this.setYSpeed(this.getYSpeed() - Constants.gravity);
 
-        if (movingRight && this.getXSpeed() < Constants.getMaxXSpeed()) {
-            this.setXSpeed(this.getXSpeed() + Constants.getXSpeedAddition());
-        } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.getMaxXSpeed())) {
-            this.setXSpeed(this.getXSpeed() - Constants.getXSpeedAddition());
+        if (movingRight && this.getXSpeed() < Constants.maxXSpeed) {
+            this.setXSpeed(this.getXSpeed() + Constants.XSpeedAddition);
+        } else if (movingLeft && this.getXSpeed() > (-1) * (Constants.maxXSpeed)) {
+            this.setXSpeed(this.getXSpeed() - Constants.XSpeedAddition);
         } else if (this.getXSpeed() != 0) {
-            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * Constants.getXSpeedAddition());
-            if (Math.abs(this.getXSpeed()) <= Constants.getXSpeedAddition()) {
+            this.setXSpeed(this.getXSpeed() - this.getXSpeed()/Math.abs(this.getXSpeed()) * Constants.XSpeedAddition);
+            if (Math.abs(this.getXSpeed()) <= Constants.XSpeedAddition) {
                 this.setXSpeed(0);
             }
         }
@@ -84,7 +84,7 @@ public class Player extends Alive {//
     public void jump() {
 
         if (this.getJumpNum() < this.getMaxJumps()) {
-            this.setYSpeed(Constants.getJumpBoost());
+            this.setYSpeed(Constants.jumpBoost);
             this.setJumpNum(this.getJumpNum() + 1);
         }
 
@@ -92,7 +92,7 @@ public class Player extends Alive {//
 
     public void dash() {
         this.setAbilityActive(true);
-        this.setAbilityDirection(Constants.getAbilitySpeed() * this.getDirection(), 0);
+        this.setAbilityDirection(Constants.abilitySpeed * this.getDirection(), 0);
         this.dashUsed = true;
 
     }
@@ -101,7 +101,7 @@ public class Player extends Alive {//
         this.setAbilityActive(true);
         double dX = targetX - this.getCenterX();
         double dY = -(targetY - this.getCenterY());
-        double interval = Constants.getAbilitySpeed()/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+        double interval = Constants.abilitySpeed/Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
         this.setAbilityDirection((int) (dX * interval), (int) (dY * interval));
         this.bashUsed = true;
@@ -109,7 +109,7 @@ public class Player extends Alive {//
 
     public void movementAbility() {
 
-        if (this.abilityTravelled < Constants.getMovementAbilityTotal()) {
+        if (this.abilityTravelled < Constants.movementAbilityTotal) {
             this.setXSpeed(this.getAbilityDirection(0));
             this.setYSpeed(this.getAbilityDirection(1));
             this.abilityTravelled += Math.sqrt(Math.pow(this.getAbilityDirection(0), 2) + Math.pow(this.getAbilityDirection(1), 2));
