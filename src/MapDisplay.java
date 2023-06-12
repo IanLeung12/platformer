@@ -201,7 +201,6 @@ public class MapDisplay extends JFrame {
             try {
                 game.save();
             } catch (FileNotFoundException ex) {
-                System.out.println("WTF");
                 throw new RuntimeException(ex);
             }
 
@@ -339,7 +338,6 @@ public class MapDisplay extends JFrame {
             if (!game.isInObelisk()) {
                 for (Rectangle hitbox: game.getObeliskHitboxes()) {
                     if (player.intersects(hitbox)) {
-                        System.out.println("yes");
                         g2d.drawImage(eButton, (int) hitbox.getCenterX() - 50, (int) hitbox.getCenterY() - 50, this);
                     }
                 }
@@ -365,6 +363,10 @@ public class MapDisplay extends JFrame {
 
             g2d.fillRect(90, 690, 295, 70);
             g2d.setColor(new Color(159, 243, 245));
+
+            for (Rectangle rect: game.getObeliskHitboxes()) {
+                g2d.drawRect(rect.x, rect.y, rect.width, rect.height);
+            }
 
             switch (player.getCurrentWeapon()) {
                 case "Sword":
@@ -671,7 +673,9 @@ public class MapDisplay extends JFrame {
                     }
                     break;
                 case '4':
-                    player.setCurrentWeapon("Bow");
+                    if (player.getWeapons().contains("Rocket")) {
+                        player.setCurrentWeapon("Rocket");
+                    }
                     break;
             }
         }

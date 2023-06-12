@@ -31,7 +31,7 @@ public class GameEngine {
 
     private int currentObelisk = 0;
 
-    private int[] obeliskSpawns;
+    private ArrayList<int[]> obeliskSpawns;
 
     private int requiredKills = 0;
 
@@ -49,7 +49,7 @@ public class GameEngine {
         this.respawnList = new ArrayList<>();
         this.obeliskHitboxes = new ArrayList<>();
         this.shop = new ArrayList<>();
-        this.obeliskSpawns = new int[] {0, 0, 0};
+        this.obeliskSpawns = new ArrayList<>();
 
         this.refreshDelay = 17;
 
@@ -79,7 +79,6 @@ public class GameEngine {
                     break;
                 case "Shop":
                     shop.add(new ShopItem(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.next(), input.nextInt()));
-                    System.out.println("yes");
                     break;
                 case "Weapon":
                     player.getWeapons().add(input.next());
@@ -87,9 +86,6 @@ public class GameEngine {
             }
         }
 
-        for (ShopItem item: shop) {
-            System.out.println(item);
-        }
         input.close();
     }
 
@@ -342,40 +338,64 @@ public class GameEngine {
     public void activateObelisk(int obeliskNum) {
         this.inObelisk = true;
         this.currentObelisk = obeliskNum;
+        this.obeliskSpawns.clear();
 
         switch (obeliskNum) {
             case 0:
-                obeliskSpawns[0] = 25;
+                this.obeliskSpawns.add(new int[] {25, 0, 0});
                 requiredKills = 25;
             case 1:
-                obeliskSpawns[1] = 69;
+                this.obeliskSpawns.add(new int[] {0, 5, 0});
+                this.requiredKills = 5;
+                this.obeliskSpawns.add(new int[] {5, 3, 0});
+                this.obeliskSpawns.add(new int[] {0, 8, 0});
+                this.obeliskSpawns.add(new int[] {10, 5, 0});
         }
     }
 
 
     public void obeliskTick() {
         if (requiredKills <= 0) {
-            this.inObelisk = false;
-            switch (currentObelisk) {
-                case 0:
-                    if (player.getMaxJumps() < 2) {
-                        player.setMaxJumps(2);
-                    }
-                    if (player.getMaxHealth() < 200) {
-                        player.setMaxHealth(200);
-                    }
-                    player.setDashUnlocked(true);
+            requiredKills = 0;
+            obeliskSpawns.remove(0);
+            if (obeliskSpawns.size() == 0) {
+                this.inObelisk = false;
+                switch (currentObelisk) {
+                    case 0:
+                        if (player.getMaxJumps() < 2) {
+                            player.setMaxJumps(2);
+                        }
+                        if (!player.isDashUnlocked()) {
+                            player.setMaxHealth(player.getMaxHealth() + 100);
+                            player.setDashUnlocked(true);
+                        }
+                    case 1:
+                        if (!player.isBashUnlocked()) {
+                            player.setMaxHealth(player.getMaxHealth() + 100);
+                            player.setBashUnlocked(true);
+                        }
+
+                }
+            } else {
+                for (int i = 0; i < this.obeliskSpawns.get(0).length; i++) {
+                    requiredKills += this.obeliskSpawns.get(0)[i];
+                }
+                System.out.println(requiredKills);
             }
+
+
         } else {
             Rectangle obelisk = this.obeliskHitboxes.get(this.currentObelisk);
-            for (int i = 0; i < obeliskSpawns.length; i ++) {
-                if (obeliskSpawns[i] > 0) {
+            for (int i = 0; i < obeliskSpawns.get(0).length; i ++) {
+                if (obeliskSpawns.get(0)[i] > 0) {
                     if (Math.random() < 0.1) {
-                        System.out.println("yes");
-                        obeliskSpawns[i] --;
+                        obeliskSpawns.get(0)[i] --;
                         switch (i) {
                             case 0:
                                 enemies.add(new Slime((int) (obelisk.getX() - 100 + ((int) (Math.random() * 2)) * (obelisk.getWidth() + 200)), (int) (obelisk.getY() + obelisk.getHeight() - 100), 100, 100, 100, 100, 15, 100, 0, 150000));
+                            case 1:
+                                enemies.add(new Mosquito((int) (Math.random() * (obelisk.getWidth() - 50)), (int) (Math.random() * (obelisk.getHeight() - 50)), 50, 50, 100, 100, 20, 100, 0, 150000));
+
                         }
                     }
                 }
