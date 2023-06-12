@@ -39,6 +39,7 @@ public class Player extends Alive {//
         this.maxJumps = maxJumps;
         this.setImmunityTimer(1);
         this.weapons = new ArrayList<>();
+        this.weapons.add("Sword");
         this.respawnPoint = new int[]{x, y};
         this.dashUnlocked = dashUnlocked;
         this.bashUnlocked = bashUnlocked;
@@ -201,7 +202,7 @@ public class Player extends Alive {//
         this.setEnergy(this.getMaxEnergy());
         this.setXSpeed(0);
         this.setYSpeed(0);
-        this.totalGold = (int) (this.totalGold * 0.9);
+        this.totalGold = (int) (this.totalGold * 0.7);
     }
 
 

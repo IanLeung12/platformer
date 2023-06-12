@@ -129,7 +129,6 @@ public class Jumper extends Enemy{
             double ticks = Math.max(r1, r2);
             this.setXSpeed((int) Math.round(dX/(ticks*2)));
             this.setYSpeed(60);
-            System.out.println(ticks + " " + dX + " " + this.getXSpeed() + " " + dY);
         } else {
             this.setYSpeed(80);
             this.setXSpeed((int) Math.round(dX/30));
