@@ -48,6 +48,8 @@ public class MapDisplay extends JFrame {
 
     static BufferedImage slime;
 
+    static BufferedImage eButton;
+
 
     //------------------------------------------------------------------------------
     MapDisplay(GameEngine game){
@@ -77,6 +79,7 @@ public class MapDisplay extends JFrame {
             playerFrames[5] = image("Pictures/player5.png");
 
             slime = image("Pictures/slime.png");
+            eButton = image("Pictures/e.png");
             System.out.println("e");
         } catch (IOException ex){
             System.out.println("a");
@@ -163,6 +166,9 @@ public class MapDisplay extends JFrame {
             orb.translate(dX, dY);
         }
 
+        for (Rectangle hitbox: game.getObeliskHitboxes()) {
+            hitbox.translate(dX, dY);
+        }
 
     }
 
@@ -307,6 +313,18 @@ public class MapDisplay extends JFrame {
                 g2d.fillRect((int) orb.getX(), (int) orb.getY(), Constants.orbDimensions, Constants.orbDimensions);
             }
 
+
+            if (!game.isInObelisk()) {
+                for (Rectangle hitbox: game.getObeliskHitboxes()) {
+                    if (player.intersects(hitbox)) {
+                        System.out.println("yes");
+                        g2d.drawImage(eButton, (int) hitbox.getCenterX() - 50, (int) hitbox.getCenterY() - 50, this);
+                    }
+                }
+            }
+
+
+
             g2d.setFont(new Font("Georgia", Font.PLAIN, 42));
             g2d.drawString("Bow Power: " + bowPower, 50, 50);
             g2d.drawString("gold " + player.getTotalGold(), 1000, 50);
@@ -406,11 +424,11 @@ public class MapDisplay extends JFrame {
                 switch (player.getCurrentWeapon()) {
                     case "Sword":
                         game.getAttacks().add(new Sword((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() : -150)),
-                                (int) (player.getY() - 50), direction, true));
+                                (int) (player.getY() - 50), player.getDirection(), true));
                         break;
                     case "Hammer":
                         game.getAttacks().add(new Hammer((int) (player.getX() + (player.getDirection() == 1 ? player.getWidth() + 50 : -300)),
-                                (int) (player.getY() - 50), direction, true));
+                                (int) (player.getY() - 50), player.getDirection(), true));
                         break;
                     case "Bow":
                         if (bowCharging) {
@@ -494,6 +512,14 @@ public class MapDisplay extends JFrame {
                 case 'q':
                     game.paused = true;
                     break;
+                case 'e':
+                    if (!game.isInObelisk()) {
+                        for (int i = 0; i < game.getObeliskHitboxes().size(); i ++) {
+                            if (player.intersects(game.getObeliskHitboxes().get(i))) {
+                                game.activateObelisk(i);
+                            }
+                        }
+                    }
             }
 
             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {

@@ -4,7 +4,7 @@ public class Constants {
     static int jumpBoost = 30;
     static int abilitySpeed = 60;
 
-    static int movementAbilityTotal = 300;
+    static int movementAbilityTotal = 400;
 
     static int maxXSpeed = 26;
     static int XSpeedAddition = 2;

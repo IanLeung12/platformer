@@ -26,18 +26,17 @@ public class Player extends Alive {//
     private ArrayList<String> Weapons;
 
 
-
-    Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy) {
+    Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy, int maxJumps, boolean dashUnlocked, boolean bashUnlocked) {
         super(x, y, width, height, health, MaxHealth, 30);
         this.energy = energy;
         this.maxEnergy = maxEnergy;
         this.totalGold = 0;
         this.jumpNum = 0;
-        this.maxJumps = 2;
+        this.maxJumps = maxJumps;
         this.setImmunityTimer(1);
         this.respawnPoint = new int[]{x, y};
-        this.dashUnlocked = true;
-        this.bashUnlocked = true;
+        this.dashUnlocked = dashUnlocked;
+        this.bashUnlocked = bashUnlocked;
 
 
         // add a single weapon into weapons ===============================
@@ -349,4 +348,5 @@ public class Player extends Alive {//
     public void setRespawnPoint(int[] respawnPoint) {
         this.respawnPoint = respawnPoint;
     }
+
 }
