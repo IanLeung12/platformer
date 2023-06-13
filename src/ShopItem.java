@@ -78,7 +78,7 @@ public class ShopItem extends GameObject{
                     break;
 
                 case "Energy":
-                    player.setMaxEnergy(player.getEnergy() + 100);
+                    player.setMaxEnergy(player.getMaxEnergy() + 100);
                     break;
 
                 case "Damage":

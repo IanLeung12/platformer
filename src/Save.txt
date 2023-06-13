@@ -1,4 +1,4 @@
-0 0 75 150 100 100 100 100 1 false false 1
+0 0 75 150 100 100 100 100 1 false false 1 0
 Wall 0 0 0 0 false
  Wall -900 -1500 900 2300 true
  Wall 0 0 1900 600 true
@@ -103,11 +103,11 @@ Wall 0 0 0 0 false
  Wall 9400 -5000 50 500 false
  Wall 9900 -5000 50 420 false
  Shop 8400 -4550 200 100 Damage 7500
- Shop 8400 -4350 200 100 Health 5000
- Shop 8800 -4350 200 100 Energy 5000
+ Shop 8400 -4350 200 100 Health 6000
+ Shop 8800 -4350 200 100 Energy 6000
  Shop 8400 -4150 200 100 TripleJump 12000
  Shop 8800 -4150 200 100 Rocket 12000
- Shop 8400 -3950 200 100 Hammer 6000
+ Shop 8400 -3950 200 100 Hammer 10000
  Shop 8800 -3950 200 100 Bow 7500
 
 

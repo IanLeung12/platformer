@@ -50,7 +50,7 @@ public class GameEngine {
         if (input.next().equals("new")) {
             input = new Scanner(new File("src/Save.txt"));
         }
-        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextInt(), input.nextBoolean(), input.nextBoolean(), input.nextDouble());
+        this.player = new Player(input.nextInt(), input.nextInt(), input.nextInt(), input.nextInt(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextDouble(), input.nextInt(), input.nextBoolean(), input.nextBoolean(), input.nextDouble(), input.nextInt());
         this.surroundings = new ArrayList<>();
         this.attacks = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -570,7 +570,7 @@ public class GameEngine {
         //Player save
         output.println(player.getRespawnPoint()[0] + " " + player.getRespawnPoint()[1] + " " + (int) player.getWidth() + " " + (int) player.getHeight() + " " +
                 (int) player.getHealth() + " " + (int) player.getMaxHealth() + " " + (int) player.getEnergy() + " " + (int) player.getMaxEnergy() + " " +
-                player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isDashUnlocked() + " " + player.getDamageBoost());
+                player.getMaxJumps() + " " + player.isDashUnlocked() + " " + player.isBashUnlocked() + " " + player.getDamageBoost() + " " + (int) player.getTotalGold());
 
         // Weapons save
         for (String weapon: player.getWeapons()) {

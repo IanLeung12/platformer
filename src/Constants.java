@@ -40,7 +40,7 @@ public class Constants {
     static int jumperMaxHP = 100;
 
 
-    static int respawnTimerEnemy = 100000;
+    static int respawnTimerEnemy = 1000;
 
 
 

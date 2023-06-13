@@ -44,11 +44,11 @@ public class Player extends Alive {
      * @param bashUnlocked  specifies if the Player has unlocked the bash ability
      * @param damageBoost   the damage boost value for the Player
      */
-    Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy, int maxJumps, boolean dashUnlocked, boolean bashUnlocked, double damageBoost) {
+    Player(int x, int y, int width, int height, double health, double MaxHealth, double energy, double maxEnergy, int maxJumps, boolean dashUnlocked, boolean bashUnlocked, double damageBoost, int totalGold) {
         super(x, y, width, height, health, MaxHealth, 30);
         this.energy = energy;
         this.maxEnergy = maxEnergy;
-        this.totalGold = 0;
+        this.totalGold = totalGold;
         this.jumpNum = 0;
         this.maxJumps = maxJumps;
         this.setImmunityTimer(1);
