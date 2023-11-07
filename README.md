@@ -1,4 +1,4 @@
-# platformer
+Ori And The Oblisks
 
 This work in progress is a game inspired by ori and the will of the wisps*
 
@@ -19,5 +19,3 @@ Attack selection:
 left click to attack
 
 shift: dash
-
-*Name not yet decided
