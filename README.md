@@ -1,4 +1,4 @@
-Ori And The Oblisks
+Iro And The Oblisks
 
 This work in progress is a game inspired by ori and the will of the wisps*
 
