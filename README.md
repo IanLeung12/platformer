@@ -19,3 +19,6 @@ Attack selection:
 left click to attack
 
 shift: dash
+
+![image](https://github.com/user-attachments/assets/33f89bea-f21c-401e-ad54-58436aba1517)
+
